@@ -15,7 +15,8 @@ public class Main {
         point start = new point(0,0);
         point end = new point(img[0].length(),img.length);
         quadtree qt = new quadtree(start, end, img);
-        for(char[] cA : qt.print()) {
+        char ret[][] = new char[qt.end.x - qt.start.x][qt.end.y - qt.start.y];
+        for(char[] cA : qt.print(ret)) {
             for (char c : cA) {
                 System.out.print(c);
         }

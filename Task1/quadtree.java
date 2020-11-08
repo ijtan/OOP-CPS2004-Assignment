@@ -57,8 +57,8 @@ public class quadtree {
         }
     }
 
-    public char[][] print(){
-        char ret[][] = new char[end.x-start.x][end.y-start.y];
+    public char[][] print(char[][] ret){
+        // char ret[][] = new char[end.x-start.x][end.y-start.y];
         quadtree quadrant[] = {NW,NE,SW,SE};
         for (quadtree q : quadrant) {
             if (q.isLeaf) {
@@ -69,10 +69,6 @@ public class quadtree {
                 }
             } else {
                 point mid = new point(start.x + (end.x - start.x) / 2, start.y + (end.y - start.y) / 2);
-                point A = new point(mid.x, start.y);
-                point B = new point(end.x, mid.y);
-                point C = new point(start.x, mid.y);
-                point D = new point(end.y, mid.x);
                 //S##A###
                 //#  #  #
                 //C##M##B
@@ -81,16 +77,16 @@ public class quadtree {
                 for (int x = 0; x < q.end.x - q.start.x; x++) {
                     for (int y = 0; y < q.end.y - q.start.y; y++) {
                         if(x<mid.x && y>mid.y){ //NW
-                            ret[x][y]
+                            ret = q.print(ret);
                         }
-                        if (x > mid.x && y > mid.y) {
-
+                        if (x > mid.x && y > mid.y) { //NE
+                            ret = q.print(ret);
                         }
-                        if (x < mid.x && y < mid.y) {
-
+                        if (x < mid.x && y < mid.y) { //SW
+                            ret = q.print(ret);
                         }
-                        if (x > mid.x && y < mid.y) {
-
+                        if (x > mid.x && y < mid.y) { //SE
+                            ret = q.print(ret);
                         }
                     }
                 }
