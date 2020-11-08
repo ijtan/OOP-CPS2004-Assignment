@@ -10,7 +10,7 @@ public class Main {
                             "FFFFTTFF\n"+
                             "FFFFTTTT\n"+
                             "FFFFTTTF";
-
+        System.out.println("Starting!");
         String img[] = exampleImg.split("\n");
         point start = new point(0,0);
         point end = new point(img[0].length(),img.length);

@@ -19,7 +19,8 @@ public class quadtree {
     public quadtree(point start, point end, String[] img){
         this.start = start;
         this.end = end;
-
+        System.out.println("I have been initalized; x,y x,y");
+        System.out.println(' '+start.x+','+start.y+'\t'+end.x+','+end.y);
         //S##A###
         //#  #  #
         //C##M##B
@@ -32,7 +33,7 @@ public class quadtree {
         point C = new point(start.x, mid.y);
         point D = new point(end.y, mid.x);
 
-        if(end.x-start.x == 0 && end.y - start.y == 0){
+        if(end.x-start.x == 1 && end.y - start.y == 1){
             this.isLeaf = true;
             if(img[start.y].charAt(start.x) == 'T')
                 this.state = true;
