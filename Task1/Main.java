@@ -4,18 +4,16 @@ package Task1;
 // import java.util.List;
 
 public class Main {
-    public static void main(String args[]) { // T G
-        String exampleImg = "TTTTTTTT\n" + // F G
-                "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n" + "FFFFTTTT\n" + "FFFFTTTF\n";
+    public static void main(String args[]) {
+        String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
+                + "FFFFTTTT\n" + "FFFFTTTF\n";
         // System.out.println("Starting!");
         char[] imgArray = exampleImg.replaceAll("\n", "").toCharArray();
         int sideLength = (int) Math.sqrt(imgArray.length);
 
-
         qt tree = new qt(1);
         tree.init(1, sideLength * sideLength);
         tree.assign(imgArray);
-
 
         for (int i = 1; i <= imgArray.length; i++) {
             System.out.print(tree.getPixelByChar(i));
@@ -24,7 +22,7 @@ public class Main {
         for (int i = 1; i <= imgArray.length; i++) {
             System.out.print(imgArray[i - 1]);
         }
-        
+
         System.out.println("\n\n");
         System.out.println(tree.print());
         System.out.println("\n\n");

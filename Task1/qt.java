@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class qt {
     int index;
-    int start,end;
+    int start, end;
     // False = Black
     // True = White
     boolean state;
@@ -23,7 +23,7 @@ public class qt {
 
     public qt init(int size, int max) {
         this.max = max;
-        if(size >= max){
+        if (size >= max) {
             this.isLeaf = true;
             subTrees = null;
             this.start = this.end = this.index;
@@ -32,74 +32,76 @@ public class qt {
         }
         subTrees = new qt[4];
 
-        int startIndex = 4*(this.index-1)+1; 
-        int endIndex = 4*(this.index); 
+        int startIndex = 4 * (this.index - 1) + 1;
+        int endIndex = 4 * (this.index);
         this.start = startIndex;
         this.end = endIndex;
 
-        for(int i = 0; i < subTrees.length; i++){
-            subTrees[i] = new qt(startIndex+i);
-            subTrees[i].init(size*4, max);
+        for (int i = 0; i < subTrees.length; i++) {
+            subTrees[i] = new qt(startIndex + i);
+            subTrees[i].init(size * 4, max);
         }
         this.start = subTrees[0].start;
         this.end = subTrees[3].end;
-        
+
         return this;
     }
 
     public ArrayList<Integer> indexShifter() {
-        double size = (int)Math.sqrt(max)/2;
-        ArrayList<Integer> indexes = new ArrayList<Integer>();        
-        for (int i = 0; i < max; i+=(max/4)) {
+        double size = (int) Math.sqrt(max) / 2;
+        ArrayList<Integer> indexes = new ArrayList<Integer>();
+        for (int i = 0; i < max; i += (max / 4)) {
             for (int j = 0; j < size; j++) {
-                int now = 4*j + i;
-                indexes.add(now+1);
-                indexes.add(now+2);
+                int now = 4 * j + i;
+                indexes.add(now + 1);
+                indexes.add(now + 2);
             }
             for (int j = 0; j < size; j++) {
                 int now = 4 * j + i;
                 indexes.add(now + 3);
                 indexes.add(now + 4);
             }
-    }
-    return indexes;
+        }
+        return indexes;
 
     }
 
-    public void assign(char[] img){
+    public void assign(char[] img) {
         var indexes = indexShifter();
-        for (int i = 1; i <= img.length; i++) 
-            this.setPixel(img[indexes.get(i-1)-1], i);    
+        for (int i = 1; i <= img.length; i++){
+            this.setPixel(img[indexes.get(i - 1) - 1], i);
+            System.out.println("Setting (tr)"+i+" to "+ indexes.get(i - 1) + " - " + img[indexes.get(i - 1)]+"/"+ img[indexes.get(i - 1) - 1]);
+        }
     }
 
     public boolean setPixel(char pixel, int index) {
-        if(this.isLeaf && this.index == index){
+        if (this.isLeaf && this.index == index) {
             this.state = charToBool(pixel);
             return true;
         }
-        if(!this.isLeaf)
+        if (!this.isLeaf)
             for (qt q : subTrees) {
-                if(q.contains(index))
+                if (q.contains(index))
                     return q.setPixel(pixel, index);
-                if(q.isLeaf)
+                if (q.isLeaf)
                     q.setPixel(pixel, index);
-                }
-        return false;           
+            }
+        return false;
     }
 
-    public boolean contains(int x){
-        if(this.start <= x && x <= this.end)
+    public boolean contains(int x) {
+        if (this.start <= x && x <= this.end)
             return true;
         return false;
     }
 
-    public int getPixel(int index){
-        if(this.isLeaf && this.contains(index))
+    public int getPixel(int index) {
+        if (this.isLeaf && this.contains(index))
             return state ? 1 : 0;
         for (qt q : subTrees) {
-            if(q.isLeaf && q.contains(index))
+            if (q.isLeaf && q.contains(index))
                 return q.state ? 1 : 0;
-            else if(q.contains(index))
+            else if (q.contains(index))
                 return q.getPixel(index);
         }
         return 3;
@@ -118,31 +120,33 @@ public class qt {
                 allChildrenAreLeaves = false;
         }
         if (allChildrenAreLeaves) {
-            if ((subTrees[0].state && subTrees[1].state  && subTrees[2].state &&  subTrees[3].state )|| (!subTrees[0].state
-                    && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can be absorbed
-                System.out.println("Absorbing indexes: "+subTrees[0].start+" - "+subTrees[3].end);
+            if ((subTrees[0].state && subTrees[1].state && subTrees[2].state && subTrees[3].state)
+                    || (!subTrees[0].state && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can
+                                                                                                                 // be
+                                                                                                                 // absorbed
+                System.out.println("Absorbing indexes: " + subTrees[0].start + " - " + subTrees[3].end);
                 this.state = subTrees[0].state;
                 this.size = 1;
                 this.isLeaf = true;
-                
+
                 this.start = subTrees[0].start;
                 this.end = subTrees[3].end;
-                
+
                 this.subTrees = null;
             }
         }
     }
 
-    public int nodeCount(){
+    public int nodeCount() {
         int count = 0;
-        if(this.isLeaf)
+        if (this.isLeaf)
             return 1;
-        for(int i = 0; i < subTrees.length; i++)
+        for (int i = 0; i < subTrees.length; i++)
             count += subTrees[i].nodeCount();
-            
-        return count+1;
+
+        return count + 1;
     }
-    
+
     public int leafCount() {
         int count = 0;
         if (this.isLeaf)
@@ -153,32 +157,32 @@ public class qt {
         return count;
     }
 
-    public char getPixelByChar(int index){
-        if(getPixel(index) == 1)
+    public char getPixelByChar(int index) {
+        if (getPixel(index) == 1)
             return 'T';
-        if(getPixel(index) == 0)
+        if (getPixel(index) == 0)
             return 'F';
         return 'E';
     }
-    
+
     public String print() {
-   
-    var indexes = indexShifter(); 
-    // here we shift from the absolute addresing to the split addressing used in the trees
-    char[] formatted = new char[max];
-    for (int i = 1; i <= max; i++) 
-        formatted[indexes.get(i-1)-1] = getPixelByChar(i);
-        
-    
-    formatted.toString();
-    String split = ""; //Here we simply add spaces every 8 characters for formatting
-    for (int i = 1; i <= formatted.length; i++) {
-        split += formatted[i-1];
-        if(i%8==0)
-            split+='\n';
+
+        var indexes = indexShifter();
+        // here we shift from the absolute addresing to the split addressing used in the
+        // trees
+        char[] formatted = new char[max];
+        for (int i = 1; i <= max; i++)
+            formatted[indexes.get(i - 1) - 1] = getPixelByChar(i);
+
+        formatted.toString();
+        String split = ""; // Here we simply add spaces every 8 characters for formatting
+        for (int i = 1; i <= formatted.length; i++) {
+            split += formatted[i - 1];
+            if (i % 8 == 0)
+                split += '\n';
+        }
+        return split;
     }
-    return split;
-}
 
     boolean charToBool(char c) {
         if (c == 'T')
