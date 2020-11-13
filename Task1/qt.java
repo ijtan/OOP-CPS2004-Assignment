@@ -1,94 +1,108 @@
 package Task1;
 
-public class qt {
-    point start, end;
+import java.util.ArrayList;
 
+public class qt {
+    int index;
+    int start,end;
     // False = Black
     // True = White
     boolean state;
     boolean isLeaf;
     int size;
+    int max;
 
     qt subTrees[];
 
-    public qt( point start, point end) {
-        this.start = start;
-        this.end = end;
+    public qt(int index) {
+        // System.out.println("I have been initated with index: "+index);
+        this.index = index;
         this.isLeaf = false;
         // this.init(4, (end.x-start.x+1 * end.y-start.y+1));
     }
 
     public qt init(int size, int max) {
-        if((start.x == end.x && start.y == end.y) || size >= max){
+        this.max = max;
+        if(size >= max){
             this.isLeaf = true;
             subTrees = null;
+            this.start = this.end = this.index;
             this.size = 1;
             return this;
         }
         subTrees = new qt[4];
 
-        for (int i = 0;i< subTrees.length;i++) {
-            subTrees[i] = new qt(start,end).init(size*4,max);
-            this.size += subTrees[i].size;
+        int startIndex = 4*(this.index-1)+1; 
+        int endIndex = 4*(this.index); 
+        this.start = startIndex;
+        this.end = endIndex;
+
+        for(int i = 0; i < subTrees.length; i++){
+            subTrees[i] = new qt(startIndex+i);
+            subTrees[i].init(size*4, max);
         }
-
-            // tmp = new point(start.x + md, start.y + md);
-            // subTrees[0] = new qt(start, tmp).init(makeLeaf);
-
-            // tmp = new point(end.x - md, start.y);
-            // tmp1 = new point(end.x, start.y + md);
-            // subTrees[1] = new qt(tmp, tmp1).init(makeLeaf);
-
-            // tmp = new point(start.x, end.y - md);
-            // tmp1 = new point(start.x + md, end.y);
-            // subTrees[2] = new qt(tmp, tmp1).init(makeLeaf);
-
-            // tmp = new point(end.x - md, end.y - md);
-            // subTrees[3] = new qt(tmp, end).init(makeLeaf);
-            // return this;
-        // }
-        // else
-        //     md = start.x + (end.x - start.x) / 2; // md stand for mid Distance which is distance to middle area of the
-                                                  // parent tree
-        // for end.x = 7 we get md = 3.5 which = 3
-
-
-        // point tmp,tmp1;
-
-        // tmp = new point(start.x + md, start.y + md);
-        // subTrees[0] = new qt(start, tmp).init(makeLeaf);
-
-        // tmp = new point(end.x-md, start.y);
-        // tmp1 = new point(end.x,start.y+md);
-        // subTrees[1] = new qt(tmp, tmp1).init(makeLeaf);
-
-
-        // tmp = new point(start.x, end.y-md);
-        // tmp1 = new point(start.x+md, end.y);
-        // subTrees[2] = new qt(tmp, tmp1).init(makeLeaf);
-
-        // tmp = new point(end.x-md, end.y - md);
-        // subTrees[3] = new qt(tmp, end).init(makeLeaf);
-    
+        this.start = subTrees[0].start;
+        this.end = subTrees[3].end;
         
         return this;
     }
 
-    public void assign(char[][] img) {
-        int skipTimes = 0;
-        for(int i = 0; i < img[0].length;i++){
-            for(int j = 0; j < img.length; j++){
-                for(int x = 0; x<subTrees.length;x++){
-                    if(subTrees[x].isLeaf){
-                        subTrees[x].state = charToBool(img[i][j]); }
-                    else{
-                        subTrees[x].assign(img);
-                        skipTimes = subTrees[x].size;
-                    }
-                }
-                
+    public ArrayList<Integer> indexShifter() {
+        double size = (int)Math.sqrt(max)/2;
+        ArrayList<Integer> indexes = new ArrayList<Integer>();        
+        for (int i = 0; i < max; i+=(max/4)) {
+            for (int j = 0; j < size; j++) {
+                int now = 4*j + i;
+                indexes.add(now+1);
+                indexes.add(now+2);
             }
+            for (int j = 0; j < size; j++) {
+                int now = 4 * j + i;
+                indexes.add(now + 3);
+                indexes.add(now + 4);
+            }
+    }
+    return indexes;
+
+    }
+
+    public void assign(char[] img){
+        var indexes = indexShifter();
+        for (int i = 1; i <= img.length; i++) 
+            this.setPixel(img[indexes.get(i-1)-1], i);    
+    }
+
+    public boolean setPixel(char pixel, int index) {
+        if(this.isLeaf && this.index == index){
+            this.state = charToBool(pixel);
+            return true;
         }
+        if(!this.isLeaf)
+            for (qt q : subTrees) {
+                if(q.contains(index))
+                    return q.setPixel(pixel, index);
+                if(q.isLeaf)
+                    q.setPixel(pixel, index);
+                }
+        return false;           
+    }
+
+    public boolean contains(int x){
+        if(this.start <= x && x <= this.end)
+            return true;
+        return false;
+    }
+
+    public int getPixel(int index){
+        if(this.isLeaf && this.contains(index))
+            return state ? 1 : 0;
+        for (qt q : subTrees) {
+            if(q.isLeaf && q.contains(index))
+                return q.state ? 1 : 0;
+            else if(q.contains(index))
+                return q.getPixel(index);
+        }
+        return 3;
     }
 
     public void optimize() {
@@ -104,40 +118,67 @@ public class qt {
                 allChildrenAreLeaves = false;
         }
         if (allChildrenAreLeaves) {
-            if (subTrees[0].state == subTrees[1].state == subTrees[2].state == subTrees[3].state) { // can be absorbed
+            if ((subTrees[0].state && subTrees[1].state  && subTrees[2].state &&  subTrees[3].state )|| (!subTrees[0].state
+                    && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can be absorbed
+                System.out.println("Absorbing indexes: "+subTrees[0].start+" - "+subTrees[3].end);
                 this.state = subTrees[0].state;
                 this.size = 1;
                 this.isLeaf = true;
+                
+                this.start = subTrees[0].start;
+                this.end = subTrees[3].end;
+                
                 this.subTrees = null;
             }
         }
     }
 
-    public int getSize(){
+    public int nodeCount(){
         int count = 0;
-        if(isLeaf)
+        if(this.isLeaf)
             return 1;
         for(int i = 0; i < subTrees.length; i++)
-            if(subTrees[i].isLeaf)
-                count += subTrees[i].getSize();
+            count += subTrees[i].nodeCount();
+            
+        return count+1;
+    }
+    
+    public int leafCount() {
+        int count = 0;
+        if (this.isLeaf)
+            return 1;
+        for (int i = 0; i < subTrees.length; i++)
+            count += subTrees[i].leafCount();
+
         return count;
     }
 
-    public boolean absorbs(point p) {
-        if (p.x >= start.x && p.x <= end.x && p.y >= start.y && p.y <= end.y)
-            return true;
-        return false;
-    }
-
-    public char[][] print(char[][] ret) {
-        return ret;
-    }
-
-    char stateToChar() {
-        if (state == true)
+    public char getPixelByChar(int index){
+        if(getPixel(index) == 1)
             return 'T';
-        return 'F';
+        if(getPixel(index) == 0)
+            return 'F';
+        return 'E';
     }
+    
+    public String print() {
+   
+    var indexes = indexShifter(); 
+    // here we shift from the absolute addresing to the split addressing used in the trees
+    char[] formatted = new char[max];
+    for (int i = 1; i <= max; i++) 
+        formatted[indexes.get(i-1)-1] = getPixelByChar(i);
+        
+    
+    formatted.toString();
+    String split = ""; //Here we simply add spaces every 8 characters for formatting
+    for (int i = 1; i <= formatted.length; i++) {
+        split += formatted[i-1];
+        if(i%8==0)
+            split+='\n';
+    }
+    return split;
+}
 
     boolean charToBool(char c) {
         if (c == 'T')

@@ -1,38 +1,40 @@
 package Task1;
 
-public class Main {
-    public static void main(String args[]){ //T G
-        String exampleImg = "TTTTTTTT\n"+   //F G
-                            "TTTTTTTT\n"+
-                            "TTTTFFFT\n"+
-                            "TTTTTTFF\n"+
-                            "FFFFTTFF\n"+
-                            "FFFFTTFF\n"+
-                            "FFFFTTTT\n"+
-                            "FFFFTTTF\n";
-    //     System.out.println("Starting!");
-        String strImg[] = exampleImg.split("\n");
-        char[][] img = new char[strImg.length][strImg[0].length()];
-        for (int i = 0; i<strImg[0].length();i++) {
-            img[i] = strImg[i].toCharArray();
-        }
+// import java.util.ArrayList;
+// import java.util.List;
 
-        point start = new point(0,0);
-        point end = new point(img[0].length-1,img.length-1);
-    //     quadtree qt = new quadtree(start, end, img);
-    //     char ret[][] = new char[qt.end.x+1][qt.end.y+1];
-    //     for(char[] cA : qt.print(ret)) {
-    //         for (char c : cA) {
-    //             System.out.print(c);
-    //     }
-    //     System.out.print('\n');
-    //     }
-    // }
-    qt tree = new qt(start, end);
-    tree.init(1,((int)Math.pow(end.x+1,2)));
-    tree.assign(img);
-    System.out.println("tree count = " + tree.size);
-    tree.optimize();
-    System.out.println("final tree count = "+tree.getSize());
+public class Main {
+    public static void main(String args[]) { // T G
+        String exampleImg = "TTTTTTTT\n" + // F G
+                "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n" + "FFFFTTTT\n" + "FFFFTTTF\n";
+        // System.out.println("Starting!");
+        char[] imgArray = exampleImg.replaceAll("\n", "").toCharArray();
+        int sideLength = (int) Math.sqrt(imgArray.length);
+
+
+        qt tree = new qt(1);
+        tree.init(1, sideLength * sideLength);
+        tree.assign(imgArray);
+
+
+        for (int i = 1; i <= imgArray.length; i++) {
+            System.out.print(tree.getPixelByChar(i));
+        }
+        System.out.println();
+        for (int i = 1; i <= imgArray.length; i++) {
+            System.out.print(imgArray[i - 1]);
+        }
+        
+        System.out.println("\n\n");
+        System.out.println(tree.print());
+        System.out.println("\n\n");
+        System.out.println("Pre optimization leaf count = " + tree.leafCount());
+        System.out.println("Pre optimization node count = " + tree.nodeCount());
+        tree.optimize();
+        System.out.println("Post optimization leaf count = " + tree.leafCount());
+        System.out.println("Post optimization node count = " + tree.nodeCount());
+        System.out.println("\n\n");
+        System.out.println(tree.print());
+        System.out.println("\n\n");
     }
 }
