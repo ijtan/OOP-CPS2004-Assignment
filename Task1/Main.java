@@ -41,7 +41,6 @@ public class Main {
                 j = 0;
             }
         }
-
         System.out.println("\n\n");
         System.out.println("Assigned tree print");
         System.out.println(tree.print());
