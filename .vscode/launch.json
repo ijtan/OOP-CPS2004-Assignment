@@ -6,6 +6,27 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Main",
+            "request": "launch",
+            "mainClass": "newTask1.Main",
+            "projectName": "cps2004-oop-assignment_f73c9c1f"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - main",
+            "request": "launch",
+            "mainClass": "newTask1.main",
+            "projectName": "cps2004-oop-assignment_f73c9c1f"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - MainSplitQT",
+            "request": "launch",
+            "mainClass": "Task1.MainSplitQT",
+            "projectName": "cps2004-oop-assignment_f73c9c1f"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch) - Current File",
             "request": "launch",
             "mainClass": "${file}"

@@ -44,6 +44,7 @@ public class qt {
         this.start = subTrees[0].start;
         this.end = subTrees[3].end;
 
+        System.out.println("node init: "+this.start + " - "+this.end);
         return this;
     }
 
@@ -70,7 +71,7 @@ public class qt {
         var indexes = indexShifter();
         for (int i = 1; i <= img.length; i++){
             this.setPixel(img[indexes.get(i - 1) - 1], i);
-            System.out.println("Setting (tr)"+i+" to "+ indexes.get(i - 1) + " - " + img[indexes.get(i - 1)]+"/"+ img[indexes.get(i - 1) - 1]);
+            System.out.println("Setting (tr)"+i+" to "+ indexes.get(i - 1) + " - " + img[indexes.get(i - 1) - 1]+"/"+ getPixel(i));
         }
     }
 
@@ -83,9 +84,8 @@ public class qt {
             for (qt q : subTrees) {
                 if (q.contains(index))
                     return q.setPixel(pixel, index);
-                if (q.isLeaf)
-                    q.setPixel(pixel, index);
             }
+        System.out.println("falsing");
         return false;
     }
 
@@ -108,6 +108,7 @@ public class qt {
     }
 
     public void optimize() {
+        var indexes = indexShifter();
         if (this.isLeaf)
             return;
 
@@ -124,7 +125,7 @@ public class qt {
                     || (!subTrees[0].state && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can
                                                                                                                  // be
                                                                                                                  // absorbed
-                System.out.println("Absorbing indexes: " + subTrees[0].start + " - " + subTrees[3].end);
+                System.out.println("Absorbing indexes: " + indexes.get(subTrees[0].start-1) + " - " + indexes.get(subTrees[3].end-1));
                 this.state = subTrees[0].state;
                 this.size = 1;
                 this.isLeaf = true;
@@ -133,8 +134,15 @@ public class qt {
                 this.end = subTrees[3].end;
 
                 this.subTrees = null;
+                return;
             }
         }
+        System.err.println("child nodes: "+allChildrenAreLeaves);
+        System.out.println("" + subTrees[0].state + subTrees[1].state + subTrees[2].state + subTrees[3].state);
+        System.out.println("" + indexes.get(subTrees[0].start-1) + " - " +  indexes.get(subTrees[0].end-1));
+        System.out.println("" + indexes.get(subTrees[1].start-1) + " - " +  indexes.get(subTrees[1].end-1));
+        System.out.println("" + indexes.get(subTrees[2].start-1) + " - " +  indexes.get(subTrees[2].end-1));
+        System.out.println("" + indexes.get(subTrees[3].start-1) + " - " +  indexes.get(subTrees[3].end-1));
     }
 
     public int nodeCount() {

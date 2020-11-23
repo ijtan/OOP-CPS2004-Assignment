@@ -3,7 +3,7 @@ package Task1;
 // import java.util.ArrayList;
 // import java.util.List;
 
-public class Main {
+public class MainQT {
     public static void main(String args[]) {
         String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
                 + "FFFFTTTT\n" + "FFFFTTTF\n";

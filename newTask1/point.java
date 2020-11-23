@@ -1,4 +1,4 @@
-package Task1;
+package newTask1;
 
 public class point {
     int x,y;
