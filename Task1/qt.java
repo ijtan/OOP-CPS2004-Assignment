@@ -26,6 +26,8 @@ public class qt {
         if (size >= max) {
             this.isLeaf = true;
             subTrees = null;
+            var indexes = indexShifter();
+            this.index = indexes.get(index - 1);
             this.start = this.end = this.index;
             this.size = 1;
             return this;
@@ -66,6 +68,19 @@ public class qt {
         return indexes;
 
     }
+    public int recursePrint(){
+        
+        if(this.isLeaf){
+            // return getPixelByChar(this.index);
+            return index;
+        }
+        for (qt q : subTrees) {
+            System.out.print( q.recursePrint() );
+            System.out.print(' ');
+        }
+        System.out.println('\n');
+        return 0;
+    }
 
     public void assign(char[] img) {
         var indexes = indexShifter();
@@ -73,6 +88,19 @@ public class qt {
             this.setPixel(img[indexes.get(i - 1) - 1], i);
             System.out.println("Setting (tr)"+i+" to "+ indexes.get(i - 1) + " - " + img[indexes.get(i - 1) - 1]+"/"+ getPixel(i));
         }
+
+        // var indexes = indexShifter();
+        // // here we shift from the absolute addresing to the split addressing used in the
+        // // trees
+        // // char[] formatted = new char[max];
+        // for (int i = 1; i < max; i++)
+            // setPixel(img[i], indexes.get(i - 1) - 1);
+
+        // formatted.toString();
+        // String split = ""; // Here we simply add spaces every 8 characters for formatting
+        // for (int i = 1; i <= formatted.length; i++) {
+            
+        // }
     }
 
     public boolean setPixel(char pixel, int index) {
@@ -125,7 +153,8 @@ public class qt {
                     || (!subTrees[0].state && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can
                                                                                                                  // be
                                                                                                                  // absorbed
-                System.out.println("Absorbing indexes: " + indexes.get(subTrees[0].start-1) + " - " + indexes.get(subTrees[3].end-1));
+                // System.out.println("Absorbing indexes: " + indexes.get(subTrees[0].start-1) + " - " + indexes.get(subTrees[3].end-1));
+                System.out.println("Absorbing indexes: " + subTrees[0].start + " - " + subTrees[3].end);
                 this.state = subTrees[0].state;
                 this.size = 1;
                 this.isLeaf = true;
@@ -137,12 +166,12 @@ public class qt {
                 return;
             }
         }
-        System.err.println("child nodes: "+allChildrenAreLeaves);
-        System.out.println("" + subTrees[0].state + subTrees[1].state + subTrees[2].state + subTrees[3].state);
-        System.out.println("" + indexes.get(subTrees[0].start-1) + " - " +  indexes.get(subTrees[0].end-1));
-        System.out.println("" + indexes.get(subTrees[1].start-1) + " - " +  indexes.get(subTrees[1].end-1));
-        System.out.println("" + indexes.get(subTrees[2].start-1) + " - " +  indexes.get(subTrees[2].end-1));
-        System.out.println("" + indexes.get(subTrees[3].start-1) + " - " +  indexes.get(subTrees[3].end-1));
+        // System.err.println("child nodes: "+allChildrenAreLeaves);
+        // System.out.println("" + subTrees[0].state + subTrees[1].state + subTrees[2].state + subTrees[3].state);
+        // System.out.println("" + indexes.get(subTrees[0].start-1) + " - " +  indexes.get(subTrees[0].end-1));
+        // System.out.println("" + indexes.get(subTrees[1].start-1) + " - " +  indexes.get(subTrees[1].end-1));
+        // System.out.println("" + indexes.get(subTrees[2].start-1) + " - " +  indexes.get(subTrees[2].end-1));
+        // System.out.println("" + indexes.get(subTrees[3].start-1) + " - " +  indexes.get(subTrees[3].end-1));
     }
 
     public int nodeCount() {
@@ -178,6 +207,7 @@ public class qt {
         var indexes = indexShifter();
         // here we shift from the absolute addresing to the split addressing used in the
         // trees
+        var newlineInterval = Math.sqrt(max);
         char[] formatted = new char[max];
         for (int i = 1; i <= max; i++)
             formatted[indexes.get(i - 1) - 1] = getPixelByChar(i);
@@ -186,6 +216,26 @@ public class qt {
         String split = ""; // Here we simply add spaces every 8 characters for formatting
         for (int i = 1; i <= formatted.length; i++) {
             split += formatted[i - 1];
+            if (i % newlineInterval == 0)
+                split += '\n';
+        }
+        return split;
+    }
+
+    public String printIndex() {
+
+        var indexes = indexShifter();
+        // here we shift from the absolute addresing to the split addressing used in the
+        // trees
+        int[] formatted = new int[max];
+        for (int i = 1; i <= max; i++)
+            formatted[i-1] = indexes.get(i - 1) - 1;
+
+        formatted.toString();
+        String split = ""; // Here we simply add spaces every 8 characters for formatting
+        for (int i = 1; i <= formatted.length; i++) {
+            split += formatted[i - 1];
+            split += '\t';
             if (i % 8 == 0)
                 split += '\n';
         }

@@ -8,6 +8,13 @@
             "type": "java",
             "name": "CodeLens (Launch) - Main",
             "request": "launch",
+            "mainClass": "Task1.Main",
+            "projectName": "cps2004-oop-assignment_d97b741e"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Main",
+            "request": "launch",
             "mainClass": "newTask1.Main",
             "projectName": "cps2004-oop-assignment_f73c9c1f"
         },
