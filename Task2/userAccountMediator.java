@@ -5,60 +5,26 @@ import java.util.List;
 
 public class userAccountMediator {
 
-
     private static List<request> requests = new ArrayList<request>();
-    private static List<user> users = new ArrayList<user>();
 
-    public static user getUser(String id) {
-        for (user u : users)
-            if (u.getID() == id)
-                return u;
-        return null;
-    }
-
-    public static void addUser(String id){
-        user u = new user();
-        users.add(u);
-    }
+    // public static user getUser(String id) {
+    //     return userManager.getUser(id);
+    // }
 
     public static void addAccountToUser(String id, account acc) {
-        for (user u : users) {
-            if (u.getID() == id) {
-                u.addAccount(acc);
-                return;
-            }
-        }
+        userManager.getUser(id).addAccount(acc);
     }
 
     public static void removeAccountFromUser(String id, account acc) {
-        for (user u : users) {
-            if (u.getID() == id) {
-                try {
-                    u.removeAccount(acc);
-                } catch (Exception e) {
-                    System.err.println("Could not remove account: " + e.getMessage());
-                }
-                return;
-            }
+        try {
+            userManager.getUser(id).removeAccount(acc);
+        } catch (Exception e) {
+            System.err.println("Unable to remove account: "+e.getMessage());
         }
     }
 
-    public static user getUserWithAccount(int accountNumber) {
-        for (user u : users) {
-            if (u.getAccount(accountNumber) != null) {
-                return u;
-            }
-        }
-        return null;
-    }
-
-    public static account getAccount(int accountNumber) {
-        for (user u : users) {
-            if (u.getAccount(accountNumber) != null) {
-                return u.getAccount(accountNumber);
-            }
-        }
-        return null;
+    public static account getAccount(String userID, int accountNumber) {
+        return userManager.getUser(userID).getAccount(accountNumber);
     }
 
 
@@ -97,14 +63,12 @@ public class userAccountMediator {
     }
 
     public static void addCardToAccount(String userID, int AccountNumber, card cr) {
-        var user = getUser(userID);
-        var account = getAccount(AccountNumber);
-        user.addCard(cr, account);
+        var account = getAccount(userID, AccountNumber);
+        account.addCard(cr);
     }
 
     public static void removeCardFromAccount(String userID, int AccountNumber, card cr) {
-        var user = getUser(userID);
-        var account = getAccount(AccountNumber);
+        var account = getAccount(userID, AccountNumber);
         try {
             account.removeCard(cr);
         } catch (Exception e) {
@@ -113,9 +77,10 @@ public class userAccountMediator {
         
     }
 
-    public static void transact(int senderAccount, int recieverAccount, double amount){
-        account sender = getAccount(senderAccount);
-        account reciever = getAccount(recieverAccount);
+    public static void transact(String senderID, int senderAccount, int recieverAccount, double amount){
+        account sender = getAccount(senderID, senderAccount);
+        String recieverId = userManager.getOwner(recieverAccount);
+        account reciever = getAccount(recieverId, recieverAccount);
         try{
         sender.subtract(amount);
         reciever.add(amount);
@@ -127,14 +92,14 @@ public class userAccountMediator {
     }
 
     public static void joinAccount(int accountNo, String newUserId){
-        account a = getAccount(accountNo);
+        account a = getAccount(newUserId, accountNo);
         if(a == null){
             System.err.println("Account not found!");
         }
         addAccountToUser(newUserId, a);
     }
 
-    public static char getCurrency(int accountNumber){
-        return getAccount(accountNumber).getCurrency();
+    public static char getCurrency(String userID, int accountNumber){
+        return getAccount(userID, accountNumber).getCurrency();
     }
 }

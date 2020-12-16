@@ -7,13 +7,13 @@ public class user {
     private ArrayList<String> transactions = new ArrayList<String>();
     private String name, surname, id;
 
-    public boolean moveMoney(double value, int myAccount, int recipient) {
+    public boolean moveMoney(double value, int myAccount, int recipientAccountNumber) {
         // if (bankHoliday) 
         //     return false;
         
-        userAccountMediator.transact(myAccount, recipient, value);
+        userAccountMediator.transact(this.getID(), myAccount, recipientAccountNumber, value);
 
-        transactions.add("Sent money from account ["+myAccount+"] to account [" + recipient+"] a value of" + userAccountMediator.getCurrency(myAccount) + value);
+        transactions.add("Sent money from account ["+myAccount+"] to account [" + recipientAccountNumber+"] a value of" + userAccountMediator.getCurrency(id, myAccount) + value);
         return true;
 
     }
@@ -54,16 +54,6 @@ public class user {
     }
     public String getID(){
         return id;
-    }
-
-    public void addCard(card cr, account a){
-        if(this.accounts.contains(a)){
-            var acc = this.accounts.get(this.accounts.indexOf(a));
-            acc.addCard(cr);
-            this.accounts.set(this.accounts.indexOf(a), acc);
-        }else
-            System.err.println("Account not found!");
-        
     }
 
     public account getAccount(int accNumber){
