@@ -5,7 +5,10 @@ package Task1;
 
 public class Main {
     public static void main(String args[]) {
-        String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
+        // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
+        //         + "FFFFTTTT\n" + "FFFFTTTF\n";
+
+        String exampleImg = "FFFFTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
                 + "FFFFTTTT\n" + "FFFFTTTF\n";
                 
         // System.out.println("Starting!");
@@ -28,27 +31,9 @@ public class Main {
             System.out.print(imgArray[i - 1]);
         }
 
-        // System.out.println("\n\n");
-        // System.out.println("test indexes");
-        
-        // int j =0;
-        // for (int i : tree.indexShifter()) {
-        //     System.out.print(i+"\t");
-        //     j++;
 
-        //     if(j==8){
-        //         System.out.println();
-        //         j = 0;
-        //     }
-        // }
-
-
-        // System.out.println("testing assigned indexes::::");
-        // System.out.println(tree.printIndex());
-
-
-        System.out.println("\nrecurse print");
-        System.out.println(tree.recursePrint());
+        // System.out.println("\nrecurse print");
+        // System.out.println(tree.recursePrint());
 
         System.out.println("\n\n");
         System.out.println("Assigned tree print");
