@@ -18,7 +18,7 @@ public class Main {
 
         System.out.println("Diff checker");
         System.out.println("assigned");
-        for (int i : tree.indexShifter()) {
+        for (int i = 1; i <= imgArray.length; i++) {
             System.out.print(tree.getPixelByChar(i));
         }
         
@@ -28,26 +28,26 @@ public class Main {
             System.out.print(imgArray[i - 1]);
         }
 
-        System.out.println("\n\n");
-        System.out.println("test indexes");
+        // System.out.println("\n\n");
+        // System.out.println("test indexes");
         
-        int j =0;
-        for (int i : tree.indexShifter()) {
-            System.out.print(i+"\t");
-            j++;
+        // int j =0;
+        // for (int i : tree.indexShifter()) {
+        //     System.out.print(i+"\t");
+        //     j++;
 
-            if(j==8){
-                System.out.println();
-                j = 0;
-            }
-        }
-
-
-        System.out.println("testing assigned indexes::::");
-        System.out.println(tree.printIndex());
+        //     if(j==8){
+        //         System.out.println();
+        //         j = 0;
+        //     }
+        // }
 
 
-        System.out.println("recurse print");
+        // System.out.println("testing assigned indexes::::");
+        // System.out.println(tree.printIndex());
+
+
+        System.out.println("\nrecurse print");
         System.out.println(tree.recursePrint());
 
         System.out.println("\n\n");
