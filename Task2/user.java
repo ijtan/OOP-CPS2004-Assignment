@@ -3,52 +3,76 @@ package Task2;
 import java.util.ArrayList;
 
 public class user {
-    ArrayList<account> accounts = new ArrayList<account>();
-    ArrayList<String> transactions = new ArrayList<String>();
-    String name, surname, id;
+    private ArrayList<account> accounts = new ArrayList<account>();
+    private ArrayList<String> transactions = new ArrayList<String>();
+    private String name, surname, id;
 
-    public boolean moveMoney(int value, account myAccount, account recipient, boolean bankHoliday) {
-        int myAccIndex;
+    public boolean moveMoney(double value, int myAccount, int recipient) {
+        // if (bankHoliday) 
+        //     return false;
+        
+        userAccountMediator.transact(myAccount, recipient, value);
 
-        if(bankHoliday){
-            return false;
-        }
-        if ((myAccIndex = accounts.indexOf(myAccount)) == -1) {
-            return false;
-        }
-        myAccount = accounts.get(myAccIndex);
-
-        if (myAccount.balance < value)
-            return false;
-        if (recipient.currency != myAccount.currency)
-            return false;
-
-        if(!myAccount.subtract(value))
-            return false;
-        recipient.add(value);
-
-        transactions.add("Sent money from account ["+myAccount.accountNo+"] to account [" + recipient.accountNo+"] a value of" + recipient.currency + value);
+        transactions.add("Sent money from account ["+myAccount+"] to account [" + recipient+"] a value of" + userAccountMediator.getCurrency(myAccount) + value);
         return true;
 
     }
 
 
-    public request requestNewAccount(){
-        request r = new request(this);
-        return r;
+    public void requestNewAccount(){
+        userAccountMediator.requestNewAccount(this.id);
     }
 
     
 
-    public int getBalance(account a){
+    public double getBalance(account a){
         if(accounts.contains(a))
-            return a.balance;
+            return a.getBalance();
         return -1;
     }
+
     public String listAccounts(){
         String accList = "";
         for (account acc : accounts) 
-            accList+=acc.accountNo+" | "+acc.currency+acc.balance+'\n';
+            accList+=acc.getAccountNumber()+"\t | "+acc.getCurrency()+acc.getBalance()+'\n';
         return accList;
     }
+
+    public String getFullName(){
+        return name + " " + surname;
+    }
+
+    public void addAccount(account a) {
+        this.accounts.add(a);
+    }
+
+    public void removeAccount(account a) throws Exception {
+        if(this.accounts.contains(a))
+            this.accounts.remove(a);
+        else
+            throw new Exception("Account not found!");
+    }
+    public String getID(){
+        return id;
+    }
+
+    public void addCard(card cr, account a){
+        if(this.accounts.contains(a)){
+            var acc = this.accounts.get(this.accounts.indexOf(a));
+            acc.addCard(cr);
+            this.accounts.set(this.accounts.indexOf(a), acc);
+        }else
+            System.err.println("Account not found!");
+        
+    }
+
+    public account getAccount(int accNumber){
+        for (account acc : accounts) {
+            if(acc.getAccountNumber() == accNumber)
+                return acc;
+        }
+        System.err.println("Account not found");
+        return null;
+    }
+
 }
