@@ -5,32 +5,32 @@ package Task1;
 
 public class Main {
     public static void main(String args[]) {
-        // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
-        //         + "FFFFTTTT\n" + "FFFFTTTF\n";
+        // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n"
+        // + "FFFFTTFF\n" + "FFFFTTFF\n"
+        // + "FFFFTTTT\n" + "FFFFTTTF\n";
 
         String exampleImg = "FFFFTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
                 + "FFFFTTTT\n" + "FFFFTTTF\n";
-                
+
         // System.out.println("Starting!");
         char[] imgArray = exampleImg.replaceAll("\n", "").toCharArray();
         int sideLength = (int) Math.sqrt(imgArray.length);
 
-        qt tree = new qt(1);
-        tree.init(1, sideLength * sideLength);
-        tree.assign(imgArray);
+        qt tree = new qt(1, imgArray);
+        tree.init(1, sideLength * sideLength, false);
+        // tree.assign(imgArray);
 
         System.out.println("Diff checker");
         System.out.println("assigned");
         for (int i = 1; i <= imgArray.length; i++) {
             System.out.print(tree.getPixelByChar(i));
         }
-        
+
         System.out.println();
         System.out.println("original");
         for (int i = 1; i <= imgArray.length; i++) {
             System.out.print(imgArray[i - 1]);
         }
-
 
         // System.out.println("\nrecurse print");
         // System.out.println(tree.recursePrint());

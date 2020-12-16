@@ -45,32 +45,51 @@ public class qt {
         this.start = startIndex;
         this.end = endIndex;
 
-        
-
-        for (int i = 0; i < subTrees.length; i++) {
-            subTrees[i] = new qt(startIndex + i, img);
+        var indeces = indexShifter();
+        for (int i = 1; i < subTrees.length; i++) {
+            subTrees[i] = new qt(indeces.get(startIndex + i - 2), img);
             subTrees[i].init(size * 4, max);
 
-            if(!subTrees[i].isLeaf)
+            if (!subTrees[i].isLeaf)
                 subIndeces.addAll(subTrees[i].subIndeces);
             else
                 subIndeces.add(subTrees[i].index);
         }
+
         this.start = subTrees[0].start;
         this.end = subTrees[3].end;
-        
 
-        System.out.println("node init: "+this.start + " - "+this.end);
+        System.out.println("node init: " + this.start + " - " + this.end);
         return this;
     }
-    public int recursePrint(){
-        
-        if(this.isLeaf){
+
+    public ArrayList<Integer> indexShifter() {
+        double size = (int) Math.sqrt(max) / 2;
+        ArrayList<Integer> indexes = new ArrayList<Integer>();
+        for (int i = 0; i < max; i += (max / 4)) {
+            for (int j = 0; j < size; j++) {
+                int now = 4 * j + i;
+                indexes.add(now + 1);
+                indexes.add(now + 2);
+            }
+            for (int j = 0; j < size; j++) {
+                int now = 4 * j + i;
+                indexes.add(now + 3);
+                indexes.add(now + 4);
+            }
+        }
+        return indexes;
+
+    }
+
+    public int recursePrint() {
+
+        if (this.isLeaf) {
             // return getPixelByChar(this.index);
             return index;
         }
         for (qt q : subTrees) {
-            System.out.print( q.recursePrint() );
+            System.out.print(q.recursePrint());
             System.out.print(' ');
         }
         System.out.println('\n');
@@ -79,29 +98,29 @@ public class qt {
 
     public void assign(char[] img) {
         // var indexes = indexShifter();
-        for (int i = 0; i < img.length; i++){
+        for (int i = 0; i < img.length; i++) {
             // this.setPixel(img[indexes.get(i - 1) - 1], i);
-            this.setPixel(img[i], i+1);
-            System.out.println("Setting " + (i+1) + " to " + img[i]+ "/"+ getPixel(i+1));
+            this.setPixel(img[i], i + 1);
+            System.out.println("Setting " + (i + 1) + " to " + img[i] + "/" + getPixel(i + 1));
         }
     }
 
     public boolean setPixel(char pixel, int index) {
         if (this.isLeaf && (this.index == index || this.contains(index) || this.subIndeces.contains(index))) {
             this.state = charToBool(pixel);
-            System.out.println("I with index: "+this.index +" was called wiith index: "+index+" and have been assigned: "+pixel);
+            System.out.println("I with index: " + this.index + " was called wiith index: " + index
+                    + " and have been assigned: " + pixel);
             return true;
         }
-        
-        else if (this.isLeaf && this.index != index){
+
+        else if (this.isLeaf && this.index != index) {
             System.out.println("wrong leaf!");
             return true;
         }
-            
 
         if (!this.isLeaf)
             for (qt q : subTrees) {
-                if (q.contains(index)  || q.absorbed.contains(index) || q.index == index)
+                if (q.contains(index) || q.absorbed.contains(index) || q.index == index)
                     return q.setPixel(pixel, index);
             }
         else
@@ -111,23 +130,22 @@ public class qt {
     }
 
     public boolean contains(int x) {
-        if(subIndeces.contains(x))
+        if (subIndeces.contains(x))
             return true;
         return false;
     }
 
     public int getPixel(int index) {
         if (this.isLeaf && (this.index == index || this.contains(index) || this.absorbed.contains(index)))
-            if(this.index == index)
+            if (this.index == index)
                 return state ? 1 : 0;
             else
                 return state ? 20 : 10;
-        if(subTrees != null){
-            for (qt q : subTrees) 
-                if(q.contains(index) || q.absorbed.contains(index) || q.index == index)
+        if (subTrees != null) {
+            for (qt q : subTrees)
+                if (q.contains(index) || q.absorbed.contains(index) || q.index == index)
                     return q.getPixel(index);
-        }
-        else            
+        } else
             return 3;
 
         return 4;
@@ -151,7 +169,8 @@ public class qt {
                     || (!subTrees[0].state && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can
                                                                                                                  // be
                                                                                                                  // absorbed
-                // System.out.println("Absorbing indexes: " + indexes.get(subTrees[0].start-1) + " - " + indexes.get(subTrees[3].end-1));
+                // System.out.println("Absorbing indexes: " + indexes.get(subTrees[0].start-1) +
+                // " - " + indexes.get(subTrees[3].end-1));
                 System.out.println("Absorbing indexes: " + subTrees[0].start + " - " + subTrees[3].end);
                 this.state = subTrees[0].state;
                 this.size = 1;
@@ -160,10 +179,9 @@ public class qt {
                 this.start = subTrees[0].start;
                 this.end = subTrees[3].end;
                 for (qt q : subTrees) {
-                    if(q.subIndeces != null)
+                    if (q.subIndeces != null)
                         this.absorbed.addAll(q.subIndeces);
                 }
-                
 
                 this.subTrees = null;
                 return;
@@ -196,12 +214,11 @@ public class qt {
             return 'T';
         if (getPixel(index) == 0)
             return 'F';
-        
+
         if (getPixel(index) == 20)
             return 'U';
         if (getPixel(index) == 10)
             return 'D';
-
 
         if (getPixel(index) == 3)
             return 'X';
