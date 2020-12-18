@@ -14,7 +14,6 @@ public class qt {
         
         this.index = index;
         this.isLeaf = false;
-        System.out.println("My index is: " + index);
     }
 
     public qt init(int size, char[] image) {
