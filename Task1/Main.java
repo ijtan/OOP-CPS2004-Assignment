@@ -10,63 +10,39 @@ public class Main {
         String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
                 + "FFFFTTTT\n" + "FFFFTTTF\n";
 
-        // System.out.println("Starting!");
-        char[] imgArray = exampleImg.replaceAll("\n", "").toCharArray();
-        int sideLength = (int) Math.sqrt(imgArray.length);
-
-        qt tree = new qt(1);    
-
-
-
-        tree.init(1, sideLength * sideLength, imgArray);
-        System.out.println("\n\n");
-
-        // tree.assign(imgArray);
+        
+        String image = imageProcessor.preprocess(exampleImg.replaceAll("\n", ""));
+        qt tree = new qt(1);
+        tree.init(1, image.toCharArray());
 
         System.out.println("Diff checker");
         System.out.println("assigned");
         // for (int i = 1; i < 65; i++) {
-            for(int i: tree.indeces){
-            System.out.print(tree.getPixelByChar(i+1));
+            for(int i = 1; i <= image.length(); i++){
+                System.out.print(tree.getPixelByChar(i));
         }
 
         System.out.println();
         System.out.println("original");
-        for (int i = 1; i <= imgArray.length; i++) 
-            System.out.print(imgArray[i - 1]);
+        for (int i = 1; i <= exampleImg.length(); i++) 
+            System.out.print(exampleImg.charAt(i - 1));
         
 
        
 
         System.out.println("\n\n");
-        System.out.println("Assigned tree print");
-        System.out.println(tree.print());
-        System.out.println("\n\n");
+        // System.out.println("Assigned tree print");
+        // System.out.println(tree.print());
+        // System.out.println("\n\n");
         System.out.println("Pre optimization leaf count = " + tree.leafCount());
         System.out.println("Pre optimization node count = " + tree.nodeCount());
+        
+        System.out.println("Optimizing Tree...");
         tree.optimize();
-
-
-
-
-
-
-
-        System.out.println("Diff checker2");
-        System.out.println("assigned2");
-        // for (int i = 1; i < 65; i++) {
-        for (int i : tree.indeces) {
-            System.out.print(tree.getPixelByChar(i + 1));
-        }
-
-        System.out.println();
-        System.out.println("original2");
-        for (int i = 1; i <= imgArray.length; i++)
-            System.out.print(imgArray[i - 1]);
-        System.out.println();
 
         System.out.println("Post optimization leaf count = " + tree.leafCount());
         System.out.println("Post optimization node count = " + tree.nodeCount());
+        
         System.out.println("\n\n");
         System.out.println(tree.print());
         System.out.println("\n\n");
