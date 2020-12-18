@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class qt {
+    
     int index;
     int start, end;
     // False = Black
@@ -12,7 +13,7 @@ public class qt {
     boolean isLeaf;
     int size;
     int max;
-
+    ArrayList<Integer> indeces;
     qt subTrees[];
     // List<Integer> subIndices = new ArrayList<Integer>();
 
@@ -25,6 +26,7 @@ public class qt {
 
     public qt init(int size, int max) {
         this.max = max;
+        this.indeces = indexShifter(max);
         if (size >= max) {
             this.isLeaf = true;
             subTrees = null;
@@ -53,19 +55,45 @@ public class qt {
         return this;
     }
 
-    public ArrayList<Integer> indexShifter() {
-        double size = (int) Math.sqrt(max) / 2;
+    public ArrayList<Integer> indexShifter(int current) {
+        ArrayList<Integer> prevIndeces = new ArrayList<Integer>();
+        if(current <= 4){
+            prevIndeces.add(0);
+            prevIndeces.add(1);
+            prevIndeces.add(2);
+            prevIndeces.add(3);
+            return prevIndeces;
+        }
+        prevIndeces = indexShifter(current / 4);
+        
+        double size = (int) Math.sqrt(current) / 2;
+
         ArrayList<Integer> indexes = new ArrayList<Integer>();
-        for (int i = 0; i < max; i += (max / 4)) {
+
+        for (int i = 0; i < size; i += 1) { //how many y axis (*2)
             for (int j = 0; j < size; j++) {
-                int now = 4 * j + i;
+                int now = 4 * prevIndeces.get(j) + 8 * prevIndeces.get(i);
+                indexes.add(now + 0);
                 indexes.add(now + 1);
-                indexes.add(now + 2);
             }
             for (int j = 0; j < size; j++) {
-                int now = 4 * j + i;
+                int now = 4 * prevIndeces.get(j) + 8 * prevIndeces.get(i);
+                indexes.add(now + 2);
                 indexes.add(now + 3);
-                indexes.add(now + 4);
+            }
+        }
+
+        System.out.println("test indexes: "+current);
+
+        int j = 0;
+        if(this.indeces == null)
+        for (int i : indexes) {
+            System.out.print(i + "\t");
+            j++;
+
+            if (j == Math.sqrt(current)) {
+                System.out.println();
+                j = 0;
             }
         }
         return indexes;
@@ -111,12 +139,11 @@ public class qt {
    } 
 
     public void assign(char[] image) {
-        var indexes = indexShifter();
 
         char[] formatted = new char[max];
         for (int i = 0; i < image.length; i++){
-            formatted[indexes.get(i) - 1] = image[i];
-            System.out.println("formatting "+ (indexes.get(i)) + " to "+ image[i]);
+            formatted[indeces.get(i)] = image[i];
+            System.out.println("formatting "+ (indeces.get(i)) + " to "+ image[i]);
         }
         String fString = formatted.toString();
         System.out.println("This is the forrmatted string: "+ fString);
@@ -244,13 +271,12 @@ public class qt {
 
     public String print(char[] img) {
 
-        var indexes = indexShifter();
         // here we shift from the absolute addresing to the split addressing used in the
         // trees
         var newlineInterval = Math.sqrt(max);
         char[] formatted = new char[max];
         for (int i = 1; i <= max; i++)
-            formatted[indexes.get(i - 1) - 1] = getPixelByChar(i);
+            formatted[indeces.get(i-1)] = getPixelByChar(i);
 
         formatted.toString();
 
