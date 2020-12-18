@@ -8,6 +8,20 @@ public class imageProcessor {
         return print;       
     }
 
+    public static String readCSV(String filename){
+        String image = "";
+        return image;
+    }
+    
+    public static String readFile(String filename) {
+        String image = "";
+        return image;
+    }
+
+    public static char[] preprocess(String filename) {
+    char[] image = {' '};
+        return image;
+    }
 }
 
 

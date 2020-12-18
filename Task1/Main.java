@@ -18,23 +18,10 @@ public class Main {
 
 
 
-        tree.init(1, sideLength * sideLength);
+        tree.init(1, sideLength * sideLength, imgArray);
         System.out.println("\n\n");
-        // System.out.println("test indexes");
 
-        // int j = 0;
-        // for (int i : tree.indeces) {
-        //     System.out.print(i + "\t");
-        //     j++;
-
-        //     if (j == 8) {
-        //         System.out.println();
-        //         j = 0;
-        //     }
-        // }
-        // System.out.println("recurse shift");
-        // System.out.println(tree.recurseShift());
-        tree.assign(imgArray);
+        // tree.assign(imgArray);
 
         System.out.println("Diff checker");
         System.out.println("assigned");

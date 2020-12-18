@@ -7,38 +7,27 @@ import javax.swing.plaf.synth.SynthSpinnerUI;
 
 public class qt {
 
-    int index;
-    int start, end;
-    // False = Black
-    // True = White
-    boolean state;
-    boolean isLeaf;
-    int size;
-    int max;
+    boolean state, isLeaf;
+    int size, max, index;
+    qt parent, subTrees[];
     ArrayList<Integer> indeces;
     ArrayList<Integer> contained = new ArrayList<Integer>();
-    qt subTrees[];
-    qt parent;
-
-    // List<Integer> subIndices = new ArrayList<Integer>();
+   
 
     public qt(int index) {
-        // System.out.println("I have been initated with index: "+index);
         this.index = index;
         this.isLeaf = false;
-        // this.init(4, (end.x-start.x+1 * end.y-start.y+1));
+        
     }
 
-    public qt init(int size, int max) {
+    public qt init(int size, int max, char[] image) {
         this.max = max;
         this.indeces = indexShifter(max);
+
+
         if (size >= max) {
             this.isLeaf = true;
             subTrees = null;
-            // var indexes = indexShifter();
-            // this.index = indexes.get(index - 1);
-
-            this.start = this.end = this.index;
             this.size = 1;
             parent.contained.add(index);
             this.contained.add(index);
@@ -46,25 +35,16 @@ public class qt {
         }
         subTrees = new qt[4];
 
-        int startIndex = 4 * (this.index - 1) + 1;
-        int endIndex = 4 * (this.index);
-        this.start = startIndex;
-        this.end = endIndex;
+        int startIndex = 4 * this.index;
 
         for (int i = 0; i < subTrees.length; i++) {
             subTrees[i] = new qt(startIndex + i);
             subTrees[i].parent = this;
-            subTrees[i].init(size * 4, max);
+            subTrees[i].init(size * 4, max, image);
         }
-        this.start = subTrees[0].start;
-        this.end = subTrees[3].end;
+
         if (parent != null)
             parent.contained.addAll(this.contained);
-        System.out.print("not initalized and i contain: ");
-        for (Integer integer : contained)
-            System.out.print(integer + ", ");
-        System.out.println();
-        // System.out.println("node init: " + this.start + " - " + this.end);
 
         return this;
     }
@@ -72,6 +52,7 @@ public class qt {
     public ArrayList<Integer> indexShifter(int current) {
         ArrayList<Integer> prevIndeces = new ArrayList<Integer>();
         if (current <= 4) {
+            prevIndeces = {1,2,3,4};
             prevIndeces.add(0);
             prevIndeces.add(1);
             prevIndeces.add(2);
@@ -96,74 +77,16 @@ public class qt {
                 indexes.add(now + 3);
             }
         }
-
-        // System.out.println("test indexes: "+current);
-
-        // int j = 0;
-        // if(this.indeces == null)
-        // for (int i : indexes) {
-        // System.out.print(i + "\t");
-        // j++;
-
-        // if (j == Math.sqrt(current)) {
-        // System.out.println();
-        // j = 0;
-        // }
-        // }
         return indexes;
-
-    }
-
-    public static int log(int x, int b) {
-        return (int) (Math.log(x) / Math.log(b));
-    }
-
-    // public int recurseShift() {
-    // System.out.println("shifting " + index + " to " + indexShifter().get(index -
-    // 1));
-    // this.index = indexShifter().get(index - 1);
-
-    // if (this.isLeaf) {
-    // // return getPixelByChar(this.index);
-    // return index;
-    // }
-    // for (qt q : subTrees) {
-    // q.recurseShift();
-    // // System.out.print(' ');
-    // if(q.isLeaf)
-    // this.subIndices.add(q.index);
-    // else
-    // this.subIndices.addAll(q.subIndices);
-    // }
-    // this.start = subTrees[0].index;
-    // this.end = subTrees[3].index;
-    // this.subIndices.clear();
-    // // System.out.println('\n');
-    // return 0;
-    // }
-
-    public void testShift() {
-        ArrayList<qt> childTrees = new ArrayList<qt>();
-
-        for (qt q : subTrees) {
-            childTrees.add(q);
-        }
     }
 
     public void assign(char[] image) {
-
         char[] formatted = new char[max];
-        for (int i = 0; i < image.length; i++) {
+        for (int i = 0; i < image.length; i++)
             formatted[indeces.get(i)] = image[i];
-            System.out.println("formatting " + (indeces.get(i)) + " to " + image[i]);
-        }
-        String fString = formatted.toString();
-        System.out.println("This is the forrmatted string: " + fString);
-
-        for (int i = 1; i <= formatted.length; i++) {
+        for (int i = 1; i <= formatted.length; i++) 
             this.setPixel(formatted[i - 1], i);
-            System.out.println("Setting " + i + " to " + formatted[i - 1] + "/" + getPixel(i));
-        }
+        
     }
 
     public boolean setPixel(char pixel, int index) {
@@ -224,28 +147,13 @@ public class qt {
         }
         if (allChildrenAreLeaves) {
             if ((subTrees[0].state && subTrees[1].state && subTrees[2].state && subTrees[3].state)
-                    || (!subTrees[0].state && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) { // can
-                                                                                                                 // be
-                                                                                                                 // absorbed
-                // System.out.println("Absorbing indexes: " + indexes.get(subTrees[0].start-1) +
-                // " - " + indexes.get(subTrees[3].end-1));
-                System.out.println("Absorbing indexes: " + subTrees[0].start + " - " + subTrees[3].end);
+                    || (!subTrees[0].state && !subTrees[1].state && !subTrees[2].state && !subTrees[3].state)) {
+                                                                                                                 
+
+                // System.out.println("Absorbing indexes: " + this.contained.get(this); + " - " + subTrees[3].end);
                 this.state = subTrees[0].state;
                 this.size = 1;
                 this.isLeaf = true;
-
-                this.start = subTrees[0].start;
-                this.end = subTrees[3].end;
-                // for (qt q : subTrees) {
-                // if (q.contained.size() > 0)
-                // this.contained.addAll(q.contained);
-                // else
-                // System.err.println("empty container!");
-                // }
-                // System.out.print("now carrying: ");
-                // for(int i: contained){
-                // System.out.print(i+", ");
-                // }
 
                 this.subTrees = null;
                 return;
