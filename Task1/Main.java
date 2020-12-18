@@ -5,24 +5,27 @@ package Task1;
 
 public class Main {
     public static void main(String args[]) {
-        // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n"
-        // + "FFFFTTFF\n" + "FFFFTTFF\n"
-        // + "FFFFTTTT\n" + "FFFFTTTF\n";
 
-        String exampleImg = "FFFFTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
+
+        String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
                 + "FFFFTTTT\n" + "FFFFTTTF\n";
 
         // System.out.println("Starting!");
         char[] imgArray = exampleImg.replaceAll("\n", "").toCharArray();
         int sideLength = (int) Math.sqrt(imgArray.length);
 
-        qt tree = new qt(1, imgArray);
-        tree.init(1, sideLength * sideLength, false);
-        // tree.assign(imgArray);
+        qt tree = new qt(1);    
+
+
+
+        tree.init(1, sideLength * sideLength);
+        // System.out.println("recurse shift");
+        // System.out.println(tree.recurseShift());
+        tree.assign(imgArray);
 
         System.out.println("Diff checker");
         System.out.println("assigned");
-        for (int i = 1; i <= imgArray.length; i++) {
+        for (int i : tree.indexShifter()) {
             System.out.print(tree.getPixelByChar(i));
         }
 
@@ -32,12 +35,28 @@ public class Main {
             System.out.print(imgArray[i - 1]);
         }
 
-        // System.out.println("\nrecurse print");
-        // System.out.println(tree.recursePrint());
+        System.out.println("\n\n");
+        System.out.println("test indexes");
+
+        int j = 0;
+        for (int i : tree.indexShifter()) {
+            System.out.print(i + "\t");
+            j++;
+
+            if (j == 8) {
+                System.out.println();
+                j = 0;
+            }
+        }
+
+        System.out.println("testing assigned indexes::::");
+        System.out.println(tree.printIndex(imgArray));
+
+       
 
         System.out.println("\n\n");
         System.out.println("Assigned tree print");
-        System.out.println(tree.print());
+        System.out.println(tree.print(imgArray));
         System.out.println("\n\n");
         System.out.println("Pre optimization leaf count = " + tree.leafCount());
         System.out.println("Pre optimization node count = " + tree.nodeCount());
@@ -45,7 +64,7 @@ public class Main {
         System.out.println("Post optimization leaf count = " + tree.leafCount());
         System.out.println("Post optimization node count = " + tree.nodeCount());
         System.out.println("\n\n");
-        System.out.println(tree.print());
+        System.out.println(tree.print(imgArray));
         System.out.println("\n\n");
 
     }
