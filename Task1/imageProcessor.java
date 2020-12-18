@@ -22,7 +22,6 @@ public class imageProcessor {
     public static String preprocess(String image) {
         image = image.strip().replaceAll("\n", "");
         int length = image.length();
-        double sideLength = Math.sqrt(length);
         double sizeTest = Math.log(length) / Math.log(4); 
         if(!(sizeTest == Math.floor(sizeTest))){
             System.err.println("Image in not of size 4^n !!\nAborting...");

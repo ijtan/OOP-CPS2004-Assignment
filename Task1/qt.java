@@ -2,8 +2,6 @@ package Task1;
 
 import java.util.ArrayList;
 
-import sun.jvm.hotspot.tools.SysPropsDumper;
-
 public class qt {
 
     boolean state, isLeaf;
@@ -47,38 +45,6 @@ public class qt {
             parent.contained.addAll(this.contained);
         return this;
     }
-
-    // public void assign(char[] image) {
-    // char[] formatted = new char[max];
-    // for (int i = 0; i < image.length; i++)
-    // formatted[indeces.get(i)] = image[i];
-    // for (int i = 1; i <= formatted.length; i++)
-    // this.setPixel(formatted[i - 1], i);
-
-    // }
-
-    // public boolean setPixel(char pixel, int index) {
-    // if (this.isLeaf && this.index == index) {
-    // this.state = charToBool(pixel);
-    // return true;
-    // }
-    // if (!this.isLeaf)
-    // for (qt q : subTrees) {
-    // if (q.contains(index))
-    // return q.setPixel(pixel, index);
-    // }
-    // if (this.isLeaf) {
-    // System.out.print("leaf with wrong index!!\t");
-    // }
-    // if (this.subTrees != null) {
-    // System.out.print("subtrees found!!\t");
-    // for (qt q : subTrees) {
-    // System.out.print("" + q.index + "\t");
-    // }
-    // }
-    // System.out.println("falsing");
-    // return false;
-    // }
 
     public boolean contains(int x) {
         if (this.contained.contains(x))
