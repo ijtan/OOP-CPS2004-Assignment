@@ -7,7 +7,7 @@ public class bank {
     
 
     public static void main(String args[]){
-        ArrayList<String> logs = new ArrayList<String>();
+        // ArrayList<String> logs = new ArrayList<String>();
 
 
     }

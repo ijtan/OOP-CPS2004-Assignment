@@ -1,0 +1,6 @@
+Task3/CMakeFiles*
+*.vscode*
+Task3/Makefile
+Task3/Main
+Task3/CMakeCache.txt
+Task3/cmake_install.cmake

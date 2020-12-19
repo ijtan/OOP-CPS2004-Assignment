@@ -4,5 +4,18 @@
         "**/.project": true,
         "**/.settings": true,
         "**/.factorypath": true
+    },
+    "files.associations": {
+        "*.tcc": "cpp",
+        "istream": "cpp",
+        "iostream": "cpp",
+        "optional": "cpp",
+        "ostream": "cpp",
+        "system_error": "cpp",
+        "array": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp"
     }
 }
