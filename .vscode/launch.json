@@ -10,7 +10,7 @@
             "request": "launch",
             "mainClass": "Task1.Main",
             "projectName": "cps2004-oop-assignment_d97b741e"
-        }//,
+        },//,
         // {
         //     "type": "java",
         //     "name": "Debug (Launch) - Current File",
