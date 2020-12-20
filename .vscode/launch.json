@@ -6,17 +6,18 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Launch bank",
+            "request": "launch",
+            "mainClass": "Task2.bank",
+            "projectName": "cps2004-oop-assignment_f73c9c1f"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Main",
             "request": "launch",
             "mainClass": "Task1.Main",
             "projectName": "cps2004-oop-assignment_d97b741e"
-        },//,
-        // {
-        //     "type": "java",
-        //     "name": "Debug (Launch) - Current File",
-        //     "request": "launch",
-        //     "mainClass": "${file}"
-        // },
+        },
         {
             "type": "java",
             "name": "Debug (Launch)-Main<cps2004-oop-assignment_f73c9c1f>",

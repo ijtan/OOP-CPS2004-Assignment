@@ -7,24 +7,25 @@ public class userManager {
     private static List<user> users = new ArrayList<user>();
 
     
-    public static user getUser(String id) {
+    public static user getUser(String id) throws Exception{
         for (user u : users)
             if (u.getID() == id)
                 return u;
-        return null;
+        throw new Exception("User with specified ID not found!");
     }
 
     // public List<account>getUserAccounts(String id){
     //     for (user u : users) {
     //         if(u.getID() == id)
     //     }
-    // }   
-     public static void addUser(String id) {
-        user u = new user();
+    // } 
+      
+     public static void addUser(String name, String surname, String id) {
+        user u = new user(name,surname,id);
         users.add(u);
     }
 
-    public static String getOwner(int accountNumber){
+    public static String getOwner(int accountNumber) throws Exception{
         for(user u : users){
             if(u.getAccount(accountNumber)!=null)
                 return u.getID();

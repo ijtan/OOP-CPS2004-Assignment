@@ -2,43 +2,66 @@ package Task2;
 
 import java.util.ArrayList;
 
-public class user {
+public class user extends person {
     private ArrayList<account> accounts = new ArrayList<account>();
-    private ArrayList<String> transactions = new ArrayList<String>();
-    private String name, surname, id;
+    // private ArrayList<String> transactions = new ArrayList<String>();
 
-    public boolean moveMoney(double value, int myAccount, int recipientAccountNumber) {
-        // if (bankHoliday) 
-        //     return false;
+    public user(String name, String surname, String id){
+        super(name, surname,id);
+    }
+    public void moveMoney(double value, int myAccount, int recipientAccountNumber) {
+        // if (bankHoliday)
+        // return false;
+
+        accountMediator.transact(this.getID(), myAccount, recipientAccountNumber, value);
+    }
+
+    public void requestNewAccount() {
+        accountMediator.requestNewAccount(this.id);
+    }
+
+    public void deposit(int accountNumber, double value) {
+        account acc = null;
+        try {
+           acc = accountMediator.getAccount(this.id, accountNumber);
+        } catch (Exception e) {
+            System.err.println("Error while depositing!" + e.getMessage());
+            return;
+        }
+        if(acc!=null)
+            acc.add(value);
         
-        userAccountMediator.transact(this.getID(), myAccount, recipientAccountNumber, value);
-
-        transactions.add("Sent money from account ["+myAccount+"] to account [" + recipientAccountNumber+"] a value of" + userAccountMediator.getCurrency(id, myAccount) + value);
-        return true;
-
     }
 
-
-    public void requestNewAccount(){
-        userAccountMediator.requestNewAccount(this.id);
+    public void withdraw(int accountNumber, double value) {
+        account acc = null;
+        try {
+            acc = accountMediator.getAccount(this.id, accountNumber);
+            acc.subtract(value);
+        } catch (Exception e) {
+            System.out.println("Error whilst withdrawing: " + e.getMessage());
+            return;
+        }
     }
 
-    
-
-    public double getBalance(account a){
-        if(accounts.contains(a))
+    public double getBalance(account a) {
+        if (accounts.contains(a))
             return a.getBalance();
         return -1;
     }
 
-    public String listAccounts(){
+    public String listAccounts() {
         String accList = "";
-        for (account acc : accounts) 
-            accList+=acc.getAccountNumber()+"\t | "+acc.getCurrency()+acc.getBalance()+'\n';
+        for (account acc : accounts)
+            accList += acc.getAccountNumber() + "\t | " + acc.getCurrency() + acc.getBalance() + '\n';
         return accList;
     }
 
-    public String getFullName(){
+    public ArrayList<account> getAccounts(){
+        return accounts;
+    }
+
+    public String getFullName() {
         return name + " " + surname;
     }
 
@@ -47,22 +70,22 @@ public class user {
     }
 
     public void removeAccount(account a) throws Exception {
-        if(this.accounts.contains(a))
+        if (this.accounts.contains(a))
             this.accounts.remove(a);
         else
             throw new Exception("Account not found!");
     }
-    public String getID(){
+
+    public String getID() {
         return id;
     }
 
-    public account getAccount(int accNumber){
-        for (account acc : accounts) {
-            if(acc.getAccountNumber() == accNumber)
+    public account getAccount(int accNumber) throws Exception {
+        for (account acc : accounts)
+            if (acc.getAccountNumber() == accNumber)
                 return acc;
-        }
-        System.err.println("Account not found");
-        return null;
+
+        throw new Exception("Account not found");
     }
 
 }

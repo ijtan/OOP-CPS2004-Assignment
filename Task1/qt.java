@@ -17,11 +17,12 @@ public class qt {
     }
 
     public qt init(int size, char[] image) {
-        if(index>64){
+        this.max = image.length;
+        if(index>max){
             System.err.println("index out of bonds: "+index);
             return null;
         }
-        this.max = image.length;
+        
 
         if (size >= max) {
             this.isLeaf = true;

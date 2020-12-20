@@ -1,6 +1,8 @@
  package Task2;
 
-public class request{
+import java.io.Serializable;
+
+public class request implements Serializable{
     private String requesterID;
     //int type; //0 = close account 1 = open account 2 = new card 3 = close card
     approvable action;
