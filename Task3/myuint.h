@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #define ll long long
 using namespace std;
 
@@ -116,13 +117,72 @@ public:
     myuint<addResultSize> add(myuint<otherSize> &b)
     {
         cout << "in add method\n";
-        ll aValue = getValues().back();
-        ll bValue = b.getValues().back();
-        if (sizeof(aValue + bValue) > addResultSize)
+        vector<bool> aValues = getValues();
+        vector<bool> bValues = b.getValues();
+
+        
+        // if (sizeof(aValues + bValues) > addResultSize)
+        // {
+        //     cout << "size of value > size of return!\n";
+        // }
+        // return aValues + bValues;
+
+        
+        string aStr = toBinaryString();
+        string bStr = b.toBinaryString();
+
+        string added = ""; 
+        int x = 0;
+        int i = aStr.size() - 1;
+        int j = bStr.size() - 1;
+        while (x==1 or i >= 0 or j >= 0)
         {
-            cout << "size of value > size of return!\n";
+            if(i>=0)
+                x += aStr[i] - '0';
+            else
+                x += 0;
+
+            if (j >= 0)
+                x += bStr[i] - '0';
+            else
+                x+= 0;
+
+            added = char(x % 2 + '0') + added;
+            
+            x /= 2;
+            i--;
+            j--;
         }
-        return aValue + bValue;
+        myuint<addResultSize> ret;
+        ret.setValueByBinaryString(added);
+        return ret;
+    }
+
+    void setValueByBinaryString(string s){
+        values.clear();
+        for(char c: s){
+            if(c == '0'){
+                this->values.push_back(false);
+            }
+            else if (c == '1'){
+                this->values.push_back(true);
+            }else{
+                cerr<<"unkown character found! aborting...\n";
+                return;
+            }
+        }
+    }
+
+    string toBinaryString(){
+        string bin;
+        for (bool b : values)
+        {
+            if (b)
+                bin+= '1';
+            else
+                bin+= '0';
+        }
+        return bin;
     }
 
     template <ll subResultSize, ll otherSize>

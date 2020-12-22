@@ -35,5 +35,11 @@ int main()
     }
     cout<<'\n';
     cout<<"value converted to int is: "<<k.getIntFromValue()<<'\n';
+
+    myuint<32> L(20);
+
+    myuint<32>f = L + k;
+    cout << "added binary: "<<f.toBinaryString()<<"\n";
+    cout << "added int: "<<f.getIntFromValue()<<"\n";
     return 0;
 }
