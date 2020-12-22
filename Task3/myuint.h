@@ -1,6 +1,8 @@
 #include <iostream>
+#include <limits>
+#include <stdexcept>
 #include <vector>
-#define ll long long
+#define ll unsigned long long
 using namespace std;
 
 template <ll size>
