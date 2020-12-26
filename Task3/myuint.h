@@ -44,7 +44,7 @@ public:
     // bool operator<(const myuint &p) const;
     // bool operator>(const myuint &p) const;
 
-    vector<ll> getValues()
+    vector<ll> getValueContainer()
     {
         return values;
     }
@@ -67,12 +67,49 @@ public:
         int currentSize = size;
     }
 
+    string getValueAsString(){
+        
+    }
+
+    myuint<size> setValue(ll num)
+    {
+        cout << "in assign method\n";
+        
+
+        if(num%2==0)
+            value[size-1] == 0;
+        else{
+            value[size-1] == 1;
+            num-=1;
+        }
+        
+        int current = 2;
+        for(int i = size-2;i>=0;i--){
+            if(num-current >= 0){
+                num-=current;
+                value[i] = true;
+            }else{
+                value[i] = false;
+            }
+
+            if(num==0){
+                cout<<"number represented!\n";
+                break;
+            }            
+            current*=2;
+        }
+        if(num!=0){
+            cerr<<"Num is still not zero -> not fully represented!!\n";
+        }
+        return this;
+    }
+
     template <ll addResultSize, ll otherSize>
     myuint<addResultSize> add(myuint<otherSize> &b)
     {
         cout << "in add method\n";
-        ll aValue = getValues().back();
-        ll bValue = b.getValues().back();
+        ll aValue = getValueContainer().back();
+        ll bValue = b.getValueContainer().back();
         if(sizeof(aValue + bValue) > addResultSize){
             cout<<"size of value > size of return!\n";
         }
@@ -83,8 +120,8 @@ public:
     myuint<subResultSize> sub(myuint<otherSize> &b)
     {
         cout << "in sub method\n";
-        ll aValue = getValues().back();
-        ll bValue = b.getValues().back();
+        ll aValue = getValueContainer().back();
+        ll bValue = b.getValueContainer().back();
         return aValue - bValue;
     }
 };
