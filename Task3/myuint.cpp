@@ -14,5 +14,5 @@
 // {
 
 //     cout << "- operator called!\n";
-//     return sub<(size > otherSize ? size : otherSize)>(other);
+//     return subtract<(size > otherSize ? size : otherSize)>(other);
 // }
