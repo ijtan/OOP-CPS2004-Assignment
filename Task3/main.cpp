@@ -24,5 +24,22 @@ int main()
     myuint y = i - j;    
     cout << "y size is: " << y.getSize() << endl;
 
+
+    myuint<32> k(5);
+    vector<bool> vals = k.getValues(); 
+    for(bool b : vals){
+        if(b)
+            cout<<'1';
+        else
+            cout<<'0';
+    }
+    cout<<'\n';
+    cout<<"value converted to int is: "<<k.getIntFromValue()<<'\n';
+
+    myuint<32> L(20);
+
+    myuint<32>f = L + k;
+    cout << "added binary: "<<f.toBinaryString()<<"\n";
+    cout << "added int: "<<f.getIntFromValue()<<"\n";
     return 0;
 }

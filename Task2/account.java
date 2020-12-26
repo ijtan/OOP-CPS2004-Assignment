@@ -21,14 +21,14 @@ public class account extends approvable {
     @Override
     public void approve(request r) {
         if(r.toClose)
-            userAccountMediator.approveAccountDeletion(r, this);
+            accountMediator.approveAccountDeletion(r, this);
         else
-            userAccountMediator.approveNewAccount(r, this);
+            accountMediator.approveNewAccount(r, this);
     }
 
     @Override
     public void deny(request r) {
-        userAccountMediator.deny(r);
+        accountMediator.deny(r);
     }
 
     public String getOwner(){

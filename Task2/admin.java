@@ -1,6 +1,11 @@
 package Task2;
 
-public class admin extends user{
+public class admin extends person{
+
+    public admin(String name, String surname, String id){
+        super(name, surname,id);
+    }
+
     public void approveRequest(request r){
         r.approve();
     }
