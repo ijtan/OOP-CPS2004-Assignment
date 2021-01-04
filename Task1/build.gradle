@@ -3,13 +3,24 @@ apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+// source 'src/main/java/'
+
 repositories {
     mavenCentral()
 }
 dependencies {
     // implementation ""
-    implementation "junit:junit:4.12"
+    testCompile  "junit:junit:4.12"
 }
+
+
+// sourceSets {
+//     build {
+//         java {
+//             srcDirs = ["src/main/java/"]
+//         }
+//     }
+// }
 
 
 // task runWithJavaExec(type: JavaExec) {

@@ -1,1 +1,1 @@
-cd ..;java Task1.src.main.java
+java src/main/java/Main.java

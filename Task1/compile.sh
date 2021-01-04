@@ -1,1 +1,1 @@
-gradle build
+javac src/main/java/Main.java

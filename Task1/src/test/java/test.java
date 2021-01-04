@@ -1,5 +1,7 @@
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
+
+import src.main.java.*;
 
 public class test{
     qt tester = new qt(1); // MyClass is tested
