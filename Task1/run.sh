@@ -1,0 +1,1 @@
+cd ..;java Task1.src.main.java

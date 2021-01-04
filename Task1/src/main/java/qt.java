@@ -1,5 +1,4 @@
-package Task1.src.main.java;
-
+// package Task1.src.main.java;
 import java.util.ArrayList;
 
 public class qt {

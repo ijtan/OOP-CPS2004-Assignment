@@ -1,6 +1,3 @@
-package Task1.src.test.java;
-import Task1.src.main.java.*;
-
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

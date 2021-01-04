@@ -8,5 +8,13 @@ repositories {
 }
 dependencies {
     // implementation ""
-    testImplementation "junit:junit:4.12"
+    implementation "junit:junit:4.12"
 }
+
+
+// task runWithJavaExec(type: JavaExec) {
+//     group = "Execution"
+//     description = "Run the main class with JavaExecTask"
+//     classpath = src.main.java
+//     main = Main.java
+// }
