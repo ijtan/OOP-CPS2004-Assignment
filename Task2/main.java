@@ -1,6 +1,6 @@
 package Task2;
 
-public class bank {
+public class main {
 
     public static void main(String args[]) {
         // ArrayList<String> logs = new ArrayList<String>();
