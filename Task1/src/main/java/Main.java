@@ -1,11 +1,9 @@
-package Task1;
+package Task1.src.main.java;
 
 // import java.util.ArrayList;
 // import java.util.List;
-
 public class Main {
     public static void main(String args[]) {
-
 
         // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
         //         + "FFFFTTTT\n" + "FFFFTTTF\n";

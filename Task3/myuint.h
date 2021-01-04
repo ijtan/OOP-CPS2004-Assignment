@@ -25,8 +25,8 @@ private:
     // bool isPowerOfTwo(ll x)
     //     return ;
 
-    static_assert(((size != 0) && ((size & (size - 1)) == 0)), "Size can only be power of two");
-    vector<bool> values = vector<bool>(size); //TODO compile time error if not power of two
+    static_assert(((size != 0) && ((size & (size - 1)) == 0)), "Size can only be power of two"); //compile time error if not power of two
+    vector<bool> values = vector<bool>(size); 
 public:
     template <ll otherSize>
     myuint<size> operator+(myuint<otherSize> &other)
@@ -219,8 +219,8 @@ public:
         int j = bStr.size() - 1;
 
         cout<<"adding binary string with sizes: "<<i<<" and "<<j<<"\n";
-        cout<<"a: "<<aStr<<endl;
-        cout<<"b: "<<bStr<<endl;
+        // cout<<"a: "<<aStr<<endl;
+        // cout<<"b: "<<bStr<<endl;
 
         while (x == 1 or i >= 0 or j >= 0)
         {

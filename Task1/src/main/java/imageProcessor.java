@@ -1,4 +1,4 @@
-package Task1;
+package Task1.src.main.java;
 
 import java.io.*;
 import java.nio.file.Files;

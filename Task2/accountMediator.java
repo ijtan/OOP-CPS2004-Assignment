@@ -79,7 +79,7 @@ public class accountMediator {
     public static void addCardToAccount(String userID, int AccountNumber, card cr) {
         try {
             getAccount(userID, AccountNumber).addCard(cr);
-            ;
+            
         } catch (Exception e) {
             System.err.println("Error while adding card: " + e.getMessage());
         }

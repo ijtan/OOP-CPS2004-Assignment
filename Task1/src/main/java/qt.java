@@ -1,12 +1,12 @@
-package Task1;
+package Task1.src.main.java;
 
 import java.util.ArrayList;
 
 public class qt {
 
-    boolean state, isLeaf;
-    int size, max, index;
-    qt parent, subTrees[];
+    private boolean state, isLeaf;
+    private int size, max, index;
+    private qt parent, subTrees[];
     // ArrayList<Integer> indeces;
     ArrayList<Integer> contained = new ArrayList<Integer>();
 
@@ -53,7 +53,7 @@ public class qt {
     }
 
     public int getPixel(int index) {
-        var indices = imageProcessor.indices;
+        ArrayList<Integer> indices = imageProcessor.indices;
         return getNode(indices.get(index - 1)+1);
     }
 
@@ -126,7 +126,7 @@ public class qt {
     }
 
     public String print() {
-        var newlineInterval = Math.sqrt(max);
+        double newlineInterval = Math.sqrt(max);
         String split = ""; // Here we simply add spaces every 8 characters for formatting
         for (int i = 1; i <= max; i++) {
             split += getPixelByChar(i);
