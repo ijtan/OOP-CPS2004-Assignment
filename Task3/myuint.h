@@ -273,27 +273,6 @@ public:
         return ret;
     }
 
-    // template <int otherSize>
-    // operator myuint<otherSize>()
-    // {
-    //     cout << "old size: " << values.size() << "\n";
-    //     // myuint<otherSize> tmp;
-    //     // vector<bool> vec = this->getValueContainer();
-    //     if (otherSize > size)
-    //     {
-    //         cout << "inserting values: " << otherSize - size << "\n";
-    //         values.insert(values.begin(), otherSize - size, false);
-    //         cout << "newSize: " << values.size() << "\n";
-    //     }
-    //     else
-    //     {
-    //         cout << "removing values: " << size - otherSize << "\n";
-    //         values.erase(values.end() - (size - otherSize), values.end());
-    //     }
-    //     // tmp.setValueByVec(vec);
-    //     // return this;
-    // }
-
     int whichIsLarger(vector<bool> boolVec, unsigned long long other)
     {
         string otherString = toBinaryString(other);
@@ -407,32 +386,6 @@ public:
         string thisS = toBinaryString();
         return (thisS == otherS);
     }
-
-    // string getValueAsString()
-    // {
-
-    //     myuint<size> j(1);
-    //     ll x = 0;
-    //     ll xCounter = 0;
-    //     for (int i = values.size() - 1; i >= 0; i--)
-    //     {
-    //         if (sizeof(x) >= INT_MAX)
-    //         {
-    //             xCounter++;
-    //             x -= INT_MAX;
-    //         }
-    //         if (values[i])
-    //             x += j;
-    //         j.setValueByBinaryString(addBinaryStrings(j.toBinaryString(), j.toBinaryString()));
-    //     }
-    //     string returnVal = "0";
-    //     for (; xCounter > 0; xCounter--)
-    //     {
-    //         addBinaryStrings(returnVal, to_string(INT_MAX));
-    //     }
-    //     addBinaryStrings(returnVal, to_string(x));
-    //     return returnVal;
-    // }
 
     string subtractBinaryStrings(string aStr, string bStr)
     {
