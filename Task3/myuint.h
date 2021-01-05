@@ -19,11 +19,18 @@ private:
     vector<bool> values = vector<bool>(size);
 
 public:
-    template <class T>
-    myuint(T value)
+    template <int oSize>
+    myuint(myuint<oSize> other)
+    {
+        cout << "init with other myuint\n";
+        setValueByVec(other.getValueContainer());
+    }
+
+    // template <class T>
+    myuint(int value)
     {
         cout << "init with size: " << size << " and value: " << value << '\n';
-        setValueByOther<T>(value);
+        setValueByOther(value);
     }
 
     template <int otherSize>
@@ -45,10 +52,12 @@ public:
         return tmp;
     };
 
-    template <u_int otherSize>
-    void operator+=(myuint<otherSize> &other)
+    template <int otherSize>
+    myuint<size> operator+=(myuint<otherSize> &other)
     {
-        this->values = add<size>(other).getValueContainer();
+        string bin = other.toBinaryString();
+        setValueByBinaryString(addBinaryStrings(this->toBinaryString(), bin));
+        return this[0];
     };
 
     template <class T>
@@ -60,39 +69,31 @@ public:
     };
 
     template <int otherSize>
-    myuint<size> operator-(myuint<otherSize> &other)
+    myuint<size> operator-(myuint<otherSize> other)
     {
         cout << "- operator called!\n";
-        string thisStr = toBinaryString();
-        string otherStr = other.toBinaryString();
-        string newStr = subtractBinaryStrings(thisStr, otherStr);
-        setValueByBinaryString(newStr);
-        return this;
+        return subtract<size>(other);
     };
 
     template <class T>
-    myuint<size> operator-(const T &other)
+    myuint<size> operator-(T &other)
     {
         cout << "- operator called!\n";
-        string thisStr = toBinaryString();
-        string otherStr = toBinaryString(other);
-        string newStr = subtractBinaryStrings(thisStr, otherStr);
-        setValueByBinaryString(newStr);
-        return this;
+        return subtract<T>(other);
     }
 
     template <int otherSize>
-    myuint<size> operator-=(myuint<otherSize> &other)
+    myuint<size> operator-=(myuint<otherSize> other)
     {
-        this = this - other;
-        return this;
+        setValueByVec(subtract<otherSize>(other).getValueContainer());
+        return this[0];
     };
 
     template <class T>
     myuint<size> operator-=(const T other)
     {
-        this = this - other;
-        return this;
+        // this =
+        return this - other;
     }
 
     myuint<size> operator--()
@@ -102,19 +103,22 @@ public:
 
     myuint<size> operator++()
     {
-        return this + 1;
+        // string bin = toBinaryString();
+        setValueByBinaryString(addBinaryStrings(this->toBinaryString(), "01"));
+        return this[0];
     }
 
-    template <int otherSize> 
-    myuint<otherSize> operator=(const myuint<otherSize> &other) //TODO change size accordingly
+    template <int otherSize>
+    myuint<size> operator=(const myuint<otherSize> other) //TODO change size accordingly
     {
         /*TODO not sure if this should return size or otherSize!!*/
-        if(other.getSize()>getSize()){
-            cerr<<"other size is too big to assign to this one!\n";//TODO
+        if (other.getSize() > getSize())
+        {
+            cerr << "other size is too big to assign to this one!\n"; //TODO
         }
         int diff = other.getSize() - size;
         this->values = other.getValueContainer();
-        values.insert(values.begin(), diff,false);
+        values.insert(values.begin(), diff, false);
         return this;
     }
 
@@ -161,7 +165,13 @@ public:
     }
 
     template <int otherSize>
-    myuint<size> operator/(myuint<otherSize> other)
+    myuint<size> operator/(myuint<otherSize> &other)
+    {
+        return divideByMyuint<otherSize>(other); //TODO
+    }
+
+    template <int otherSize>
+    myuint<size> operator%(myuint<otherSize> &other)
     {
         return divideByMyuint<otherSize>(other); //TODO
     }
@@ -170,6 +180,12 @@ public:
     myuint<size> operator%(T other)
     {
         return this; //TODO
+    }
+
+    template <class T>
+    int operator%(T other)
+    {
+        return 0; //TODO
     }
 
     template <class T>
@@ -223,10 +239,8 @@ public:
         return values.size() * sizeof(values[0]);
     }
 
-
-
-    template <class T>
-    void setValueByOther(T num)
+    // template <class T>
+    void setValueByOther(int num)
     {
         values.clear();
         int a[size] = {0};
@@ -260,7 +274,7 @@ public:
     }
 
     // template <int otherSize>
-    // operator myuint<otherSize>() 
+    // operator myuint<otherSize>()
     // {
     //     cout << "old size: " << values.size() << "\n";
     //     // myuint<otherSize> tmp;
@@ -422,24 +436,24 @@ public:
 
     string subtractBinaryStrings(string aStr, string bStr)
     {
-        string ans(aStr.length() + 1, '0');
+        string ans(aStr.length(), '0');
         bool borrow = false;
         int aInt, bInt;
         for (int i = aStr.length() - 1; i >= 0; --i)
         {
             aInt = aStr[i];
             bInt = bStr[i];
-            ans[i + 1] += (aInt - bInt);
+            ans[i] += (aInt - bInt);
 
             if (borrow)
             {
-                ans[i + 1] -= 1;
+                ans[i] -= 1;
                 borrow = false;
             }
 
-            if (ans[i + 1] == '0' - 1)
+            if (ans[i] == '0' - 1)
             {
-                ans[i + 1] += 2;
+                ans[i] += 2;
                 borrow = true;
             }
             if (borrow)
@@ -455,9 +469,21 @@ public:
         int i = aStr.size() - 1;
         int j = bStr.size() - 1;
 
-        cout << "adding binary string with sizes: " << i + 1 << " and " << j + 1 << "\n";
-        // cout<<"a: "<<aStr<<endl;
-        // cout<<"b: "<<bStr<<endl;
+        int aSize = aStr.size();
+        int bSize = bStr.size();
+        if (aSize > bSize)
+        {
+            int diff = aSize - bSize;
+            aStr.insert(0, abs(diff), '0');
+
+            bSize = bStr.size();
+        }
+        else if (aSize < bSize)
+        {
+            int diff = bSize - aSize;
+            aStr.insert(0, abs(diff), '0');
+            aSize = aStr.size();
+        }
 
         while (x == 1 or i >= 0 or j >= 0)
         {
@@ -490,7 +516,7 @@ public:
         string aStr = toBinaryString();
         string bStr = b.toBinaryString();
 
-        myuint<addResultSize> ret;
+        myuint<addResultSize> ret(0);
         ret.setValueByBinaryString(addBinaryStrings(aStr, bStr));
         return ret;
     }
@@ -571,13 +597,25 @@ public:
         return bin;
     }
 
-    template <int subResultSize, int otherSize>
-    myuint<subResultSize> subtract(myuint<otherSize> &b)
+    template <int otherSize>
+    myuint<size> subtract(myuint<otherSize> &b)
     {
-        //TODO obviosuly change this
-        cout << "in sub method\n";
-        int aValue = getValueContainer().back();
-        int bValue = b.getValueContainer().back();
-        return aValue - bValue;
+        string thisStr = toBinaryString();
+        string bStr = b.toBinaryString();
+        string result = subtractBinaryStrings(thisStr, bStr);
+        myuint<size> tmp(0);
+        tmp.setValueByBinaryString(result);
+        return tmp;
+    }
+
+    template <class T>
+    myuint<size> subtract(T b)
+    {
+        string thisStr = toBinaryString();
+        string bStr = toBinaryString(b);
+        string result = subtractBinaryStrings(thisStr, bStr);
+        myuint<size> tmp(0);
+        tmp.setValueByBinaryString(result);
+        return tmp;
     }
 };

@@ -56,15 +56,16 @@ int main()
     myuint<32> f(10);
     myuint<32> t(2);
 
-    cout<<f.subtractBinaryStrings("1000", "0100")<<"\n";
+    // cout<<f.subtractBinaryStrings("1000", "0100")<<"\n";
 
-    cout<<"\n\n"<<f.multiplyBinaryStringByScalar(f.toBinaryString(),100)<<endl;
+    // cout<<"\n\n"<<f.multiplyBinaryStringByScalar(f.toBinaryString(),100)<<endl;
 
     cout << "\nunary\n";
     cout << "b4\n"
          << f.toBinaryString() << endl;
     // f = ++f;
-    
+    // f +=t;
+    ++f;
     cout << f.toBinaryString() << endl;
 
     cout<<"\ndiv\n";
