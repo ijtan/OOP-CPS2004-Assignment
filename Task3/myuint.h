@@ -197,33 +197,29 @@ public:
         return val == 1 || val == 1;
     }
 
-    // template <int otherSize>
-    // myuint<size> operator%(myuint<otherSize> &other)
-    // {
-    //     // cout << "dividing by other myuint\n";
-    //     myuint<size> tmp(0);
-    //     tmp = *this;
-    //     return tmp.longDivide(other)[1];
-    // }
 
     template <class T>
     myuint<size> operator/(T other)
     {
-        // cout << "dividing by other myuint\n";
-        myuint<size> tmp(0);
-        tmp = *this;
-        return tmp.longDivide(other)[0];
+        return longDivide(other)[0];
     }
 
     template <class T>
-    myuint<size> operator%(T other)
-    {
-        myuint<size> tmp(0);
-        tmp = *this;
-        return tmp.longDivide(other)[1];
+    myuint<size> operator%(T other){
+        return longDivide(other)[1];
     }
 
-    
+    template <class T>
+    myuint<size> operator/=(T other)
+    {
+        return *this = longDivide(other)[0];
+    }
+
+    template <class T>
+    myuint<size> operator%=(T other)
+    {
+        return *this = longDivide(other)[1];
+    }
 
     // myuint operator<<(const myuint &p) const;
     // myuint operator>>(const myuint &p) const;

@@ -39,8 +39,7 @@ int main(){
 
 
     cout<<"\ndiv\n";
-    myuint<32> d(1986);
-    
+    myuint<32> d(1986);    
     myuint<32> t(9);
     // cout<<"b4 d\n"<<d.toBinaryString()<<endl;
     // cout<<"b4 t\n"<<d.toBinaryString()<<endl;
@@ -59,7 +58,11 @@ int main(){
     cout << (d%t).toBinaryString() << endl;
 
     cout << (d/t).getIntFromValue() << " / ";
-    cout << (d%t).getIntFromValue() << endl;
 
+    cout << d.getIntFromValue() << endl;
+    d/=t;
+    myuint<32> r(1986);
+    r%=t;
+    cout << r.getIntFromValue() <<"\n";
     return 0;
 }
