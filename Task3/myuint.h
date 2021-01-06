@@ -398,7 +398,7 @@ public:
         myuint<size>ans(0);
         for (int i = size - 1; i >= 0; i--)
         {
-            tmp.shiftLeft(1);
+            tmp.shiftLeft(1); //TODO fix multiplication
             if(b[i]=='1'){
                 tmp+= *this;
                 // ans=tmp;
