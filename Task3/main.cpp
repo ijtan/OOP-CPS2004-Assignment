@@ -48,18 +48,18 @@ int main(){
     cout << d.getIntFromValue() / t.getIntFromValue() << " / ";
     cout << d.getIntFromValue() % t.getIntFromValue() << endl;
 
-    vector<myuint<32>> dr = d.longDivide(t);
+    // vector<myuint<32>> dr = d.longDivide(t);
 
-    myuint<32> r(0);
-    d = dr[0];
-    r = dr[1];
+    // myuint<32> r(0);
+    // d = dr[0];
+    // r = dr[1];
     // string ret = d.divideByScalar(3);
     // cout << f.toBinaryString() << endl;
-    cout << d.toBinaryString() << " / ";
-    cout << r.toBinaryString() << endl;
+    cout << (d/t).toBinaryString() << " / ";
+    cout << (d%t).toBinaryString() << endl;
 
-    cout << d.getIntFromValue() << " / ";
-    cout << r.getIntFromValue() << endl;
+    cout << (d/t).getIntFromValue() << " / ";
+    cout << (d%t).getIntFromValue() << endl;
 
     return 0;
 }

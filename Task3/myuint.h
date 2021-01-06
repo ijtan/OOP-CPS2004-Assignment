@@ -197,42 +197,33 @@ public:
         return val == 1 || val == 1;
     }
 
-    template <int otherSize>
-    myuint<size> operator/(myuint<otherSize> &other)
-    {
-        cout << "dividing by other myuint\n";
-        return divideByMyuint<otherSize>(other); //TODO
-    }
+    // template <int otherSize>
+    // myuint<size> operator%(myuint<otherSize> &other)
+    // {
+    //     // cout << "dividing by other myuint\n";
+    //     myuint<size> tmp(0);
+    //     tmp = *this;
+    //     return tmp.longDivide(other)[1];
+    // }
 
-    template <int otherSize>
-    myuint<size> operator%(myuint<otherSize> &other)
+    template <class T>
+    myuint<size> operator/(T other)
     {
-        cout << "dividing by scalar\n";
-        return divideByMyuint<otherSize>(other); //TODO
+        // cout << "dividing by other myuint\n";
+        myuint<size> tmp(0);
+        tmp = *this;
+        return tmp.longDivide(other)[0];
     }
 
     template <class T>
     myuint<size> operator%(T other)
     {
-        cout << "modulus not implemented!!\n";
-        return this; //TODO
-    }
-
-    template <class T>
-    int operator%(T other)
-    {
-        cout << "modulus not implemented!!\n";
-        return 0; //TODO
-    }
-
-    template <class T>
-    myuint<size> operator/(T other)
-    {
-        cout << "dividing by scalar\n";
         myuint<size> tmp(0);
-        tmp.setValueByBinaryString(divideByScalar(other));
-        return tmp;
+        tmp = *this;
+        return tmp.longDivide(other)[1];
     }
+
+    
 
     // myuint operator<<(const myuint &p) const;
     // myuint operator>>(const myuint &p) const;
@@ -251,7 +242,7 @@ public:
 
     u_int getIntFromValue()
     {
-        
+
         if (getSize() / 8 > sizeof(u_int) * 8)
         {
             cout << "getting int, myuint size is: " << getSize() / 8 << " and max size is: " << sizeof(u_int) * 8 << "\n";
@@ -277,7 +268,7 @@ public:
     int getSize()
     {
         // return sizeof(values)/sizeof(values[0]);
-        return size*8;
+        return size * 8;
     }
     int getContainerSize()
     {
@@ -360,21 +351,6 @@ public:
                 return 1;
         }
         return 0;
-    }
-
-    template <class T>
-    string divideByScalar(T num)
-    {
-        string newStr = toBinaryString();
-        myuint<size> tmp(0);
-        tmp.setValueByBinaryString(newStr);
-
-        for (; num > 1; --num)
-        {
-            tmp.shiftRight(1);
-            newStr = subtractBinaryStrings(newStr, tmp.toBinaryString());
-        }
-        return newStr;
     }
 
     template <int otherSize>
@@ -469,7 +445,7 @@ public:
                 if (borrow)
                     ans[i] = '0';
                 else
-                    ans[i] = '0'+1;
+                    ans[i] = '0' + 1;
                 borrow = true;
             }
             // if (borrow)
@@ -584,7 +560,7 @@ public:
     }
 
     myuint<size> shiftLeft(int shiftAmount)
-    {   //TODO change to myuint return
+    { //TODO change to myuint return
         //TODO change this to return a temp !!
         values.insert(values.end(), shiftAmount, false);
 
@@ -636,8 +612,11 @@ public:
         return tmp;
     }
 
-    template <int otherSize>
-    vector<myuint<size>> longDivide(myuint<otherSize> other)
+    
+
+
+    template <class T>
+    vector<myuint<size>> longDivide(T other)
     {
         myuint<size> nomin(0);
         nomin.setValueByVec(getValueContainer());
@@ -650,7 +629,7 @@ public:
 
         myuint<size> m0(1);
         myuint<size> n0(0);
-        n0.setValueByVec(other.getValueContainer());
+        n0 = other;
 
         myuint<size> quotient(0);
 
