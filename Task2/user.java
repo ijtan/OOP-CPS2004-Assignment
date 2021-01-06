@@ -3,7 +3,8 @@ package Task2;
 import java.util.ArrayList;
 
 public class user extends person {
-    private ArrayList<account> accounts = new ArrayList<account>();
+    // private ArrayList<account> accounts = new ArrayList<account>(); TODO we will change this so user does not have access to his account ! he will only bave a list of accountNumbers
+    private List<String> accountNumbers = new ArrayList<String>();
     // private ArrayList<String> transactions = new ArrayList<String>();
 
     public user(String name, String surname, String id){

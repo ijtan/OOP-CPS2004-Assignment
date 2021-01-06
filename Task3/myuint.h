@@ -19,8 +19,8 @@ private:
     vector<bool> values = vector<bool>(size);
 
 public:
-    template <int oSize>
-    myuint(myuint<oSize> other)
+    template <int otherSize>
+    myuint(myuint<otherSize> other)
     {
         cout << "init with other myuint\n";
         setValueByVec(other.getValueContainer());
@@ -29,7 +29,7 @@ public:
     // template <class T>
     myuint(int value)
     {
-        cout << "init with size: " << size << " and value: " << value << '\n';
+        // cout << "init with size: " << size << " and value: " << value << '\n';
         setValueByOther(value);
     }
 
@@ -98,7 +98,8 @@ public:
 
     myuint<size> operator--()
     {
-        return this - 1;
+        setValueByBinaryString(subtract(1).toBinaryString());
+        return this[0];
     }
 
     myuint<size> operator++()
@@ -140,6 +141,20 @@ public:
         return whichIsLarger(values, other.getValueContainer()) == 2;
     }
 
+    template <int otherSize>
+    bool operator>=(myuint<otherSize> other)
+    {
+        int val = whichIsLarger(values, other.getValueContainer());
+        return val == 1 || val == 0;
+    }
+
+    template <int otherSize>
+    bool operator<=(myuint<otherSize> other)
+    {
+        int val = whichIsLarger(values, other.getValueContainer());
+        return val == 2 || val == 0;
+    }
+
     template <class T>
     bool operator==(T other)
     {
@@ -164,34 +179,59 @@ public:
         return whichIsLarger(values, otherVec) == 2;
     }
 
+    template <class T>
+    bool operator>=(T other)
+    {
+        string otherStr = toBinaryString(other);
+        vector<bool> otherVec = stringToBoolVec(otherStr);
+        int val = whichIsLarger(values, otherVec);
+        return val == 1 || val == 1;
+    }
+
+    template <class T>
+    bool operator<=(T other)
+    {
+        string otherStr = toBinaryString(other);
+        vector<bool> otherVec = stringToBoolVec(otherStr);
+        int val = whichIsLarger(values, otherVec) == 2;
+        return val == 1 || val == 1;
+    }
+
     template <int otherSize>
     myuint<size> operator/(myuint<otherSize> &other)
     {
+        cout << "dividing by other myuint\n";
         return divideByMyuint<otherSize>(other); //TODO
     }
 
     template <int otherSize>
     myuint<size> operator%(myuint<otherSize> &other)
     {
+        cout << "dividing by scalar\n";
         return divideByMyuint<otherSize>(other); //TODO
     }
 
     template <class T>
     myuint<size> operator%(T other)
     {
+        cout << "modulus not implemented!!\n";
         return this; //TODO
     }
 
     template <class T>
     int operator%(T other)
     {
+        cout << "modulus not implemented!!\n";
         return 0; //TODO
     }
 
     template <class T>
     myuint<size> operator/(T other)
     {
-        return this;
+        cout << "dividing by scalar\n";
+        myuint<size> tmp(0);
+        tmp.setValueByBinaryString(divideByScalar(other));
+        return tmp;
     }
 
     // myuint operator<<(const myuint &p) const;
@@ -211,9 +251,10 @@ public:
 
     u_int getIntFromValue()
     {
-        cout << "getting int, myuint size is: " << getSize() / 8 << " and max size is: " << sizeof(u_int) * 8 << "\n";
+        
         if (getSize() / 8 > sizeof(u_int) * 8)
         {
+            cout << "getting int, myuint size is: " << getSize() / 8 << " and max size is: " << sizeof(u_int) * 8 << "\n";
             cerr << "cannot convert number larger than 32 bits to int!!\n";
             return 0;
         }
@@ -234,6 +275,11 @@ public:
     }
 
     int getSize()
+    {
+        // return sizeof(values)/sizeof(values[0]);
+        return size*8;
+    }
+    int getContainerSize()
     {
         // return sizeof(values)/sizeof(values[0]);
         return values.size() * sizeof(values[0]);
@@ -260,16 +306,17 @@ public:
     string toBinaryString(T num)
     {
         int a[size] = {0};
+        int tmp = num;
         string ret = "";
-        for (int i = 0; num > 0; i++)
+        for (int i = 0; tmp > 0; i++)
         {
-            a[i] = num % 2;
-            num = num / 2;
+            a[i] = tmp % 2;
+            tmp = tmp / 2;
         }
 
         for (int i = size - 1; i >= 0; i--)
             ret += to_string(a[i]);
-        cout << "num was converted to: " << ret << endl;
+        // cout << "num was converted to: " << ret << endl;
         return ret;
     }
 
@@ -316,9 +363,18 @@ public:
     }
 
     template <class T>
-    string divideBStringByScalar(T num)
+    string divideByScalar(T num)
     {
-        return ""; //TODO
+        string newStr = toBinaryString();
+        myuint<size> tmp(0);
+        tmp.setValueByBinaryString(newStr);
+
+        for (; num > 1; --num)
+        {
+            tmp.shiftRight(1);
+            newStr = subtractBinaryStrings(newStr, tmp.toBinaryString());
+        }
+        return newStr;
     }
 
     template <int otherSize>
@@ -335,6 +391,7 @@ public:
             newStr = subtractBinaryStrings(newStr, tmp.toBinaryString());
         }
         tmp.setValueByBinaryString(newStr);
+
         return tmp;
     }
 
@@ -344,7 +401,7 @@ public:
         string start = s;
         for (; m > 0; --m)
         {
-            cout << s << "\n";
+            // cout << s << "\n";
             s = addBinaryStrings(s, start);
 
             // cout << s << "\n";
@@ -366,11 +423,6 @@ public:
         return s;
     }
 
-    string multiplyBStringByBString(string s, string m)
-    {
-        return ""; //TODO
-    }
-
     template <class T>
     bool isEqual(T num)
     {
@@ -389,6 +441,11 @@ public:
 
     string subtractBinaryStrings(string aStr, string bStr)
     {
+        while (aStr.length() > bStr.length())
+            bStr.insert(0, "0");
+        while (bStr.length() > aStr.length())
+            aStr.insert(0, "0");
+
         string ans(aStr.length(), '0');
         bool borrow = false;
         int aInt, bInt;
@@ -400,17 +457,23 @@ public:
 
             if (borrow)
             {
-                ans[i] -= 1;
-                borrow = false;
+                if (ans[i] != '0' - 1)
+                {
+                    ans[i] -= 1;
+                    borrow = false;
+                }
             }
 
             if (ans[i] == '0' - 1)
             {
-                ans[i] += 2;
+                if (borrow)
+                    ans[i] = '0';
+                else
+                    ans[i] = '0'+1;
                 borrow = true;
             }
-            if (borrow)
-                ans += "error";
+            // if (borrow)
+            //     ans += "error";TODO
         }
         return ans;
     }
@@ -419,15 +482,13 @@ public:
     {
         string added = "";
         int x = 0;
-        int i = aStr.size() - 1;
-        int j = bStr.size() - 1;
 
         int aSize = aStr.size();
         int bSize = bStr.size();
         if (aSize > bSize)
         {
             int diff = aSize - bSize;
-            aStr.insert(0, abs(diff), '0');
+            bStr.insert(0, abs(diff), '0');
 
             bSize = bStr.size();
         }
@@ -437,6 +498,8 @@ public:
             aStr.insert(0, abs(diff), '0');
             aSize = aStr.size();
         }
+        int i = aStr.size() - 1;
+        int j = bStr.size() - 1;
 
         while (x == 1 or i >= 0 or j >= 0)
         {
@@ -508,7 +571,7 @@ public:
         this->values = vals;
     }
 
-    void shiftRight(int shiftAmount)
+    myuint<size> shiftRight(int shiftAmount)
     { //TODO change to myuint return
 
         // this->setSize((getSize()/8)+shiftAmount);
@@ -517,16 +580,17 @@ public:
 
         values.erase(values.end() - shiftAmount, values.end());
 
-        // return this;
+        return this[0];
     }
 
-    void shiftLeft(int shiftAmount)
-    { //TODO change to myuint return
+    myuint<size> shiftLeft(int shiftAmount)
+    {   //TODO change to myuint return
+        //TODO change this to return a temp !!
         values.insert(values.end(), shiftAmount, false);
 
         values.erase(values.begin(), values.begin() + shiftAmount);
 
-        // return this;
+        return this[0];
     }
 
     string toBinaryString()
@@ -570,5 +634,52 @@ public:
         myuint<size> tmp(0);
         tmp.setValueByBinaryString(result);
         return tmp;
+    }
+
+    template <int otherSize>
+    vector<myuint<size>> longDivide(myuint<otherSize> other)
+    {
+        myuint<size> nomin(0);
+        nomin.setValueByVec(getValueContainer());
+
+        myuint<size> denom(0);
+        denom.setValueByVec(getValueContainer());
+
+        myuint<size> remain(0);
+        remain.setValueByVec(getValueContainer());
+
+        myuint<size> m0(1);
+        myuint<size> n0(0);
+        n0.setValueByVec(other.getValueContainer());
+
+        myuint<size> quotient(0);
+
+        if (other > *this)
+        {
+            return {quotient, remain};
+        }
+
+        myuint<size> tmp(0);
+        tmp = n0;
+        while (((tmp.shiftLeft(1)) <= *this))
+        {
+            n0.shiftLeft(1);
+            m0.shiftLeft(1);
+            tmp = n0;
+        }
+        remain -= n0;
+        quotient += m0;
+
+        while (remain >= other)
+        {
+            m0.shiftRight(1);
+            n0.shiftRight(1);
+            if (n0 <= remain)
+            {
+                remain -= n0;
+                quotient += m0;
+            }
+        }
+        return {quotient, remain};
     }
 };

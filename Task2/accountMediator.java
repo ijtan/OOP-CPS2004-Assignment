@@ -1,15 +1,13 @@
 package Task2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class accountMediator {
 
     private static List<request> requests = new ArrayList<request>();
-
-    // public static user getUser(String id) {
-    // return userManager.getUser(id);
-    // }
+    private static HashMap<String,ArrayList<account>> accounts = new HashMap<String, ArrayList<account>>(); //TODO implement this!!
 
     public static request getOldestRequest(){
         if(requests.size() > 0)
