@@ -64,5 +64,16 @@ int main(){
     myuint<32> r(1986);
     r%=t;
     cout << r.getIntFromValue() <<"\n";
+
+    // int x = 10000000000000000000000;
+    cout<<"\nmult\n";
+    myuint<64> x(0);
+    myuint<64> y(2);
+    x.setValueByBinaryString("11010010");
+    cout << x.toBinaryString() << endl;
+    // y = 2;
+    x = x.realMultiplyByOther(y);
+    cout<<x.toBinaryString()<<endl;
+    // cout<<r.getIntFromValue()<<endl;
     return 0;
 }

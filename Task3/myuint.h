@@ -381,6 +381,32 @@ public:
         return s;
     }
 
+    template <int otherSize>
+    myuint<size> realMultiplyByOther(myuint<otherSize> m)
+    {
+        // string a = toBinaryString();
+        string b = m.toBinaryString();
+        // vector<myuint<size>> vec;
+        // myuint<size>x(0);
+        // for(int i = 0; i < a.size(); i++){
+        //     vec.push_back(x);
+        // }
+        // myuint<size>x(0);
+
+        myuint<size>tmp(0);
+        // tmp = *this;
+        myuint<size>ans(0);
+        for (int i = size - 1; i >= 0; i--)
+        {
+            tmp.shiftLeft(1);
+            if(b[i]=='1'){
+                tmp+= *this;
+                // ans=tmp;
+            }
+        }
+        return tmp;
+    }
+
     template <class T>
     string multiplyBinaryStringByScalar(string s, T m)
     {
@@ -509,7 +535,7 @@ public:
         return ret;
     }
 
-    vector<bool> stringToBoolVec(string s)
+    vector<bool> stringToBoolVec(string s,int min = 0)
     {
         vector<bool> ret;
 
@@ -529,13 +555,19 @@ public:
                 return ret;
             }
         }
+        if(ret.size()<min){
+            int diff = min - ret.size();
+            ret.insert(ret.begin(), diff, false);
+        }
         return ret;
     }
+
+    
 
     void setValueByBinaryString(string s)
     {
         values.clear();
-        values = stringToBoolVec(s);
+        values = stringToBoolVec(s,size);
     }
 
     void setValueByVec(vector<bool> vals)
