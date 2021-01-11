@@ -16,6 +16,7 @@ class myuint
 
 private:
     static_assert(((size != 0) && ((size & (size - 1)) == 0)), "Size can only be power of two"); //compile time error if not power of two
+    
     vector<bool> values = vector<bool>(size);
 
 public:
@@ -197,7 +198,6 @@ public:
         return val == 1 || val == 1;
     }
 
-
     template <class T>
     myuint<size> operator/(T other)
     {
@@ -205,7 +205,8 @@ public:
     }
 
     template <class T>
-    myuint<size> operator%(T other){
+    myuint<size> operator%(T other)
+    {
         return longDivide(other)[1];
     }
 
@@ -239,9 +240,9 @@ public:
     u_int getIntFromValue()
     {
 
-        if (getSize() / 8 > sizeof(u_int) * 8)
+        if (getSize() > sizeof(u_int) * 8)
         {
-            cout << "getting int, myuint size is: " << getSize() / 8 << " and max size is: " << sizeof(u_int) * 8 << "\n";
+            cout << "getting int, myuint size is: " << getSize() << " and max size is: " << sizeof(u_int) * 8 << "\n";
             cerr << "cannot convert number larger than 32 bits to int!!\n";
             return 0;
         }
@@ -264,12 +265,12 @@ public:
     int getSize()
     {
         // return sizeof(values)/sizeof(values[0]);
-        return size * 8;
+        return size;
     }
     int getContainerSize()
     {
         // return sizeof(values)/sizeof(values[0]);
-        return values.size() * sizeof(values[0]);
+        return values.size();
     }
 
     // template <class T>
@@ -393,14 +394,15 @@ public:
         // }
         // myuint<size>x(0);
 
-        myuint<size>tmp(0);
+        myuint<size> tmp(0);
         // tmp = *this;
-        myuint<size>ans(0);
+        myuint<size> ans(0);
         for (int i = size - 1; i >= 0; i--)
         {
             tmp.shiftLeft(1); //TODO fix multiplication
-            if(b[i]=='1'){
-                tmp+= *this;
+            if (b[i] == '1')
+            {
+                tmp += *this;
                 // ans=tmp;
             }
         }
@@ -535,7 +537,7 @@ public:
         return ret;
     }
 
-    vector<bool> stringToBoolVec(string s,int min = 0)
+    vector<bool> stringToBoolVec(string s, int min = 0)
     {
         vector<bool> ret;
 
@@ -555,19 +557,18 @@ public:
                 return ret;
             }
         }
-        if(ret.size()<min){
+        if (ret.size() < min)
+        {
             int diff = min - ret.size();
             ret.insert(ret.begin(), diff, false);
         }
         return ret;
     }
 
-    
-
     void setValueByBinaryString(string s)
     {
         values.clear();
-        values = stringToBoolVec(s,size);
+        values = stringToBoolVec(s, size);
     }
 
     void setValueByVec(vector<bool> vals)
@@ -640,9 +641,6 @@ public:
         return tmp;
     }
 
-    
-
-
     template <class T>
     vector<myuint<size>> longDivide(T other)
     {
@@ -688,5 +686,62 @@ public:
             }
         }
         return {quotient, remain};
+    }
+
+    template <class T>
+    T convert_to()
+    {
+        static_assert(is_integral<T>::value, "Integral type required.");
+        T other = 0;
+        bool canConvert = false;
+        int cSize = size;
+        if (getSize() < sizeof(T)*8)
+        {
+            canConvert = true;
+        }
+
+        int realSize = getValueContainer().size();
+        for (bool x : getValueContainer())
+        {
+            if (x)
+                break;
+            realSize--;
+        }
+        if (realSize < sizeof(T)*8){
+            canConvert = true;
+            cSize = realSize;
+        }
+        // cout<<"real size is: "<<realSize<<"\n";
+        // cout<<"declared size is: "<<getSize()<<"\n";
+        // cout<<"real container size is: "<<getContainerSize()<<"\n";
+        // cout<<"dest size is: "<<sizeof(T)*8<<"\n";
+        if (!canConvert)
+        {
+            cerr << "size of number cannot be converted to size of type specified\n";
+            return 0;
+        }
+
+        T currentValue = 1;
+        // for(bool c: getValueContainer()){
+        vector<bool> valCont = getValueContainer();
+        for (int i = valCont.size() - 1; i >= 0; i--)
+        {
+            if (valCont[i])
+                other += currentValue;
+            currentValue *= 2;
+        }
+        return other;
+    }
+
+    //copy const
+    template <int otherSize>
+    myuint(const myuint <otherSize>& other){
+        this->values=other.values;
+    }
+
+    template <int otherSize>
+    myuint(myuint<otherSize>&& other)
+    {
+        this->values  = move(other.values);
     }
 };

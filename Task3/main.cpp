@@ -7,73 +7,45 @@ using namespace std;
 
 int main(){
 
-
-
-    myuint<32> f(20);
-    
-
-    cout << "\nmult test\n";
-
-    myuint<2048> q(1);
-    // myuint<2048> r(1000000);
-    cout<<q.toBinaryString()<<endl;
-
-    // cout << q.multiplyBinaryStringByScalar(q.toBinaryString(), 1000000) << endl; TODO
-    // myuint<64> k(4);
-
-    myuint<16> j(20);
-    myuint<64> k(4);
-    cout << "\ndiiff size add test\n";
-    cout<< (j + k).toBinaryString()<<"\n";
-
-        cout
-         << "\nunary\n";
-    cout << "b4\n"
-         << f.toBinaryString() << endl;
-    // f = ++f;
-    // f +=t;
-    
-
-    cout << (--f).toBinaryString() << endl;
-    cout << (--f).toBinaryString() << endl;
-
-
-    cout<<"\ndiv\n";
-    myuint<32> d(1986);    
-    myuint<32> t(9);
-    // cout<<"b4 d\n"<<d.toBinaryString()<<endl;
-    // cout<<"b4 t\n"<<d.toBinaryString()<<endl;
-    // f = f/t;
-    cout << d.getIntFromValue() / t.getIntFromValue() << " / ";
-    cout << d.getIntFromValue() % t.getIntFromValue() << endl;
-
-    // vector<myuint<32>> dr = d.longDivide(t);
-
-    // myuint<32> r(0);
-    // d = dr[0];
-    // r = dr[1];
-    // string ret = d.divideByScalar(3);
-    // cout << f.toBinaryString() << endl;
-    cout << (d/t).toBinaryString() << " / ";
-    cout << (d%t).toBinaryString() << endl;
-
-    cout << (d/t).getIntFromValue() << " / ";
-
-    cout << d.getIntFromValue() << endl;
-    d/=t;
-    myuint<32> r(1986);
-    r%=t;
-    cout << r.getIntFromValue() <<"\n";
-
-    // int x = 10000000000000000000000;
     cout<<"\nmult\n";
     myuint<64> x(0);
     myuint<64> y(2);
     x.setValueByBinaryString("11010010");
     cout << x.toBinaryString() << endl;
-    // y = 2;
     x = x.realMultiplyByOther(y);
     cout<<x.toBinaryString()<<endl;
-    // cout<<r.getIntFromValue()<<endl;
+
+
+
+    myuint<64>z0(0);
+    myuint<1024>z1(0);
+    z0=4800;
+    z0.shiftLeft(31);
+    unsigned long long i1 = z0.convert_to<unsigned long long>();
+    // string s1 = z0.convert_to<string>();
+    cout<<"converted to other: "<<i1<<endl;
+    
+
+    cout<<"\n\n";
+    myuint<32>c0(68);
+    myuint<32>c1 = myuint<32>(c0);
+
+    
+
+    int cc = c1.convert_to<int>();
+    cout<<"copied "<<cc<<"\n";
+
+    cc = c0.convert_to<int>();
+    cout << "prev " << c0.convert_to<int>() << "\n";
+
+    myuint<32> c2 = move(c0);
+    cc = c2.convert_to<int>();
+    cout << "moved " << cc << "\n";
+
+    cc = c0.convert_to<int>();
+    cout << "prev " << c0.convert_to<int>() << "\n";
+
     return 0;
 }
+
+
