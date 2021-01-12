@@ -359,6 +359,9 @@ public:
         {
             values.push_back((bool)a[i]);
         }
+        if(values.size()!=size){
+            cerr<<"Error while trying to initialize myuint with other type\n";
+        }
         return this[0];
     }
 
@@ -650,12 +653,30 @@ public:
     void setValueByBinaryString(string s)
     {
         values.clear();
-        values = stringToBoolVec(s, size);
+        vector<bool> tmp  = stringToBoolVec(s, size);
+        if(tmp.size()>size){
+            cerr<<"string too large to assign! Removing extra bits!\n";
+            int diff = (tmp.size() - size);
+            tmp.erase(tmp.begin(), tmp.begin() + diff);
+        }
+        values = tmp;
     }
 
     void setValueByVec(vector<bool> vals)
     {
-        this->values = vals;
+        if(vals.size()==size){
+            this->values = vals;
+            return;
+        }
+        if (vals.size() < size)
+        {
+            int diff = vals.size()-size;
+            vals.insert(vals.begin(),diff,false);
+            this->values = vals;
+            return;
+        }
+        cerr<<"Vector is too large to assign. Aborting...\n";
+        
     }
 
     myuint<size> shiftRightThis(int shiftAmount)
