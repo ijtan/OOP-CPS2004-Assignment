@@ -8,8 +8,8 @@ using namespace std;
 int main(){
 
     cout<<"\nmult\n";
-    myuint<16> x(2);
-    myuint<16> y(10000);
+    myuint<16> x(65535);
+    myuint<16> y(65535);
     myuint<32> xy(0);
     // x.setValueByBinaryString("11010010");
     cout << x.toBinaryString() << endl;

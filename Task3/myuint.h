@@ -2,6 +2,7 @@
 #include <limits>
 #include <stdexcept>
 #include <vector>
+#include "math.h"
 #include <string>
 #include <limits.h>
 
@@ -31,6 +32,12 @@ public:
     myuint(int value)
     {
         // cout << "init with size: " << size << " and value: " << value << '\n';
+        // static_assert(value<=2^size)
+        if(value>=pow(2,size)){
+            cerr << "could not initalize by "<<value<<" as size is too small; max size is: "<<pow(2,size)-1<<"\n";
+            return;
+        }
+        
         setValueByOther(value);
     }
 
@@ -369,53 +376,20 @@ public:
     }
 
     template <int otherSize>
-    string multiplyBinaryStringByScalar(string s, myuint<otherSize> m)
-    {
-        string start = s;
-        for (; m > 0; --m)
-        {
-            // cout << s << "\n";
-            s = addBinaryStrings(s, start);
-
-            // cout << s << "\n";
-        }
-        return s;
-    }
-
-    template <int otherSize>
-    myuint<size> realMultiplyByOther(myuint<otherSize> m)
-    {
-        // string a = toBinaryString();
-        string b = m.toBinaryString();
-        // vector<myuint<size>> vec;
-        // myuint<size>x(0);
-        // for(int i = 0; i < a.size(); i++){
-        //     vec.push_back(x);
-        // }
-        // myuint<size>x(0);
-
-        myuint<size> tmp(0);
-        // tmp = *this;
-        myuint<size> ans(0);
-        for (int i = size - 1; i >= 0; i--)
-        {
-            tmp.shiftLeft(1); //TODO fix multiplication
-            if (b[i] == '1')
-            {
-                tmp += *this;
-                // ans=tmp;
-            }
-        }
-        return tmp;
-    }
-
-    template <int otherSize>
     myuint<size+otherSize>multiplyMyuints(myuint<otherSize> other){
-        vector<string> tmp;
+        
         myuint<size+otherSize>ret(0);
         string aStr = toBinaryString();
         string bStr = other.toBinaryString();
 
+        string retStr = multiplyBinaryStrings(aStr,bStr);
+
+        ret.setValueByBinaryString(retStr);
+        return ret;
+    }
+
+    string multiplyBinaryStrings(string aStr,string bStr){
+        vector<string> tmp;
         int aSize = aStr.size();
         int bSize = bStr.size();
         if (aSize > bSize)
@@ -435,17 +409,18 @@ public:
         int j = 0;
 
         string current;
-        int aC,bC;
-        aC=bC=0;
+        int aC, bC;
+        aC = bC = 0;
         char abC;
-        for(;i>=0;i--){
+        for (; i >= 0; i--)
+        {
             current = "";
             for (j = bStr.size() - 1; j >= 0; j--)
             {
-                aC = aStr[j]-'0';
-                bC = bStr[i]-'0';
-                abC = (aC*bC)+'0';
-                current.insert(0,1,abC);
+                aC = aStr[j] - '0';
+                bC = bStr[i] - '0';
+                abC = (aC * bC) + '0';
+                current.insert(0, 1, abC);
             }
             tmp.push_back(current);
         }
@@ -459,22 +434,7 @@ public:
             retStr = addBinaryStrings(retStr, s);
             increase++;
         }
-        ret.setValueByBinaryString(retStr);
-        return ret;
-    }
-
-    template <class T>
-    string multiplyBinaryStringByScalar(string s, T m)
-    {
-        string start = s;
-        for (int i = 1; i < m; ++i)
-        {
-            cout << s << "\n";
-            s = addBinaryStrings(s, start);
-
-            // cout << s << "\n";
-        }
-        return s;
+        return retStr;
     }
 
     template <class T>
@@ -749,7 +709,7 @@ public:
         T other = 0;
         bool canConvert = false;
         int cSize = size;
-        if (getSize() < sizeof(T)*8)
+        if (getSize() <= sizeof(T)*8)
         {
             canConvert = true;
         }
@@ -761,7 +721,7 @@ public:
                 break;
             realSize--;
         }
-        if (realSize < sizeof(T)*8){
+        if (realSize <= sizeof(T)*8){
             canConvert = true;
             cSize = realSize;
         }
