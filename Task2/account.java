@@ -8,31 +8,31 @@ public class account extends approvable {
     private double balance;
     private char currency;
     private ArrayList<card> cards = new ArrayList<card>();
-    private ArrayList<String> transactions = new ArrayList<String>();
-    private String owner;
+    // private ArrayList<String> transactions = new ArrayList<String>();
+    private String ownerID;
 
 
 
 
     public account(String ownerID) {
-        this.owner = ownerID;
+        this.ownerID = ownerID;
     }
 
     @Override
-    public void approve(request r) {
-        if(r.toClose)
-            accountMediator.approveAccountDeletion(r, this);
-        else
-            accountMediator.approveNewAccount(r, this);
+    public void approve(request r) {//TODO
+        // if(r.toClose)
+        //     accountMediator.approveAccountDeletion(r, this);
+        // else
+        //     accountMediator.approveNewAccount(r, this);
     }
 
     @Override
     public void deny(request r) {
-        accountMediator.deny(r);
+    //     accountMediator.deny(r);
     }
 
-    public String getOwner(){
-        return owner;
+    public String getOwnerID(){
+        return ownerID;
     }
     
     public char getCurrency() {
@@ -44,12 +44,12 @@ public class account extends approvable {
             throw new Exception("Not enough money in sender account");
         }
         balance -= value;
-        transactions.add("Subtracted " + currency + value);
+        // transactions.add("Subtracted " + currency + value);
     }
 
     public void add(double value) {
         balance += value;
-        transactions.add("Added " + currency + value);
+        // transactions.add("Added " + currency + value);
     }
 
     public ArrayList<card> getAllCards() {
