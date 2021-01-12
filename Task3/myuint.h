@@ -27,7 +27,7 @@ public:
         cout << "init with other myuint\n";
         if (other.getSize() > getSize())
         {
-            cerr << "other size is too big to assign to this one!\n";
+            cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
         }
         int diff = other.getSize() - size;
         this->values = other.getValueContainer();
@@ -38,6 +38,7 @@ public:
     myuint(T value)
     {
         // cout << "init with size: " << size << " and value: " << value << '\n';
+        // cout<<"value is :"<<type(T)<<endl;
         static_assert(is_integral<T>::value, "Can only initalize by integral types!");
         if (value >= pow(2, size))
         {
@@ -102,7 +103,7 @@ public:
     template <int otherSize>
     myuint<size> operator-=(myuint<otherSize> other)
     {
-        return *this =  subtract<otherSize>(other);
+        return *this = subtract<otherSize>(other);
     };
 
     template <class T>
@@ -130,7 +131,7 @@ public:
     {
         if (other.getSize() > getSize())
         {
-            cerr << "other size is too big to assign to this one!\n";
+            cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
             return this[0];
         }
         int diff = size - other.getSize();
@@ -221,16 +222,27 @@ public:
     template <int otherSize>
     myuint<size> operator*(myuint<otherSize> other)
     {
-        auto tmp = multiplyMyuints(other);
+        return checkOverflows(multiplyMyuints(other));
+    }
+
+    template <int otherSize>
+    myuint<size> checkOverflows(myuint<otherSize> tmp)
+    {
+
         auto tmpCont = tmp.getValueContainer();
-        for(int i = 0; i<=tmp.getSize()-size;i++){
-            if (tmpCont[i]){
-                cerr<<"overflow detected!"<<endl;
-               break;
+        for (int i = 0; i < tmp.getSize() - size; i++)
+        {
+            if (tmpCont[i])
+            {
+                cerr << "overflow detected!" << endl;
+                // cerr << "overflow detected! Aborting!" << endl;
+                // throw "overflow detected!";
+                break;
             }
         }
-        myuint<size>ret(0);
         tmpCont.erase(tmpCont.begin(), tmpCont.begin() + tmp.getSize() - size);
+        myuint<size> ret(0);
+
         ret.setValueByVec(tmpCont);
         return ret;
     }
@@ -240,7 +252,7 @@ public:
     myuint<size> operator*(T other)
     {
         static_assert(is_integral<T>::value, "Can only multiply by integral types!");
-        myuint<sizeof(other * 8)> tmp(other);
+        myuint<size> tmp(other);
         return multiplyMyuints(tmp);
     }
 
@@ -248,21 +260,15 @@ public:
     myuint<size> operator*=(myuint<otherSize> other)
     {
         // static_assert(is_integral<T>::value, "Can only divide by integral types!");
-        return setValueByOtherType(multiplyMyuints(other));
+        return *this = checkOverflows(multiplyMyuints(other));
     }
 
     template <class T>
     myuint<size> operator*=(T other)
     {
         static_assert(is_integral<T>::value, "Can only multiply by integral types!");
-        // if (sizeof(other * 8) > 2048)
-        // {
-        //     cerr << "cannot mulitply by type given as it is too large!\n";
-        //     return nullptr;
-        // }
-        myuint<sizeof(other * 8)> tmp(other);
-        auto multiplyMyuints(tmp);
-        return setValueByOtherType();
+        myuint<size> tmp(other);
+        return *this = checkOverflows(multiplyMyuints(tmp));
     }
 
     template <int otherSize>
@@ -680,7 +686,7 @@ public:
 
     myuint<size> shiftLeft(int shiftAmount)
     {
-        myuint<size>tmp(this);
+        myuint<size> tmp(this);
         return tmp.shiftLeftThis(shiftAmount);
     }
 
@@ -824,10 +830,10 @@ public:
     template <int otherSize>
     myuint(const myuint<otherSize> &other)
     {
-        if(otherSize==size)
+        if (otherSize == size)
             this->values = other.values;
         else
-            cerr<<"Could not copy by different size!\n";
+            cerr << "Could not copy by different size!\n";
     }
 
     template <int otherSize>
