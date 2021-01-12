@@ -8,15 +8,16 @@ using namespace std;
 int main(){
 
     cout<<"\nmult\n";
-    myuint<64> x(0);
-    myuint<64> y(2);
-    x.setValueByBinaryString("11010010");
+    myuint<16> x(2);
+    myuint<16> y(10000);
+    myuint<32> xy(0);
+    // x.setValueByBinaryString("11010010");
     cout << x.toBinaryString() << endl;
-    x = x.realMultiplyByOther(y);
-    cout<<x.toBinaryString()<<endl;
+    xy = x.multiplyMyuints(y);
+    cout<<xy.toBinaryString()<<endl;
+    cout<<xy.convert_to<u_int32_t>()<<endl;
 
-
-
+    cout << "\nconv\n";
     myuint<64>z0(0);
     myuint<1024>z1(0);
     z0=4800;

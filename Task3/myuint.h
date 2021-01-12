@@ -409,6 +409,60 @@ public:
         return tmp;
     }
 
+    template <int otherSize>
+    myuint<size+otherSize>multiplyMyuints(myuint<otherSize> other){
+        vector<string> tmp;
+        myuint<size+otherSize>ret(0);
+        string aStr = toBinaryString();
+        string bStr = other.toBinaryString();
+
+        int aSize = aStr.size();
+        int bSize = bStr.size();
+        if (aSize > bSize)
+        {
+            int diff = aSize - bSize;
+            bStr.insert(0, abs(diff), '0');
+
+            bSize = bStr.size();
+        }
+        else if (aSize < bSize)
+        {
+            int diff = bSize - aSize;
+            aStr.insert(0, abs(diff), '0');
+            aSize = aStr.size();
+        }
+        int i = aStr.size() - 1;
+        int j = 0;
+
+        string current;
+        int aC,bC;
+        aC=bC=0;
+        char abC;
+        for(;i>=0;i--){
+            current = "";
+            for (j = bStr.size() - 1; j >= 0; j--)
+            {
+                aC = aStr[j]-'0';
+                bC = bStr[i]-'0';
+                abC = (aC*bC)+'0';
+                current.insert(0,1,abC);
+            }
+            tmp.push_back(current);
+        }
+        string retStr = "";
+        int increase = 0;
+        for (string s : tmp)
+        {
+            // cout<<increase<<") "<<s<<endl;
+            s.insert(s.size(), increase, '0');
+            s.insert(0, 1, '0');
+            retStr = addBinaryStrings(retStr, s);
+            increase++;
+        }
+        ret.setValueByBinaryString(retStr);
+        return ret;
+    }
+
     template <class T>
     string multiplyBinaryStringByScalar(string s, T m)
     {
