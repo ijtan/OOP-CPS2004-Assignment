@@ -1,12 +1,11 @@
 package Task2;
 
-import java.util.List;
+// import java.util.List;
 import java.util.HashMap;
-import java.util.ArrayList;
+// import java.util.ArrayList;
 
 public class userManager {
-    private static List<user> users = new ArrayList<user>();
-    // TODO implement this
+    // private static List<user> users = new ArrayList<user>();
     private static HashMap<String, user> usersMap = new HashMap<String, user>(); 
 
     public static user getUser(String id) throws Exception {
@@ -25,7 +24,7 @@ public class userManager {
     public static void addUser(String name, String surname, String id) {
         user u = new user(name, surname, id);
         usersMap.put(id, u);
-        users.add(u);
+        // users.add(u);
     }
 
     public static void addAccountToUser(String id, String accountNo){
@@ -34,6 +33,7 @@ public class userManager {
             System.err.println("Could not find user to add account to!");
             return;
         }
+        // accountMediator.removeAccount(accountNo);
         u.addAccount(accountNo);
     }
 
@@ -41,7 +41,7 @@ public class userManager {
         user u = usersMap.get(id);
         if (u == null) 
             throw new Exception("User ID specified not found!");
-        
+        // accountMediator.removeAccount(accountNo);
         u.removeAccount(accountNo);
     }
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class account extends approvable {
 
-    private int accountNo;
+    private String accountNo;
     private double balance;
     private char currency;
     private ArrayList<card> cards = new ArrayList<card>();
@@ -19,16 +19,18 @@ public class account extends approvable {
     }
 
     @Override
-    public void approve(request r) {//TODO
-        // if(r.toClose)
-        //     accountMediator.approveAccountDeletion(r, this);
-        // else
-        //     accountMediator.approveNewAccount(r, this);
-    }
+    public void approve(request r) {
+        if(r.getParam(0).equals("delete"));
+        accountMediator.approveAccountDeletion(r, r.getParam(1));
+    }    
 
     @Override
     public void deny(request r) {
-    //     accountMediator.deny(r);
+        accountMediator.deny(r);
+    }
+
+    public void setAccountNumber(String acNo) {
+        this.accountNo = acNo;
     }
 
     public String getOwnerID(){
@@ -41,7 +43,7 @@ public class account extends approvable {
 
     public void subtract(double value) throws Exception {
         if (balance < value){
-            throw new Exception("Not enough money in sender account");
+            throw new Exception("Insufficient balance in account");
         }
         balance -= value;
         // transactions.add("Subtracted " + currency + value);
@@ -67,7 +69,7 @@ public class account extends approvable {
             throw new Exception("Card not found!");
     }
 
-    public int getAccountNumber() {
+    public String getAccountNumber() {
         return accountNo;
     }
 

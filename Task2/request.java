@@ -6,18 +6,33 @@ public class request implements Serializable{
     private String requesterID;
     //int type; //0 = close account 1 = open account 2 = new card 3 = close card
     approvable action;
-    boolean toClose = false;
+    String[] params;
     
-    public request(String requester, approvable a, boolean toClose) {
+
+    public request(String requester, approvable a) {
         this.requesterID = requester;
         this.action = a;
-        this.toClose = toClose;
+    }
+
+    public request(String requester, approvable a, String params[]) {
+        this.requesterID = requester;
+        this.action = a;
+        this.params = params;
     }
 
     
     public String getRequester(){
         return requesterID;
     }
+
+    public String[] getParams() {
+        return params;
+    }
+
+    public String getParam(int x) {
+        return params[x];
+    }
+
     public void approve(){
         action.approve(this);
     }
