@@ -17,7 +17,7 @@ class myuint
 
 private:
     static_assert(((size != 0) && ((size & (size - 1)) == 0)), "Size can only be power of two"); //compile time error if not power of two
-    
+
     vector<bool> values = vector<bool>(size);
 
 public:
@@ -25,20 +25,27 @@ public:
     myuint(myuint<otherSize> other)
     {
         cout << "init with other myuint\n";
-        setValueByVec(other.getValueContainer());
+        if (other.getSize() > getSize())
+        {
+            cerr << "other size is too big to assign to this one!\n";
+        }
+        int diff = other.getSize() - size;
+        this->values = other.getValueContainer();
+        values.insert(values.begin(), diff, false);
     }
 
-    // template <class T>
-    myuint(int value)
+    template <class T>
+    myuint(T value)
     {
         // cout << "init with size: " << size << " and value: " << value << '\n';
-        // static_assert(value<=2^size)
-        if(value>=pow(2,size)){
-            cerr << "could not initalize by "<<value<<" as size is too small; max size is: "<<pow(2,size)-1<<"\n";
+        static_assert(is_integral<T>::value, "Can only initalize by integral types!");
+        if (value >= pow(2, size))
+        {
+            cerr << "could not initalize by " << value << " as size is too small; max size is: " << pow(2, size) - 1 << "\n";
             return;
         }
-        
-        setValueByOther(value);
+
+        setValueByOtherType(value);
     }
 
     template <int otherSize>
@@ -51,7 +58,7 @@ public:
     template <class T>
     myuint<size> operator+(T other)
     {
-        cout << "+ operator called with other type!\n";
+        static_assert(is_integral<T>::value, "Can only add by integral types!");
 
         string bin = toBinaryString<T>(other);
         myuint<size> tmp(0);
@@ -63,6 +70,7 @@ public:
     template <int otherSize>
     myuint<size> operator+=(myuint<otherSize> &other)
     {
+
         string bin = other.toBinaryString();
         setValueByBinaryString(addBinaryStrings(this->toBinaryString(), bin));
         return this[0];
@@ -71,7 +79,7 @@ public:
     template <class T>
     void operator+=(T other)
     {
-        cout << "in +=" << endl;
+        static_assert(is_integral<T>::value, "Can only add by integral types!");
         string bin = toBinaryString<T>(other);
         this->setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
     };
@@ -86,6 +94,7 @@ public:
     template <class T>
     myuint<size> operator-(T &other)
     {
+        static_assert(is_integral<T>::value, "Can only subtract by integral types!");
         cout << "- operator called!\n";
         return subtract<T>(other);
     }
@@ -93,14 +102,13 @@ public:
     template <int otherSize>
     myuint<size> operator-=(myuint<otherSize> other)
     {
-        setValueByVec(subtract<otherSize>(other).getValueContainer());
-        return this[0];
+        return *this =  subtract<otherSize>(other);
     };
 
     template <class T>
     myuint<size> operator-=(const T other)
     {
-        // this =
+        static_assert(is_integral<T>::value, "Can only subtract by integral types!");
         return this - other;
     }
 
@@ -118,17 +126,17 @@ public:
     }
 
     template <int otherSize>
-    myuint<size> operator=(const myuint<otherSize> other) //TODO change size accordingly
+    myuint<size> operator=(myuint<otherSize> other)
     {
-        /*TODO not sure if this should return size or otherSize!!*/
         if (other.getSize() > getSize())
         {
-            cerr << "other size is too big to assign to this one!\n"; //TODO
+            cerr << "other size is too big to assign to this one!\n";
+            return this[0];
         }
-        int diff = other.getSize() - size;
+        int diff = size - other.getSize();
         this->values = other.getValueContainer();
         values.insert(values.begin(), diff, false);
-        return this;
+        return this[0];
     }
 
     template <int otherSize>
@@ -166,6 +174,7 @@ public:
     template <class T>
     bool operator==(T other)
     {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
         return whichIsLarger(values, otherVec) == 0;
@@ -174,6 +183,7 @@ public:
     template <class T>
     bool operator>(T other)
     {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
         return whichIsLarger(values, otherVec) == 1;
@@ -182,6 +192,7 @@ public:
     template <class T>
     bool operator<(T other)
     {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
         return whichIsLarger(values, otherVec) == 2;
@@ -190,6 +201,7 @@ public:
     template <class T>
     bool operator>=(T other)
     {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
         int val = whichIsLarger(values, otherVec);
@@ -199,71 +211,116 @@ public:
     template <class T>
     bool operator<=(T other)
     {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
         int val = whichIsLarger(values, otherVec) == 2;
         return val == 1 || val == 1;
     }
 
+    template <int otherSize>
+    myuint<size> operator*(myuint<otherSize> other)
+    {
+        auto tmp = multiplyMyuints(other);
+        auto tmpCont = tmp.getValueContainer();
+        for(int i = 0; i<=tmp.getSize()-size;i++){
+            if (tmpCont[i]){
+                cerr<<"overflow detected!"<<endl;
+               break;
+            }
+        }
+        myuint<size>ret(0);
+        tmpCont.erase(tmpCont.begin(), tmpCont.begin() + tmp.getSize() - size);
+        ret.setValueByVec(tmpCont);
+        return ret;
+    }
+    // explicit operator int *() const { return nullptr; }
+
+    template <class T>
+    myuint<size> operator*(T other)
+    {
+        static_assert(is_integral<T>::value, "Can only multiply by integral types!");
+        myuint<sizeof(other * 8)> tmp(other);
+        return multiplyMyuints(tmp);
+    }
+
+    template <int otherSize>
+    myuint<size> operator*=(myuint<otherSize> other)
+    {
+        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
+        return setValueByOtherType(multiplyMyuints(other));
+    }
+
+    template <class T>
+    myuint<size> operator*=(T other)
+    {
+        static_assert(is_integral<T>::value, "Can only multiply by integral types!");
+        // if (sizeof(other * 8) > 2048)
+        // {
+        //     cerr << "cannot mulitply by type given as it is too large!\n";
+        //     return nullptr;
+        // }
+        myuint<sizeof(other * 8)> tmp(other);
+        auto multiplyMyuints(tmp);
+        return setValueByOtherType();
+    }
+
+    template <int otherSize>
+    myuint<size> operator/(myuint<otherSize> other)
+    {
+        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
+        return longDivide(other)[0];
+    }
+
     template <class T>
     myuint<size> operator/(T other)
     {
+        static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return longDivide(other)[0];
     }
 
     template <class T>
     myuint<size> operator%(T other)
     {
+        static_assert(is_integral<T>::value, "Can only divide by integral types!");
+        return longDivide(other)[1];
+    }
+
+    template <int otherSize>
+    myuint<size> operator%(myuint<otherSize> other)
+    {
+        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return longDivide(other)[1];
     }
 
     template <class T>
     myuint<size> operator/=(T other)
     {
+        static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return *this = longDivide(other)[0];
     }
 
     template <class T>
     myuint<size> operator%=(T other)
     {
+        static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return *this = longDivide(other)[1];
     }
 
-    // myuint operator<<(const myuint &p) const;
-    // myuint operator>>(const myuint &p) const;
-
-    // bool operator/(const myuint &p) const;
-    // bool operator%(const myuint &p) const;
-    // bool operator*(const myuint &p) const;
-
-    // bool operator<(const myuint &p) const;
-    // bool operator>(const myuint &p) const;
-    // bool operator<=(const myuint &p) const;
-    // bool operator>=(const myuint &p) const;
-    // vector<bool> convertToValues(ll num)
-    // {
-    // }
-
-    u_int getIntFromValue()
+    template <int otherSize>
+    myuint<size> operator/=(myuint<otherSize> other)
     {
-
-        if (getSize() > sizeof(u_int) * 8)
-        {
-            cout << "getting int, myuint size is: " << getSize() << " and max size is: " << sizeof(u_int) * 8 << "\n";
-            cerr << "cannot convert number larger than 32 bits to int!!\n";
-            return 0;
-        }
-
-        int j = 1;
-        int x = 0;
-        for (int i = values.size() - 1; i >= 0; i--)
-        {
-            if (values[i])
-                x += j;
-            j *= 2;
-        }
-        return x;
+        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
+        return *this = longDivide(other)[0];
     }
+
+    template <int otherSize>
+    myuint<size> operator%=(myuint<otherSize> other)
+    {
+        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
+        return *this = longDivide(other)[1];
+    }
+
     vector<bool> getValueContainer()
     {
         return values;
@@ -280,9 +337,10 @@ public:
         return values.size();
     }
 
-    // template <class T>
-    void setValueByOther(int num)
+    template <class T>
+    myuint<size> setValueByOtherType(T num)
     {
+        static_assert(is_integral<T>::value, "can only assign sing integral types!");
         values.clear();
         int a[size] = {0};
         for (int i = 0; num > 0; i++)
@@ -295,11 +353,13 @@ public:
         {
             values.push_back((bool)a[i]);
         }
+        return this[0];
     }
 
     template <class T>
     string toBinaryString(T num)
     {
+        static_assert(is_integral<T>::value, "Can only convert integral types to strings!");
         int a[size] = {0};
         int tmp = num;
         string ret = "";
@@ -367,7 +427,7 @@ public:
 
         for (; m > 0; --m)
         {
-            tmp.shiftRight(1);
+            tmp.shiftRightThis(1);
             newStr = subtractBinaryStrings(newStr, tmp.toBinaryString());
         }
         tmp.setValueByBinaryString(newStr);
@@ -376,19 +436,21 @@ public:
     }
 
     template <int otherSize>
-    myuint<size+otherSize>multiplyMyuints(myuint<otherSize> other){
-        
-        myuint<size+otherSize>ret(0);
+    myuint<size + otherSize> multiplyMyuints(myuint<otherSize> other)
+    {
+
+        myuint<size + otherSize> ret(0);
         string aStr = toBinaryString();
         string bStr = other.toBinaryString();
 
-        string retStr = multiplyBinaryStrings(aStr,bStr);
+        string retStr = multiplyBinaryStrings(aStr, bStr);
 
         ret.setValueByBinaryString(retStr);
         return ret;
     }
 
-    string multiplyBinaryStrings(string aStr,string bStr){
+    string multiplyBinaryStrings(string aStr, string bStr)
+    {
         vector<string> tmp;
         int aSize = aStr.size();
         int bSize = bStr.size();
@@ -590,26 +652,36 @@ public:
         this->values = vals;
     }
 
-    myuint<size> shiftRight(int shiftAmount)
-    { //TODO change to myuint return
+    myuint<size> shiftRightThis(int shiftAmount)
+    {
 
         // this->setSize((getSize()/8)+shiftAmount);
 
-        values.insert(values.begin(), shiftAmount, false);
-
         values.erase(values.end() - shiftAmount, values.end());
+        values.insert(values.begin(), shiftAmount, false);
 
         return this[0];
     }
 
-    myuint<size> shiftLeft(int shiftAmount)
-    { //TODO change to myuint return
-        //TODO change this to return a temp !!
+    myuint<size> shiftLeftThis(int shiftAmount)
+    {
+        values.erase(values.begin(), values.begin() + shiftAmount);
         values.insert(values.end(), shiftAmount, false);
 
-        values.erase(values.begin(), values.begin() + shiftAmount);
-
         return this[0];
+    }
+
+    myuint<size> shiftRight(int shiftAmount)
+    {
+
+        myuint<size> tmp(this);
+        return tmp.shiftRightThis(shiftAmount);
+    }
+
+    myuint<size> shiftLeft(int shiftAmount)
+    {
+        myuint<size>tmp(this);
+        return tmp.shiftLeftThis(shiftAmount);
     }
 
     string toBinaryString()
@@ -680,10 +752,10 @@ public:
 
         myuint<size> tmp(0);
         tmp = n0;
-        while (((tmp.shiftLeft(1)) <= *this))
+        while (((tmp.shiftLeftThis(1)) <= *this))
         {
-            n0.shiftLeft(1);
-            m0.shiftLeft(1);
+            n0.shiftLeftThis(1);
+            m0.shiftLeftThis(1);
             tmp = n0;
         }
         remain -= n0;
@@ -691,8 +763,8 @@ public:
 
         while (remain >= other)
         {
-            m0.shiftRight(1);
-            n0.shiftRight(1);
+            m0.shiftRightThis(1);
+            n0.shiftRightThis(1);
             if (n0 <= remain)
             {
                 remain -= n0;
@@ -709,7 +781,7 @@ public:
         T other = 0;
         bool canConvert = false;
         int cSize = size;
-        if (getSize() <= sizeof(T)*8)
+        if (getSize() <= sizeof(T) * 8)
         {
             canConvert = true;
         }
@@ -721,7 +793,8 @@ public:
                 break;
             realSize--;
         }
-        if (realSize <= sizeof(T)*8){
+        if (realSize <= sizeof(T) * 8)
+        {
             canConvert = true;
             cSize = realSize;
         }
@@ -749,13 +822,21 @@ public:
 
     //copy const
     template <int otherSize>
-    myuint(const myuint <otherSize>& other){
-        this->values=other.values;
+    myuint(const myuint<otherSize> &other)
+    {
+        if(otherSize==size)
+            this->values = other.values;
+        else
+            cerr<<"Could not copy by different size!\n";
     }
 
     template <int otherSize>
-    myuint(myuint<otherSize>&& other)
+    myuint(myuint<otherSize> &&other)
     {
-        this->values  = move(other.values);
+
+        if (otherSize == size)
+            this->values = move(other.values);
+        else
+            cerr << "Could not move by different size!\n";
     }
 };

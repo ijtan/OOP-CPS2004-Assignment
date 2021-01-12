@@ -11,19 +11,25 @@ int main(){
     myuint<16> x(65535);
     myuint<16> y(65535);
     myuint<32> xy(0);
-    // x.setValueByBinaryString("11010010");
     cout << x.toBinaryString() << endl;
-    xy = x.multiplyMyuints(y);
+    xy = x*y;
     cout<<xy.toBinaryString()<<endl;
     cout<<xy.convert_to<u_int32_t>()<<endl;
+
+    cout << "\ndiv\n";
+    myuint<16> xx(1234);
+    myuint<16> yy(2);
+    myuint<32> xxyy(0);
+    xxyy = xx/yy;
+    cout << xxyy.toBinaryString() << endl;
+    cout << xxyy.convert_to<u_int32_t>() << endl;
 
     cout << "\nconv\n";
     myuint<64>z0(0);
     myuint<1024>z1(0);
     z0=4800;
-    z0.shiftLeft(31);
+    z0.shiftLeftThis(31);
     unsigned long long i1 = z0.convert_to<unsigned long long>();
-    // string s1 = z0.convert_to<string>();
     cout<<"converted to other: "<<i1<<endl;
     
 
