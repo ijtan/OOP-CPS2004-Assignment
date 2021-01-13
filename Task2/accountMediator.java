@@ -40,16 +40,17 @@ public class accountMediator {
         return acc;
     }
 
-    // public static ArrayList<account> getAllAccounts(String userID) throws
-    // Exception {
-    // return userManager.getUser(userID).getAccounts();
-    // }
-
     public static void requestNewAccount(String userID) {
-        account a = new account(userID);
-        request r = new request(userID, a, false);
-        requests.add(r);
+        account acc = new account(userID);
+        request rq = new request(userID, acc);
+        requests.add(rq);
+    }
 
+    public static void requestAccountDeletion(String userID,String acNo) {
+        account acc = new account(userID);
+        String[] params = new String[] {"delete",acNo};
+        request rq = new request(userID, acc, params);
+        requests.add(rq);
     }
 
     public static void removeRequest(request r) {
@@ -58,7 +59,7 @@ public class accountMediator {
         }
     }
 
-    static private final String possibleChars = "123456789";// using this to allow for
+    static private final String possibleChars = "123456789ABC";// using this to allow for
     static private final int max_len = 16;
 
     private static String generateNewAccountKey() {
@@ -78,8 +79,10 @@ public class accountMediator {
     public static void approveNewAccount(request r, account a) {
         if (requests.contains(r)) {
             String newKey = generateNewAccountKey();
+            a.setAccountNumber(newKey);
             accounts.put(newKey, a);
             userManager.addAccountToUser(r.getRequester(), newKey);
+            requests.remove(r);
         }
     }
 
@@ -92,7 +95,9 @@ public class accountMediator {
                     System.err.println("Could not Remove account from user: " + e.getMessage());
                 }
                 accounts.remove(accNo);
+                
             }
+            requests.remove(r);
         }
     }
 
@@ -134,9 +139,6 @@ public class accountMediator {
     public static void transact(String senderAccountNo, String recieverAccountNo, double amount) {
 
         try {
-            // var recieverID = userManager.getOwner(recieverAccount);
-            // getAccount(senderID, senderAccount).subtract(amount);
-            // getAccount(recieverID, recieverAccount).add(amount);
             account senderAccount = accounts.get(senderAccountNo);
             account recieverAccount = accounts.get(recieverAccountNo);
             if (senderAccount == null || recieverAccount == null) {
