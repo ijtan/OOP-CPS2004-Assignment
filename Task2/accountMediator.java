@@ -12,27 +12,23 @@ public class accountMediator implements approverInterface {
     private static HashMap<String, account> accounts = new HashMap<String, account>();
     private static HashMap<String, account> pendingAccounts = new HashMap<String, account>();
 
-
-    
-
-    public static request requestNewAccount(String userID){
-        Map<String,Object> pms = new HashMap<>();
+    public static request requestNewAccount(String userID) {
+        Map<String, Object> pms = new HashMap<>();
         pms.put("accountNumber", "test Account number");
-        request r = new request(userID, (request) -> approveNewAccount(request),pms);
+        request r = new request(userID, (request) -> approveNewAccount(request), pms);
         return r;
     }
 
-    public static request requestAccountDeletion(String userID){
-        Map<String,Object> pms = new HashMap<>();
+    public static request requestAccountDeletion(String userID) {
+        Map<String, Object> pms = new HashMap<>();
         pms.put("accountNumber", "test Account number");
-        request r = new request(userID, (request) -> approveAccDelete(request),pms);
+        request r = new request(userID, (request) -> approveAccDelete(request), pms);
         return r;
     }
 
-    
-    public static void approveNewAccount(request r){
+    public static void approveNewAccount(request r) {
         String s = (String) r.getParamNoExcept("accountNumber");
-        System.out.println("approve new acc has been run: "+s);
+        System.out.println("approve new acc has been run: " + s);
     }
 
     public static void approveAccDelete(request r) {
@@ -52,19 +48,19 @@ public class accountMediator implements approverInterface {
     }
 
     // public static void addAccount(String accNo, account acc) {
-    //     // account accs = accounts.get(id);
-    //     accounts.put(accNo, acc);
+    // // account accs = accounts.get(id);
+    // accounts.put(accNo, acc);
     // }
 
     // public static void removeAccount(String accountNo) {
-    //     try {
-    //         account done = accounts.remove(accountNo);
-    //         if (done == null) {
-    //             throw new Exception("could not find account!");
-    //         }
-    //     } catch (Exception e) {
-    //         System.err.println("Unable to remove account: " + e.getMessage());
-    //     }
+    // try {
+    // account done = accounts.remove(accountNo);
+    // if (done == null) {
+    // throw new Exception("could not find account!");
+    // }
+    // } catch (Exception e) {
+    // System.err.println("Unable to remove account: " + e.getMessage());
+    // }
     // }
 
     private static account getAccount(String accountNumber) throws Exception {
@@ -76,25 +72,25 @@ public class accountMediator implements approverInterface {
     }
 
     // public static void requestNewAccount(String userID) {
-    //     String accNo = generateNewAccountKey();
-    //     account newAcc = new account(accNo, userID);
-    //     pendingAccounts.put(accNo, newAcc);
+    // String accNo = generateNewAccountKey();
+    // account newAcc = new account(accNo, userID);
+    // pendingAccounts.put(accNo, newAcc);
 
-    //     Map<String, Object> params = new HashMap<String, Object>();
-    //     params.put("accountNumber", accNo);
-    //     request rq = new request(userID,params, accountMediator.class);
-    //     requests.add(rq);
+    // Map<String, Object> params = new HashMap<String, Object>();
+    // params.put("accountNumber", accNo);
+    // request rq = new request(userID,params, accountMediator.class);
+    // requests.add(rq);
     // }
 
     // public static void requestAccountDeletion(String userID, String acNo) {
-    //     account acc = new account(userID);
+    // account acc = new account(userID);
 
-    //     Map<String, Object> params = new HashMap<String, Object>();
-    //     params.put("delete", "true");
-    //     params.put("accountNumber", acNo);
+    // Map<String, Object> params = new HashMap<String, Object>();
+    // params.put("delete", "true");
+    // params.put("accountNumber", acNo);
 
-    //     request rq = new request(userID,params, accountMediator.class);
-    //     requests.add(rq);
+    // request rq = new request(userID,params, accountMediator.class);
+    // requests.add(rq);
     // }
 
     public static void removeRequest(request r) {
@@ -261,7 +257,7 @@ public class accountMediator implements approverInterface {
 
     }
 
-    public static void approveACC(request r) { //TODO change this
+    public static void approveACC(request r) { // TODO change this
         try {
             if (!requests.contains(r)) {
                 throw new Exception("Request not found!");

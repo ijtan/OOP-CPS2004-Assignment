@@ -15,7 +15,7 @@ public class user extends person {
     }
 
     public void moveMoney(double value, String myAccount, String recipientAccountNumber) {
-
+    requestorInterface.transact(myAccount, recipientAccountNumber, value);
         // accountMediator.transact(myAccount, recipientAccountNumber, value); TODO CANNOT HAVE THIS
     }
 
