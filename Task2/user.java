@@ -15,8 +15,6 @@ public class user extends person {
     }
 
     public void moveMoney(double value, String myAccount, String recipientAccountNumber) {
-        // if (bankHoliday)
-        // return false;
 
         accountMediator.transact(myAccount, recipientAccountNumber, value);
     }
@@ -34,7 +32,7 @@ public class user extends person {
     }
 
     public double getBalance(String accNo) {
-        ;
+        
         return accountMediator.getAccountBalance(accNo);
     }
 
