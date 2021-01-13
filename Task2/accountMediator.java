@@ -51,19 +51,16 @@ public class accountMediator {
        
         // params.put("accoun","delete");
         params.put("accountNumber",accNo);
-        account acc = new account(userID);//TODO remove this
-        request rq = new request(userID, acc, params);
+        request rq = new request(userID, newAcc, params);
         requests.add(rq);
     }
 
     public static void requestAccountDeletion(String userID,String acNo) {
-        account acc = new account(userID);//TODO remove this
-        // pendingAccounts.put(acNo,acc);
+        account acc = new account(userID);
 
-        Map<String, String> params = new HashMap<String,String>();
-       
+        Map<String, String> params = new HashMap<String,String>();       
         params.put("type","delete");
-        params.put("accountNumber","acNo");
+        params.put("accountNumber",acNo);
 
         request rq = new request(userID,acc, params);
         requests.add(rq);

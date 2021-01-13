@@ -10,23 +10,45 @@ public class main {
         admin ad = new admin("ad", "min", "899");
         userManager.addUser("john", "wick", userID);
 
+        System.out.println("User accounts Pre request");
         accountMediator.requestNewAccount(userID);
+        System.out.println("User accounts Pre approval");
         System.out.println(userManager.listUserAccounts(userID));
-
+        System.out.println("Approving");
         ad.approveRequest(accountMediator.getOldestRequest());
+        System.out.println("User accounts Post approval");
+        System.out.println(userManager.listUserAccounts(userID));
 
-        // userManager.getUser(userID).deposit(userManager.getUser(userID).getAccount(0).getAccountNumber(), 10.0);
-        // String accountNo = userManager.getUserAccounts(userID);
-        for (String accNo : userManager.getUserAccounts(userID)) {
-            System.out.println(accNo);
-        }
-        // accountMediator.depositToAccount(accountNo,10.0);
-
-        // accountMediator.requestNewAccount(userID);
-
+        System.out.println("Requesting deletion");
+        accountMediator.requestAccountDeletion(userID,userManager.getUserAccounts(userID).get(0));
+        System.out.println("User accounts Pre approval");
+        System.out.println(userManager.listUserAccounts(userID));
+        System.out.println("Approving");
+        ad.approveRequest(accountMediator.getOldestRequest());
+        System.out.println("User accounts Post approval");
         System.out.println(userManager.listUserAccounts(userID));
 
 
+
+
+        // System.out.println("User Cards Pre request");
+        // accountMediator.requestNewAccount(userID);
+        // System.out.println("User Cards Pre approval");
+        // System.out.println(userManager.listUserAccounts(userID));
+        // System.out.println("Approving");
+        // ad.approveRequest(accountMediator.getOldestRequest());
+        
+        // System.out.println("User Cards Post approval");
+        // System.out.println(userManager.listUserAccounts(userID));
+
+        // System.out.println("Requesting Cards deletion");
+        // accountMediator.requestAccountDeletion(userID, userManager.getUserAccounts(userID).get(0));
+        // System.out.println("User Cards Pre approval");
+        // System.out.println(userManager.listUserAccounts(userID));
+        // System.out.println("Approving");
+        // ad.approveRequest(accountMediator.getOldestRequest());
+        // System.out.println("User Cards Post approval");
+        // System.out.println(userManager.listUserAccounts(userID));
 
     }
 }

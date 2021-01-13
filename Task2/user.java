@@ -59,6 +59,7 @@ public class user extends person {
     }
 
     public void addAccount(String accNo) {
+        System.out.println("adding account!: "+accNo);
         accountNumbers.add(accNo);
     }
 
