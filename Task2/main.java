@@ -11,8 +11,11 @@ public class main {
         userManager.addUser("john", "wick", userID);
 
         request r = accountMediator.requestNewAccount(userID);
-        System.out.println("Approving:");
+        request r0 = accountMediator.requestAccountDeletion(userID);
+        System.out.println("Approving new:");
         r.approve();
+        System.out.println("Approving del:");
+        r0.approve();
 
 
         // System.out.println("User accounts Pre request");

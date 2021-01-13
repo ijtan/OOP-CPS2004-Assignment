@@ -22,15 +22,28 @@ public class accountMediator implements approverInterface {
         return r;
     }
 
-    public void approve(request r){
-        // String s = (String)r.getParamNoExcept("accountNumber");
-        System.out.println("approve from amed has been run");
+    public static request requestAccountDeletion(String userID){
+        Map<String,Object> pms = new HashMap<>();
+        pms.put("accountNumber", "test Account number");
+        request r = new request(userID, (request) -> approveAccDelete(request),pms);
+        return r;
     }
+
+    
     public static void approveNewAccount(request r){
         String s = (String) r.getParamNoExcept("accountNumber");
         System.out.println("approve new acc has been run: "+s);
     }
 
+    public static void approveAccDelete(request r) {
+        String s = (String) r.getParamNoExcept("accountNumber");
+        System.out.println("approve acc delete has been run: " + s);
+    }
+
+    public void approve(request r) {
+        // String s = (String)r.getParamNoExcept("accountNumber");
+        System.out.println("approve from amed has been run");
+    }
 
     public static request getOldestRequest() {
         if (requests.size() > 0)
