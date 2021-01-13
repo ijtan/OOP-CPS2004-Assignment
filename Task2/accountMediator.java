@@ -4,11 +4,13 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class accountMediator {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();
+    private static HashMap<String, account> pendingAccounts = new HashMap<String, account>();
 
     public static request getOldestRequest() {
         if (requests.size() > 0)
@@ -41,15 +43,29 @@ public class accountMediator {
     }
 
     public static void requestNewAccount(String userID) {
-        account acc = new account(userID);
-        request rq = new request(userID, acc);
+        String accNo = generateNewAccountKey();
+        account newAcc = new account(accNo, userID);
+        pendingAccounts.put(accNo, newAcc);
+
+        Map<String, String> params = new HashMap<String,String>();
+       
+        // params.put("accoun","delete");
+        params.put("accountNumber",accNo);
+        account acc = new account(userID);//TODO remove this
+        request rq = new request(userID, acc, params);
         requests.add(rq);
     }
 
     public static void requestAccountDeletion(String userID,String acNo) {
-        account acc = new account(userID);
-        String[] params = new String[] {"delete",acNo};
-        request rq = new request(userID, acc, params);
+        account acc = new account(userID);//TODO remove this
+        // pendingAccounts.put(acNo,acc);
+
+        Map<String, String> params = new HashMap<String,String>();
+       
+        params.put("type","delete");
+        params.put("accountNumber","acNo");
+
+        request rq = new request(userID,acc, params);
         requests.add(rq);
     }
 
@@ -76,13 +92,20 @@ public class accountMediator {
         return accNo;
     }
 
-    public static void approveNewAccount(request r, account a) {
+    public static void approveNewAccount(request r, String accNo) {
         if (requests.contains(r)) {
-            String newKey = generateNewAccountKey();
-            a.setAccountNumber(newKey);
-            accounts.put(newKey, a);
-            userManager.addAccountToUser(r.getRequester(), newKey);
+            account acc = pendingAccounts.get(accNo);
+            if(acc==null){
+                System.err.println("Pending Account not found in corresponding list!");
+                return;
+            }
+            accounts.put(accNo, acc);
+            userManager.addAccountToUser(r.getRequester(), accNo);
+
+            pendingAccounts.remove(accNo);
             requests.remove(r);
+            
+            
         }
     }
 

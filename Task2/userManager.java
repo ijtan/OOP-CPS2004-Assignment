@@ -2,7 +2,7 @@ package Task2;
 
 // import java.util.List;
 import java.util.HashMap;
-// import java.util.ArrayList;
+import java.util.ArrayList;
 
 public class userManager {
     // private static List<user> users = new ArrayList<user>();
@@ -57,6 +57,7 @@ public class userManager {
         user u = usersMap.get(id);
         if (u == null)
             throw new Exception("User ID specified not found!");
+            
         u.removeAccount(accountNo);
     }
 }

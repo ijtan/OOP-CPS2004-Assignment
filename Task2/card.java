@@ -1,14 +1,16 @@
 package Task2;
 
 public class card extends approvable{
-    account parentAcc;
+    String parentAccNo;
 
 
+    @Override
     public void approve(request r){
-       
+       accountMediator.addCardToAccount(parentAccNo, this);
     }
 
-    public void deny(request r){
-        
+    @Override
+    public void decline(request r){
+        accountMediator.removeCardFromAccount(parentAccNo, this);
     }
 }

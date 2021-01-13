@@ -11,9 +11,19 @@ public class account extends approvable {
     // private ArrayList<String> transactions = new ArrayList<String>();
     private String ownerID;
 
+    // public interface requestHandler{
 
-    public account(String ownerID) {
+    // }
+
+    public account(String AccountNumber, String ownerID,char currency) {
         this.ownerID = ownerID;
+        this.accountNo = AccountNumber;
+        this.currency = currency;
+    }
+
+    public account(String AccountNumber, String ownerID) {
+        this.ownerID = ownerID;
+        this.accountNo = AccountNumber;
     }
 
     public account(String ownerID) {
@@ -22,12 +32,15 @@ public class account extends approvable {
 
     @Override
     public void approve(request r) {
-        if(r.getParam(0).equals("delete"));
-        accountMediator.approveAccountDeletion(r, r.getParam(1));
-    }    
+        if(r.getParam("type")!= null && r.getParam("type").equals("delete"))
+            accountMediator.approveAccountDeletion(r, r.getParam("accountNumber"));
+        else{
+            accountMediator.approveNewAccount(r, r.getParam("accountNumber"));
+        }
+    }
 
     @Override
-    public void deny(request r) {
+    public void decline(request r) {
         accountMediator.deny(r);
     }
 
