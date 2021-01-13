@@ -10,23 +10,28 @@ public class main {
         admin ad = new admin("ad", "min", "899");
         userManager.addUser("john", "wick", userID);
 
-        System.out.println("User accounts Pre request");
-        accountMediator.requestNewAccount(userID);
-        System.out.println("User accounts Pre approval");
-        System.out.println(userManager.listUserAccounts(userID));
-        System.out.println("Approving");
-        ad.approveRequest(accountMediator.getOldestRequest());
-        System.out.println("User accounts Post approval");
-        System.out.println(userManager.listUserAccounts(userID));
+        request r = accountMediator.requestNewAccount(userID);
+        System.out.println("Approving:");
+        r.approve();
 
-        System.out.println("Requesting deletion");
-        accountMediator.requestAccountDeletion(userID,userManager.getUserAccounts(userID).get(0));
-        System.out.println("User accounts Pre approval");
-        System.out.println(userManager.listUserAccounts(userID));
-        System.out.println("Approving");
-        ad.approveRequest(accountMediator.getOldestRequest());
-        System.out.println("User accounts Post approval");
-        System.out.println(userManager.listUserAccounts(userID));
+
+        // System.out.println("User accounts Pre request");
+        // accountMediator.requestNewAccount(userID);
+        // System.out.println("User accounts Pre approval");
+        // System.out.println(userManager.listUserAccounts(userID));
+        // System.out.println("Approving");
+        // ad.approveRequest(accountMediator.getOldestRequest());
+        // System.out.println("User accounts Post approval");
+        // System.out.println(userManager.listUserAccounts(userID));
+
+        // System.out.println("Requesting deletion");
+        // accountMediator.requestAccountDeletion(userID,userManager.getUserAccounts(userID).get(0));
+        // System.out.println("User accounts Pre approval");
+        // System.out.println(userManager.listUserAccounts(userID));
+        // System.out.println("Approving");
+        // ad.approveRequest(accountMediator.getOldestRequest());
+        // System.out.println("User accounts Post approval");
+        // System.out.println(userManager.listUserAccounts(userID));
 
 
 

@@ -15,6 +15,7 @@ public class Main {
             System.err.println("Aborting due to error");
             return;
         }
+        assert 1==2 : "Aborting due to error: example image cannot be loaded";
 
         String image = imageProcessor.preprocess(exampleImg.replaceAll("\n", ""));
         if (image == null) {

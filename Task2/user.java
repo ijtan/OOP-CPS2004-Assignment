@@ -16,31 +16,32 @@ public class user extends person {
 
     public void moveMoney(double value, String myAccount, String recipientAccountNumber) {
 
-        accountMediator.transact(myAccount, recipientAccountNumber, value);
+        // accountMediator.transact(myAccount, recipientAccountNumber, value); TODO CANNOT HAVE THIS
     }
 
     public void requestNewAccount() {
-        accountMediator.requestNewAccount(this.id);
+        // accountMediator.requestNewAccount(this.id);TODO CANNOT HAVE THIS
     }
 
     public void deposit(String accountNumber, double value) {
-        accountMediator.depositToAccount(accountNumber, value);
+        // accountMediator.depositToAccount(accountNumber, value);TODO CANNOT HAVE THIS
     }
 
     public void withdraw(String accountNumber, double value) {
-        accountMediator.withdrawFromAccount(accountNumber, value);
+        // accountMediator.withdrawFromAccount(accountNumber, value);TODO CANNOT HAVE THIS
     }
 
     public double getBalance(String accNo) {
         
-        return accountMediator.getAccountBalance(accNo);
+        // return accountMediator.getAccountBalance(accNo);TODO CANNOT HAVE THIS
+        return -1;
     }
 
     public String listAccounts() {
         String accList = "";
         for (String accNo : accountNumbers)
             try {
-                accList += accNo + "\t | " + accountMediator.getCurrency(accNo);
+                // accList += accNo + "\t | " + accountMediator.getCurrency(accNo);/TODO CANNOT HAVE THIS
                 accList += accountMediator.getAccountBalance(accNo) + '\n';
             } catch (Exception e) {
                 System.err.println("Could not fetch accounts as there was an issue in one or more accounts: "+e.getMessage());

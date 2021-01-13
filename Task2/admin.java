@@ -7,7 +7,7 @@ public class admin extends person{
     }
 
     public void approveRequest(request r){
-        r.approve();
+        // r.approve();
     }
     
     public void denyRequest(request r) {

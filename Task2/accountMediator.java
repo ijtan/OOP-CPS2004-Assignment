@@ -6,11 +6,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class accountMediator {
+public class accountMediator implements approverInterface {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();
     private static HashMap<String, account> pendingAccounts = new HashMap<String, account>();
+
+
+    
+
+    public static request requestNewAccount(String userID){
+        Map<String,Object> pms = new HashMap<>();
+        pms.put("accountNumber", "test Account number");
+        request r = new request(userID, (request) -> approveNewAccount(request),pms);
+        return r;
+    }
+
+    public void approve(request r){
+        // String s = (String)r.getParamNoExcept("accountNumber");
+        System.out.println("approve from amed has been run");
+    }
+    public static void approveNewAccount(request r){
+        String s = (String) r.getParamNoExcept("accountNumber");
+        System.out.println("approve new acc has been run: "+s);
+    }
+
 
     public static request getOldestRequest() {
         if (requests.size() > 0)
@@ -18,23 +38,23 @@ public class accountMediator {
         return null;
     }
 
-    public static void addAccount(String accNo, account acc) {
-        // account accs = accounts.get(id);
-        accounts.put(accNo, acc);
-    }
+    // public static void addAccount(String accNo, account acc) {
+    //     // account accs = accounts.get(id);
+    //     accounts.put(accNo, acc);
+    // }
 
-    public static void removeAccount(String accountNo) {
-        try {
-            account done = accounts.remove(accountNo);
-            if (done == null) {
-                throw new Exception("could not find account!");
-            }
-        } catch (Exception e) {
-            System.err.println("Unable to remove account: " + e.getMessage());
-        }
-    }
+    // public static void removeAccount(String accountNo) {
+    //     try {
+    //         account done = accounts.remove(accountNo);
+    //         if (done == null) {
+    //             throw new Exception("could not find account!");
+    //         }
+    //     } catch (Exception e) {
+    //         System.err.println("Unable to remove account: " + e.getMessage());
+    //     }
+    // }
 
-    public static account getAccount(String accountNumber) throws Exception {
+    private static account getAccount(String accountNumber) throws Exception {
         // return userManager.getUser(userID).getAccount(accountNumber);
         account acc = accounts.get(accountNumber);
         if (acc == null)
@@ -42,29 +62,27 @@ public class accountMediator {
         return acc;
     }
 
-    public static void requestNewAccount(String userID) {
-        String accNo = generateNewAccountKey();
-        account newAcc = new account(accNo, userID);
-        pendingAccounts.put(accNo, newAcc);
+    // public static void requestNewAccount(String userID) {
+    //     String accNo = generateNewAccountKey();
+    //     account newAcc = new account(accNo, userID);
+    //     pendingAccounts.put(accNo, newAcc);
 
-        Map<String, String> params = new HashMap<String,String>();
-       
-        // params.put("accoun","delete");
-        params.put("accountNumber",accNo);
-        request rq = new request(userID, newAcc, params);
-        requests.add(rq);
-    }
+    //     Map<String, Object> params = new HashMap<String, Object>();
+    //     params.put("accountNumber", accNo);
+    //     request rq = new request(userID,params, accountMediator.class);
+    //     requests.add(rq);
+    // }
 
-    public static void requestAccountDeletion(String userID,String acNo) {
-        account acc = new account(userID);
+    // public static void requestAccountDeletion(String userID, String acNo) {
+    //     account acc = new account(userID);
 
-        Map<String, String> params = new HashMap<String,String>();       
-        params.put("type","delete");
-        params.put("accountNumber",acNo);
+    //     Map<String, Object> params = new HashMap<String, Object>();
+    //     params.put("delete", "true");
+    //     params.put("accountNumber", acNo);
 
-        request rq = new request(userID,acc, params);
-        requests.add(rq);
-    }
+    //     request rq = new request(userID,params, accountMediator.class);
+    //     requests.add(rq);
+    // }
 
     public static void removeRequest(request r) {
         if (requests.contains(r)) {
@@ -89,37 +107,36 @@ public class accountMediator {
         return accNo;
     }
 
-    public static void approveNewAccount(request r, String accNo) {
-        if (requests.contains(r)) {
-            account acc = pendingAccounts.get(accNo);
-            if(acc==null){
-                System.err.println("Pending Account not found in corresponding list!");
-                return;
-            }
-            accounts.put(accNo, acc);
-            userManager.addAccountToUser(r.getRequester(), accNo);
+    // public static void approveNewAccount(request r, String accNo) {
+    // if (requests.contains(r)) {
+    // account acc = pendingAccounts.get(accNo);
+    // if (acc == null) {
+    // System.err.println("Pending Account not found in corresponding list!");
+    // return;
+    // }
+    // accounts.put(accNo, acc);
+    // userManager.addAccountToUser(r.getRequester(), accNo);
 
-            pendingAccounts.remove(accNo);
-            requests.remove(r);
-            
-            
-        }
-    }
+    // pendingAccounts.remove(accNo);
+    // requests.remove(r);
 
-    public static void approveAccountDeletion(request r, String accNo) {
-        if (requests.contains(r)) {
-            if (accounts.containsKey(accNo)) {
-                try {
-                    userManager.removeAccountFromUser(r.getRequester(), accNo);
-                } catch (Exception e) {
-                    System.err.println("Could not Remove account from user: " + e.getMessage());
-                }
-                accounts.remove(accNo);
-                
-            }
-            requests.remove(r);
-        }
-    }
+    // }
+    // }
+
+    // public static void approveAccountDeletion(request r, String accNo) {
+    // if (requests.contains(r)) {
+    // if (accounts.containsKey(accNo)) {
+    // try {
+    // userManager.removeAccountFromUser(r.getRequester(), accNo);
+    // } catch (Exception e) {
+    // System.err.println("Could not Remove account from user: " + e.getMessage());
+    // }
+    // accounts.remove(accNo);
+
+    // }
+    // requests.remove(r);
+    // }
+    // }
 
     public static void deny(request r) {
         if (requests.contains(r)) {
@@ -199,15 +216,15 @@ public class accountMediator {
         account acc;
         try {
             acc = getAccount(accNo);
-            
+
         } catch (Exception e) {
-            System.err.println("Could not fetch account value: "+e.getMessage());
+            System.err.println("Could not fetch account value: " + e.getMessage());
             return -1;
         }
         return acc.getBalance();
     }
 
-    public static void depositToAccount(String accNo,double value) {
+    public static void depositToAccount(String accNo, double value) {
         account acc;
         try {
             acc = getAccount(accNo);
@@ -216,7 +233,7 @@ public class accountMediator {
             System.err.println("Could not fetch account value: " + e.getMessage());
             return;
         }
-        
+
     }
 
     public static void withdrawFromAccount(String accNo, double value) {
@@ -229,6 +246,37 @@ public class accountMediator {
             return;
         }
 
+    }
+
+    public static void approveACC(request r) { //TODO change this
+        try {
+            if (!requests.contains(r)) {
+                throw new Exception("Request not found!");
+            }
+            String accountNumber = (String) r.getParam("accountNumber");
+            if (r.getParamNoExcept("delete") != null) {
+                if (accounts.containsKey(accountNumber)) {
+                    userManager.removeAccountFromUser(r.getRequester(), accountNumber);
+                    accounts.remove(accountNumber);
+                }
+                requests.remove(r);
+
+            } else {
+                account acc = pendingAccounts.get(accountNumber);
+                accounts.put(accountNumber, acc);
+                userManager.addAccountToUser(r.getRequester(), accountNumber);
+
+                pendingAccounts.remove(accountNumber);
+                requests.remove(r);
+            }
+        } catch (Exception e) {
+            System.err.println("Could not approve request: " + e.getMessage());
+        }
+
+    }
+
+    public static void decline(request r) {
+        requests.remove(r);
     }
 
 }

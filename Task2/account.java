@@ -2,7 +2,7 @@ package Task2;
 
 import java.util.ArrayList;
 
-public class account extends approvable {
+public class account  {
 
     private String accountNo;
     private double balance;
@@ -30,19 +30,19 @@ public class account extends approvable {
         this.ownerID = ownerID;
     }
 
-    @Override
-    public void approve(request r) {
-        if(r.getParam("type")!= null && r.getParam("type").equals("delete"))
-            accountMediator.approveAccountDeletion(r, r.getParam("accountNumber"));
-        else{
-            accountMediator.approveNewAccount(r, r.getParam("accountNumber"));
-        }
-    }
+    // @Override
+    // public void approve(request r) {
+    //     if(r.getParam("type")!= null && r.getParam("type").equals("delete"))
+    //         accountMediator.approveAccountDeletion(r, r.getParam("accountNumber"));
+    //     else{
+    //         accountMediator.approveNewAccount(r, r.getParam("accountNumber"));
+    //     }
+    // }
 
-    @Override
-    public void decline(request r) {
-        accountMediator.deny(r);
-    }
+    // @Override
+    // public void decline(request r) {
+    //     accountMediator.deny(r);
+    // }
 
     public void setAccountNumber(String acNo) {
         this.accountNo = acNo;
