@@ -12,7 +12,9 @@ public class account extends approvable {
     private String ownerID;
 
 
-
+    public account(String ownerID) {
+        this.ownerID = ownerID;
+    }
 
     public account(String ownerID) {
         this.ownerID = ownerID;

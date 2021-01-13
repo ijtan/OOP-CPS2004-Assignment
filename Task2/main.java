@@ -9,28 +9,21 @@ public class main {
         admin ad = new admin("ad", "min", "899");
         userManager.addUser("john", "wick", userID);
 
-        try {
-            userManager.getUser(userID).requestNewAccount();
-
-            System.out.println(userManager.getUser(userID).listAccounts());
-        } catch (Exception e) {
-            System.err.println("error when getting user in testing");
-        }
-
+        accountMediator.requestNewAccount(userID);
+        System.out.println(userManager.listUserAccounts(userID));
 
         ad.approveRequest(accountMediator.getOldestRequest());
 
-
-        System.out.println("post approve");
-        try {
-            userManager.getUser(userID).deposit(userManager.getUser(userID).getAccount(0).getAccountNumber(), 10.0);
-
-            userManager.getUser(userID).requestNewAccount();
-
-            System.out.println(userManager.getUser(userID).listAccounts());
-        } catch (Exception e) {
-            System.err.println("error when getting user in testing");
+        // userManager.getUser(userID).deposit(userManager.getUser(userID).getAccount(0).getAccountNumber(), 10.0);
+        // String accountNo = userManager.getUserAccounts(userID);
+        for (String accNo : userManager.getUserAccounts(userID)) {
+            System.out.println(accNo);
         }
+        // accountMediator.depositToAccount(accountNo,10.0);
+
+        // accountMediator.requestNewAccount(userID);
+
+        System.out.println(userManager.listUserAccounts(userID));
 
 
     }

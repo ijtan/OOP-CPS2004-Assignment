@@ -77,9 +77,6 @@ public class accountMediator {
 
     public static void approveNewAccount(request r, account a) {
         if (requests.contains(r)) {
-            // addAccountToUser(r.getRequester(), a);
-
-            // removeRequest(r);
             String newKey = generateNewAccountKey();
             accounts.put(newKey, a);
             userManager.addAccountToUser(r.getRequester(), newKey);
