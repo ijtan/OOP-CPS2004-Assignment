@@ -1,4 +1,4 @@
-package src.main.java;
+package Quadtree;
 import java.util.ArrayList;
 
 public class qt {

@@ -1,8 +1,9 @@
-package src.main.java;
+package Quadtree;
 import java.io.File;
+
 public class Main {
     public static void main(String args[]) {
-
+        testRunner.runTests();
         // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
         //         + "FFFFTTTT\n" + "FFFFTTTF\n";
 
@@ -11,17 +12,10 @@ public class Main {
         String path = new File("testTXT.txt").getAbsolutePath();
         String exampleImg = imageProcessor.readfile(path);
 
-        if (exampleImg == null) {
-            System.err.println("Aborting due to error");
-            return;
-        }
-        assert 1==2 : "Aborting due to error: example image cannot be loaded";
+        assert exampleImg!=null : "Aborting due to error: example image cannot be loaded";
 
         String image = imageProcessor.preprocess(exampleImg.replaceAll("\n", ""));
-        if (image == null) {
-            System.err.println("Aborting due to error");
-            return;
-        }
+        assert image!=null : "Aborting due to error: image could not be processed";
         
         qt tree = new qt(1);
         tree.init(1, image.toCharArray());

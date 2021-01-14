@@ -1,1 +1,1 @@
-javac src/main/java/Main.java
+javac -d build/ Quadtree/Main.java

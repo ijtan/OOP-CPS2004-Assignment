@@ -1,1 +1,1 @@
-java src/main/java/Main.java
+java -ea -classpath build/ Quadtree.Main
