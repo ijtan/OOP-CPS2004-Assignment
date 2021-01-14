@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class accountMediator implements approverInterface {
+public class accountManager implements approverInterface {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();

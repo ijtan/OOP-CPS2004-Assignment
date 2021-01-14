@@ -18,7 +18,7 @@ public class main {
         System.out.println("accounts pre app");        
         System.out.println(u.listAccounts());
 
-        ad.approveRequest(accountMediator.getOldestRequest());
+        ad.approveRequest(accountManager.getOldestRequest());
         System.out.println("accounts post app");
         System.out.println(u.listAccounts());
 
@@ -26,7 +26,7 @@ public class main {
         System.out.println("accounts pre del app");
         System.out.println(u.listAccounts());
 
-        ad.approveRequest(accountMediator.getOldestRequest());
+        ad.approveRequest(accountManager.getOldestRequest());
         System.out.println("accounts post del app");
         System.out.println(u.listAccounts());
 
