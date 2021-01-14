@@ -19,6 +19,11 @@ public class userManager {
     // return u;
     // }
 
+    public static user getUser(String id){
+        System.err.println("This method should never be used; here for testing!");
+        return usersMap.get(id);
+    }
+
     public static ArrayList<String> getUserAccounts(String ID) {
         user u = usersMap.get(ID);
         if (u == null) {
@@ -50,7 +55,7 @@ public class userManager {
             return;
         }
         // accountMediator.removeAccount(accountNo);
-        u.addAccount(accountNo);
+        u.addAccountToList(accountNo);
     }
 
     public static void removeAccountFromUser(String id, String accountNo) throws Exception {
@@ -58,6 +63,6 @@ public class userManager {
         if (u == null)
             throw new Exception("User ID specified not found!");
             
-        u.removeAccount(accountNo);
+        u.removeAccountFromList(accountNo);
     }
 }

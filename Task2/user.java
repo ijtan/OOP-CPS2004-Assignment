@@ -15,41 +15,50 @@ public class user extends person {
     }
 
     public void moveMoney(double value, String myAccount, String recipientAccountNumber) {
-    requestorInterface.transact(myAccount, recipientAccountNumber, value);
-        // accountMediator.transact(myAccount, recipientAccountNumber, value); TODO CANNOT HAVE THIS
+        if (accountNumbers.contains(myAccount))
+            requestorInterface.transact(myAccount, recipientAccountNumber, value);            
+        else
+            System.err.println("Account specified not found under user");
     }
 
     public void requestNewAccount() {
-        // accountMediator.requestNewAccount(this.id);TODO CANNOT HAVE THIS
+        requestorInterface.requestNewAccount(id);
     }
 
-    public void deposit(String accountNumber, double value) {
-        // accountMediator.depositToAccount(accountNumber, value);TODO CANNOT HAVE THIS
+    public void requestAccountDelete(String accountNo) {
+        if(accountNumbers.contains(accountNo))
+            requestorInterface.requestAccountDeletion(id,accountNo);
+        else
+            System.err.println("Account specified not found under user");
     }
 
-    public void withdraw(String accountNumber, double value) {
-        // accountMediator.withdrawFromAccount(accountNumber, value);TODO CANNOT HAVE THIS
+    public void deposit(String accountNumber, double amount) {
+        if (accountNumbers.contains(accountNumber))
+            requestorInterface.deposit(accountNumber, amount);
+        else
+            System.err.println("Account specified not found under user");
+    }
+
+    public void withdraw(String accountNumber, double amount) {
+        if (!accountNumbers.contains(accountNumber))
+            System.err.println("Account specified not found under user");
+        else
+            requestorInterface.withdraw(accountNumber, amount);
     }
 
     public double getBalance(String accNo) {
-        
-        // return accountMediator.getAccountBalance(accNo);TODO CANNOT HAVE THIS
+        if (!accountNumbers.contains(accNo))
+            System.err.println("Account specified not found under user");
+        else
+            return requestorInterface.getBalance(accNo);
         return -1;
     }
 
     public String listAccounts() {
-        String accList = "";
-        for (String accNo : accountNumbers)
-            try {
-                // accList += accNo + "\t | " + accountMediator.getCurrency(accNo);/TODO CANNOT HAVE THIS
-                accList += accountMediator.getAccountBalance(accNo) + '\n';
-            } catch (Exception e) {
-                System.err.println("Could not fetch accounts as there was an issue in one or more accounts: "+e.getMessage());
-            }
-        return accList;
+        return requestorInterface.listAccounts(accountNumbers);
     }
 
-    public ArrayList<String> getAccountNos(){
+    public ArrayList<String> getAccountNos() {
         return accountNumbers;
     }
 
@@ -57,28 +66,19 @@ public class user extends person {
         return name + " " + surname;
     }
 
-    public void addAccount(String accNo) {
-        System.out.println("adding account!: "+accNo);
+    public void addAccountToList(String accNo) {
+        System.out.println("adding account!: " + accNo);
         accountNumbers.add(accNo);
     }
 
-    public void removeAccount(String accNo) throws Exception {
+    public void removeAccountFromList(String accNo) {
         if (this.accountNumbers.contains(accNo))
             this.accountNumbers.remove(accNo);
         else
-            throw new Exception("Account not found!");
+            System.err.println("Could not delete account as it was not found!");
     }
 
     public String getID() {
         return id;
     }
-
-    // public account getAccount(int accNumber) throws Exception {
-    //     for (account acc : accounts)
-    //         if (acc.getAccountNumber() == accNumber)
-    //             return acc;
-
-    //     throw new Exception("Account not found");
-    // }
-
 }

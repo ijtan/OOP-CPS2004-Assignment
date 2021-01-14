@@ -10,13 +10,25 @@ public class main {
         admin ad = new admin("ad", "min", "899");
         userManager.addUser("john", "wick", userID);
 
-        request r = accountMediator.requestNewAccount(userID);
-        request r0 = accountMediator.requestAccountDeletion(userID);
-        System.out.println("Approving new:");
-        r.approve();
-        System.out.println("Approving del:");
-        r0.approve();
+        user u = userManager.getUser(userID);
+        System.out.println("accounts pre");
+        System.out.println(u.listAccounts());
+        
+        u.requestNewAccount();
+        System.out.println("accounts pre app");        
+        System.out.println(u.listAccounts());
 
+        ad.approveRequest(accountMediator.getOldestRequest());
+        System.out.println("accounts post app");
+        System.out.println(u.listAccounts());
+
+        u.requestAccountDelete(u.getAccountNos().get(0));
+        System.out.println("accounts pre del app");
+        System.out.println(u.listAccounts());
+
+        ad.approveRequest(accountMediator.getOldestRequest());
+        System.out.println("accounts post del app");
+        System.out.println(u.listAccounts());
 
         // System.out.println("User accounts Pre request");
         // accountMediator.requestNewAccount(userID);

@@ -30,6 +30,8 @@ public interface requestorInterface {
         String accList = "";
         for (String accNo : accountNumbers)
             try {
+                accList += accNo+"\t|\t";
+                accList += accountMediator.getCurrency(accNo);
                 accList += accountMediator.getAccountBalance(accNo) + '\n';
             } catch (Exception e) {
                 System.err.println(
