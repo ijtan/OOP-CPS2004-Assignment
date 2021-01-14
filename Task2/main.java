@@ -19,6 +19,27 @@ public class main {
         System.out.println("accounts post app");
         System.out.println(u.listAccounts());
 
+
+        String accountNumber = u.getAccountNos().get(0);
+        System.out.println("list cards pre:");
+        System.out.println(accountManager.listCards(accountNumber));
+        accountManager.requestNewCard(userID, accountNumber);
+        System.out.println("list cards pre ap:");
+        System.out.println(accountManager.listCards(accountNumber));
+        System.out.println("list cards post ap:");
+        ad.approveRequest(accountManager.getOldestRequest());
+        System.out.println(accountManager.listCards(accountNumber));
+
+        accountManager.requestCardDeletion(userID, accountNumber, accountManager.getCardNumbers(accountNumber)[0]);
+        System.out.println("list cards pre del app:");
+        System.out.println(accountManager.listCards(accountNumber));
+
+
+        System.out.println("list cards post del app:");
+        ad.approveRequest(accountManager.getOldestRequest());
+        System.out.println(accountManager.listCards(accountNumber));
+
+
         u.requestAccountDelete(u.getAccountNos().get(0));
         System.out.println("accounts pre del app");
         System.out.println(u.listAccounts());
@@ -26,6 +47,9 @@ public class main {
         ad.approveRequest(accountManager.getOldestRequest());
         System.out.println("accounts post del app");
         System.out.println(u.listAccounts());
+
+
+       
 
         // System.out.println("User accounts Pre request");
         // accountMediator.requestNewAccount(userID);
