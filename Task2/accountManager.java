@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class accountManager implements approverInterface {
+public class accountManager {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();
@@ -42,22 +42,15 @@ public class accountManager implements approverInterface {
         try {
             accNo = (String) r.getParam("accountNumber");
 
-            System.out.println("approve acc delete has been run: " + accNo);            
+            System.out.println("approve acc delete has been run: " + accNo);
             accounts.remove(accNo);
             userManager.removeAccountFromUser(r.getRequester(), accNo);
-            
+
         } catch (Exception e) {
             System.err.println("Could not approve account deletion: " + e.getMessage());
             return;
         }
     }
-
-    public void approve(request r) {
-        // String s = (String)r.getParamNoExcept("accountNumber");
-        requests.remove(r);
-        System.out.println("approve from amed has been run");
-    }
-
     public static request getOldestRequest() {
         if (requests.size() > 0)
             return requests.get(0);
@@ -96,21 +89,17 @@ public class accountManager implements approverInterface {
     }
 
     public static void deny(request r) {
-        if (requests.contains(r)) {
+        if (requests.contains(r))
             removeRequest(r);
-        }
     }
 
     public static void addCardToAccount(String AccountNumber, card cr) {
 
         try {
             account acc = accounts.get(AccountNumber);
-            if (acc == null) {
+            if (acc == null)
                 throw new Exception("Account not found!");
-            }
             acc.addCard(cr);
-            // accounts.replace(AccountNumber, acc, acc);
-            // getAccount(userID, AccountNumber).addCard(cr);
 
         } catch (Exception e) {
             System.err.println("Error while adding card: " + e.getMessage());
@@ -145,12 +134,7 @@ public class accountManager implements approverInterface {
     }
 
     public static void joinAccount(String accountNo, String newUserId) {
-        // account accToMerge = accounts.get(accountNo);
-
-        // accaount a;
         try {
-            // a = getAccount(newUserId, accountNo);
-            // addAccountToUser(newUserId, a);
             if (accounts.containsKey(accountNo))
                 userManager.addAccountToUser(newUserId, accountNo);
             else
@@ -204,36 +188,4 @@ public class accountManager implements approverInterface {
         }
 
     }
-
-    public static void approveACC(request r) { // TODO change this
-        try {
-            if (!requests.contains(r)) {
-                throw new Exception("Request not found!");
-            }
-            String accountNumber = (String) r.getParam("accountNumber");
-            if (r.getParamNoExcept("delete") != null) {
-                if (accounts.containsKey(accountNumber)) {
-                    userManager.removeAccountFromUser(r.getRequester(), accountNumber);
-                    accounts.remove(accountNumber);
-                }
-                requests.remove(r);
-
-            } else {
-                account acc = pendingAccounts.get(accountNumber);
-                accounts.put(accountNumber, acc);
-                userManager.addAccountToUser(r.getRequester(), accountNumber);
-
-                pendingAccounts.remove(accountNumber);
-                requests.remove(r);
-            }
-        } catch (Exception e) {
-            System.err.println("Could not approve request: " + e.getMessage());
-        }
-
-    }
-
-    public static void decline(request r) {
-        requests.remove(r);
-    }
-
 }
