@@ -12,10 +12,6 @@ public class accountManager {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();
-    // private static HashMap<String, account> cards = new HashMap<String,
-    // account>();
-    // private static HashMap<String, account> pendingAccounts = new HashMap<String,
-    // account>();
 
     public static request requestNewAccount(String userID) {
         request r = new request(userID, (request) -> approveNewAccount(request));
@@ -24,8 +20,6 @@ public class accountManager {
     }
 
     public static request requestAccountDeletion(String userID, String accNo) {
-        // Map<String, Object> pms = new HashMap<>();
-        // pms.put("accountNumber", accNo);
         request r = new request(userID, (request) -> approveAccDelete(request, accNo));
         requests.add(r);
         return r;
@@ -48,7 +42,7 @@ public class accountManager {
         try {
             userManager.removeAccountFromUser(r.getRequester(), accNo);
         } catch (Exception e) {
-            System.err.println("Deletion approval failed: "+e.getMessage());
+            System.err.println("Deletion approval failed: " + e.getMessage());
             return;
         }
         requests.remove(r);
@@ -164,9 +158,10 @@ public class accountManager {
 
     public static void joinAccount(String accountNo, String newUserId) {
         try {
-            if (accounts.containsKey(accountNo))
+            if (accounts.containsKey(accountNo)) {
                 userManager.addAccountToUser(newUserId, accountNo);
-            else
+                accounts.get(accountNo).addOwner(newUserId);
+            } else
                 throw new Exception("Could not find account number specified!");
 
         } catch (Exception e) {

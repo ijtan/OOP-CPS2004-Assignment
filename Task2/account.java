@@ -1,9 +1,12 @@
 package Task2;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
 public class account {
 
@@ -11,30 +14,41 @@ public class account {
     private double balance;
     private char currency;
     private HashMap<String, card> cards = new HashMap<String, card>();
-    private String ownerID;
+    private ArrayList<String> ownerIDs;
+    private ArrayList<HashMap<String,String>> trasnactions;
     private int cardCounter;
 
+    public account(String AccountNumber, ArrayList<String> ownerIDs, char currency) {
+        this.ownerIDs = ownerIDs;
+        this.accountNo = AccountNumber;
+        this.currency = currency;
+    }
+
+    public account(String AccountNumber, ArrayList<String> ownerIDs) {
+        this.ownerIDs = ownerIDs;
+        this.accountNo = AccountNumber;
+    }
+
     public account(String AccountNumber, String ownerID, char currency) {
-        this.ownerID = ownerID;
+        this.ownerIDs.add(ownerID);
         this.accountNo = AccountNumber;
         this.currency = currency;
     }
 
     public account(String AccountNumber, String ownerID) {
-        this.ownerID = ownerID;
+        this.ownerIDs.add(ownerID);
         this.accountNo = AccountNumber;
     }
 
-    public account(String ownerID) {
-        this.ownerID = ownerID;
-    }
+
+
 
     public void setAccountNumber(String acNo) {
         this.accountNo = acNo;
     }
 
-    public String getOwnerID() {
-        return ownerID;
+    public ArrayList<String> getOwnerID() {
+        return ownerIDs;
     }
 
     public char getCurrency() {
@@ -45,12 +59,30 @@ public class account {
         if (balance < value) {
             throw new Exception("Insufficient balance in account");
         }
+        
         balance -= value;
-        // transactions.add("Subtracted " + currency + value);
+
+        HashMap<String, String> log = new HashMap<>();
+        log.put("type", "debit");
+        log.put("amount", String.valueOf(value));
+        log.put("date", getCurrentDate());
+        trasnactions.add(log);
+    }
+
+    private String getCurrentDate(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        LocalDateTime currDateTime = LocalDateTime.now();
+        return formatter.format(currDateTime);
     }
 
     public void add(double value) {
         balance += value;
+
+        HashMap<String, String> log = new HashMap<>();
+        log.put("type", "credit");
+        log.put("amount", String.valueOf(value));
+        log.put("date", getCurrentDate());
+        trasnactions.add(log);
     }
 
     public Set<String> getCardNos() {
@@ -59,9 +91,9 @@ public class account {
 
     public String addCard() {
         cardCounter++;
-        String cardNo = accountNo+"CARD"+cardCounter;
+        String cardNo = accountNo + "CARD" + cardCounter;
         card newCard = new card(cardNo, accountNo);
-        this.cards.put(cardNo,newCard);
+        this.cards.put(cardNo, newCard);
         return cardNo;
     }
 
@@ -75,8 +107,8 @@ public class account {
     public String listCards() {
         String ret = "";
         for (Map.Entry<String, card> set : cards.entrySet())
-            ret+=set.getKey() + "\t|\t" + set.getValue().getParentAccount()+'\n';
-        
+            ret += set.getKey() + "\t|\t" + set.getValue().getParentAccount() + '\n';
+
         return ret;
     }
 
@@ -87,7 +119,9 @@ public class account {
     public double getBalance() {
         return balance;
     }
-    
 
-    
+    public void addOwner(String ownerID) {
+        this.ownerIDs.add(ownerID);
+    }
+
 }
