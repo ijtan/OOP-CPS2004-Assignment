@@ -5,22 +5,26 @@ import java.util.HashMap;
 import java.util.ArrayList;
 
 public class userManager {
-    // private static List<user> users = new ArrayList<user>();
     private static HashMap<String, user> usersMap = new HashMap<String, user>(); 
 
-    // public static user getUser(String id) throws Exception {
-    // user u = usersMap.get(id);
-    // try{
-    // if(u==null)
-    // throw new Exception("User with specified ID not found!");
-    // }catch(Exception e){
-    // System.err.println("Could not get user: "+e.getMessage());
-    // }
-    // return u;
-    // }
 
-    public static user getUser(String id){
-        System.err.println("This method should never be used; here for testing!");
+    public static boolean hasAccount(String uid, String accNo) throws Exception {
+        // user u = usersMap.get(uid);
+        // if(u==null)
+        //     throw new Exception("User nto found!");
+        return getUser(uid).hasAccountNo(accNo);
+    }
+
+    public static boolean userExists(String uid) throws Exception {
+        if(usersMap.containsKey(uid))
+            return true;
+        return false;
+    }
+
+    public static user getUser(String id) {
+        System.err.println("This function is public for testing only!");
+        // if(!usersMap.containsKey(id))
+        //     throw new Exception("User not found!");
         return usersMap.get(id);
     }
 

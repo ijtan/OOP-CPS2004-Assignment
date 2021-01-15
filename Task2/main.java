@@ -7,7 +7,10 @@ public class main {
         admin ad = new admin("ad", "min", "899");
         userManager.addUser("john", "wick", userID);
 
-        user u = userManager.getUser(userID);
+        user u;
+
+        u = userManager.getUser(userID);
+
         System.out.println("accounts pre");
         System.out.println(u.listAccounts());
 

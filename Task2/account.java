@@ -14,7 +14,7 @@ public class account {
     private double balance;
     private char currency;
     private HashMap<String, card> cards = new HashMap<String, card>();
-    private ArrayList<String> ownerIDs;
+    private ArrayList<String> ownerIDs = new ArrayList<>();
     private ArrayList<HashMap<String,String>> trasnactions;
     private int cardCounter;
 
@@ -47,7 +47,7 @@ public class account {
         this.accountNo = acNo;
     }
 
-    public ArrayList<String> getOwnerID() {
+    public ArrayList<String> getOwnerIDs() {
         return ownerIDs;
     }
 
@@ -97,6 +97,11 @@ public class account {
         return cardNo;
     }
 
+    public boolean hasCard(String accNo){
+        if(this.cards.containsKey(accNo))
+            return true;
+        return false;
+    }
     public void removeCard(String cardNo) throws Exception {
         if (this.cards.containsKey(cardNo))
             cards.remove(cardNo);

@@ -5,7 +5,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class accountManager {
@@ -14,12 +13,28 @@ public class accountManager {
     private static HashMap<String, account> accounts = new HashMap<String, account>();
 
     public static request requestNewAccount(String userID) {
+        try {
+
+            if (!userManager.userExists(userID))
+                throw new Exception("Could not find specified user!");
+
+        } catch (Exception e) {
+            System.err.println("Error whilst requesting: " + e.getMessage());
+        }
+
         request r = new request(userID, (request) -> approveNewAccount(request));
         requests.add(r);
         return r;
     }
 
     public static request requestAccountDeletion(String userID, String accNo) {
+        try {
+            if (!userManager.hasAccount(userID, accNo))
+                throw new Exception("Could not verify ownership of the account specified!");
+        } catch (Exception e) {
+            System.err.println("Error whilst requesting: " + e.getMessage());
+        }
+
         request r = new request(userID, (request) -> approveAccDelete(request, accNo));
         requests.add(r);
         return r;
@@ -37,10 +52,15 @@ public class accountManager {
     public static void approveAccDelete(request r, String accNo) {
         requests.remove(r);
 
-        System.out.println("approve acc delete has been run: " + accNo);
-        accounts.remove(accNo);
+        // System.out.println("approve acc delete has been run: " + accNo);
+        
         try {
-            userManager.removeAccountFromUser(r.getRequester(), accNo);
+
+            for(String ownerID : getAccount(accNo).getOwnerIDs())
+                userManager.removeAccountFromUser(ownerID, accNo);
+
+            accounts.remove(accNo);
+
         } catch (Exception e) {
             System.err.println("Deletion approval failed: " + e.getMessage());
             return;
@@ -50,12 +70,32 @@ public class accountManager {
     }
 
     public static request requestNewCard(String userID, String accountNumber) {
+        try {
+            if (!userManager.hasAccount(userID, accountNumber))
+                throw new Exception("Could not verify owenership of the account");
+
+        } catch (Exception e) {
+            System.err.println("Error whilst requesting: " + e.getMessage());
+        }
+
         request r = new request(userID, (request) -> approveNewCard(request, accountNumber));
         requests.add(r);
         return r;
     }
 
     public static request requestCardDeletion(String userID, String accNo, String CardNo) {
+        try {
+
+            if (!userManager.hasAccount(userID, accNo))
+                throw new Exception("Could not verify owenership of the account");
+            account acc = getAccount(accNo);
+            if (!acc.hasCard(CardNo))
+                throw new Exception("Card not found in specified account!");
+
+        } catch (Exception e) {
+            System.err.println("Error whilst requesting: " + e.getMessage());
+        }
+
         request r = new request(userID, (request) -> approveCardDelete(request, accNo, CardNo));
         requests.add(r);
         return r;
@@ -107,7 +147,6 @@ public class accountManager {
     }
 
     private static account getAccount(String accountNumber) throws Exception {
-        // return userManager.getUser(userID).getAccount(accountNumber);
         account acc = accounts.get(accountNumber);
         if (acc == null)
             throw new Exception("Could not find account!");

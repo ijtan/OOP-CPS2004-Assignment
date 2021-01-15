@@ -32,6 +32,12 @@ public class user extends person {
             System.err.println("Account specified not found under user");
     }
 
+    public boolean hasAccountNo(String accountNo){
+        if(this.accountNumbers.contains(accountNo))
+            return true;
+        return false;
+    }
+
     public void deposit(String accountNumber, double amount) {
         if (accountNumbers.contains(accountNumber))
             requestorInterface.deposit(accountNumber, amount);
