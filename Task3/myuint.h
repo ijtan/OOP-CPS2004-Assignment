@@ -6,9 +6,6 @@
 #include <string>
 #include <limits.h>
 
-// #ifndef ll
-// #define ll unsigned long long
-// #endif
 using namespace std;
 
 template <int size>
@@ -37,8 +34,6 @@ public:
     template <class T>
     myuint(T value)
     {
-        // cout << "init with size: " << size << " and value: " << value << '\n';
-        // cout<<"value is :"<<type(T)<<endl;
         static_assert(is_integral<T>::value, "Can only initalize by integral types!");
         if (value >= pow(2, size))
         {
