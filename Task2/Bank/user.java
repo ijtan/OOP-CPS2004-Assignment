@@ -73,7 +73,7 @@ public class user extends person {
     }
 
     public void addAccountToList(String accNo) {
-        System.out.println("adding account!: " + accNo);
+        // System.out.println("adding account!: " + accNo);
         accountNumbers.add(accNo);
     }
 

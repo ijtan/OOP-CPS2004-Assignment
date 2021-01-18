@@ -8,11 +8,13 @@ public class userManager {
     private static HashMap<String, user> usersMap = new HashMap<String, user>(); 
 
 
-    public static boolean hasAccount(String uid, String accNo) throws Exception {
-        // user u = usersMap.get(uid);
-        // if(u==null)
-        //     throw new Exception("User nto found!");
-        return getUser(uid).hasAccountNo(accNo);
+    public static boolean hasAccount(String uid, String accNo){
+        user u =  getUser(uid);
+        if(u==null){
+            System.err.println("User not found!");
+            return false;
+        }
+        return u.hasAccountNo(accNo);
     }
 
     public static boolean userExists(String uid){
@@ -21,8 +23,8 @@ public class userManager {
         return false;
     }
 
-    public static user getUser(String id) {
-        System.err.println("This function is public for testing only!");
+    private static user getUser(String id) {
+        // System.err.println("This function is public for testing only!");
         // if(!usersMap.containsKey(id))
         //     throw new Exception("User not found!");
         return usersMap.get(id);

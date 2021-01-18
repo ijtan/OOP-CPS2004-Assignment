@@ -2,9 +2,6 @@ package Bank;
 
 import java.util.ArrayList;
 
-import Bank.accountManager;
-import Bank.userManager;
-
 public class tests {
     public static void runTests() {
         System.out.println("\033[1;36mStarting Unit Tests! \033[0m\n");
@@ -17,7 +14,6 @@ public class tests {
         assert userManager.getUserAccounts(UID).size() > 0 : "User Account not found Post Request approval!";
 
         String accNo = userManager.getUserAccounts(UID).get(0);
-        userAccountAccessTest(UID);
         accountOpperationsTest(accNo);
 
         String UID2 = "1134M";
@@ -27,8 +23,40 @@ public class tests {
         String accNo2 = userManager.getUserAccounts(UID2).get(0);
         testTransact(accNo2, accNo);
 
+        cardRequestTest(UID, accNo);
+        assert accountManager.getCardNumbers(accNo).length == 0 : "Card added before approval!";
+        adminApprovalTest();
+        assert accountManager.getCardNumbers(accNo).length == 1 : "Card not added!";
+        String cardNo = accountManager.getCardNumbers(accNo)[0];
+        cardDeletionTest(UID, accNo, cardNo);
+        assert accountManager.getCardNumbers(accNo).length == 1 : "Card deleted before deletion approval!";
+        adminApprovalTest();
+        assert accountManager.getCardNumbers(accNo).length == 0 : "Card not deleted!";
+
+        jointAccountCreationTest(UID2,accNo);
+        // adminApprovalTest();
+        jointAccountAccessTest(UID, UID2, accNo);
+
+        accountDeletionTest(UID, accNo);
+        assert accountManager.accountExists(accNo) : "Account deleted pre approval!";
+        assert userManager.getUserAccounts(UID).contains(accNo) : "Account deleted pre approval!";
+
+        adminApprovalTest();
+        assert !accountManager.accountExists(accNo) : "Account still accesable after deletion!";
+        assert !userManager.getUserAccounts(UID).contains(accNo) : "Account still accesable after deletion!";
+        assert !userManager.getUserAccounts(UID2).contains(accNo) : "Account still accesable FROM JOINT USERS after deletion!";
+        
+        accountDeletionTest(UID2, accNo2);
+        adminApprovalTest();
+       
+
+        
+        assert !accountManager.accountExists(accNo2) : "Account still accesable after deletion!";
+
+
         System.out.println("\n\033[1;32mAll Unit Tests passed! \033[0m\n");
         // System.out.println("All Unit Tests passed!\n\n");
+
     }
 
     public static void userCreationTest(String UID) {
@@ -46,12 +74,6 @@ public class tests {
         admin ad = new admin("Admin", "Man", "3311M");
         request toApprove = accountManager.getOldestRequest();
         ad.approveRequest(toApprove);
-    }
-
-    public static void userAccountAccessTest(String UID) {
-        ArrayList<String> accs = userManager.getUserAccounts(UID);
-        System.out.println("User Has: " + accs.size() + " account/s");
-        System.out.println(userManager.listUserAccounts(UID));
     }
 
     public static void accountOpperationsTest(String accountNumber) {
@@ -81,7 +103,8 @@ public class tests {
         double transferAmount = 20.0;
 
         // NOT ENOUGH MONEY TEST!
-        accountManager.transact(accNoA, accNoA, transferAmount);
+        System.out.print("Transact test when not enough balance: ");
+        accountManager.transact(accNoA, accNoB, transferAmount);
 
         double aValPost = accountManager.getAccountBalance(accNoA);
         double bValPost = accountManager.getAccountBalance(accNoB);
@@ -90,6 +113,7 @@ public class tests {
         assert bVal == bValPost : "Transfer error: Money addded to reciever account even when not enough balance!";
 
         // ENOUGH MONEY TEST!
+        
         accountManager.depositToAccount(accNoA, transferAmount);
 
         aVal = accountManager.getAccountBalance(accNoA);
@@ -104,25 +128,27 @@ public class tests {
         assert bVal + transferAmount == bValPost : "Transfer error: Money not addded to reciever!";
     }
 
-    public static void cardRequestTest(String UID,String accountNo){
-accountManager.requestNewCard(UID, accountNo);
+    public static void cardRequestTest(String UID, String accountNo) {
+        accountManager.requestNewCard(UID, accountNo);
     }
 
-    public static void cardDeletionTest(String UID,String accountNo,String cardNo) {
-accountManager.requestCardDeletion(UID, accountNo, cardNo);
+    public static void cardDeletionTest(String UID, String accountNo, String cardNo) {
+        accountManager.requestCardDeletion(UID, accountNo, cardNo);
     }
 
-    public static void jointAccountCreationTest(String accNo, String UID2) {
-accountManager.joinAccount(accNo, UID2);
+    public static void jointAccountCreationTest(String UID2,String accNo) {
+        accountManager.joinAccount(accNo, UID2);
     }
 
-    public static void jointAccountAccessTest(String UID2, String accNo) {
-assert userManager.hasAccount(UID2, accNo) : "Joint account un-accesable!";
-assert userManager.getUserAccounts(UID2).contains(accNo) : "Joint account not found in added person!";
+    public static void jointAccountAccessTest(String UID1, String UID2, String accNo) {
+        assert userManager.hasAccount(UID2, accNo) : "Joint account un-accesable!";
+        assert userManager.getUserAccounts(UID2).contains(accNo) : "Joint account not found in added person!";
+        
+        // assert userManager.
     }
 
     public static void accountDeletionTest(String UID, String accountNo) {
-accountManager.requestAccountDeletion(UID, accountNo);
+        accountManager.requestAccountDeletion(UID, accountNo);
     }
 
 }

@@ -42,7 +42,7 @@ public class accountManager {
     public static void approveNewAccount(request r) {
         requests.remove(r);
         String accNo = generateNewAccountKey();
-        System.out.println("approve new acc has been run");
+        // System.out.println("approve new acc has been run");
         account newAcc = new account(accNo, r.getRequester(), '$');
         accounts.put(accNo, newAcc);
         userManager.addAccountToUser(r.getRequester(), accNo);
@@ -102,7 +102,7 @@ public class accountManager {
 
     public static String approveNewCard(request r, String accountNumber) {
         requests.remove(r);
-        System.out.println("approve new card has been run");
+        // System.out.println("approve new card has been run");
         return accounts.get(accountNumber).addCard();
     }
 
@@ -248,5 +248,20 @@ public class accountManager {
             return;
         }
 
+    }
+
+    public static boolean accountExists(String accNo){
+        if(accounts.containsKey(accNo))
+            return true;
+        return false;
+    }
+
+    public static boolean isOwner(String userID, String accNo){
+        try{
+        return getAccount(accNo).getOwnerIDs().contains(userID);
+        }catch(Exception e){
+            System.err.println("User account not found!");
+            return false;
+        }
     }
 }
