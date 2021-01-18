@@ -93,7 +93,7 @@ public:
     };
 
     template <class T>
-    myuint<size> operator-(T &other)
+    myuint<size> operator-(T other)
     {
         static_assert(is_integral<T>::value, "Can only subtract by integral types!");
         cout << "- operator called!\n";
