@@ -24,9 +24,6 @@ public class userManager {
     }
 
     private static user getUser(String id) {
-        // System.err.println("This function is public for testing only!");
-        // if(!usersMap.containsKey(id))
-        //     throw new Exception("User not found!");
         return usersMap.get(id);
     }
 
