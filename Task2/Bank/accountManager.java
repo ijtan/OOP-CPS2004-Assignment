@@ -185,6 +185,8 @@ public class accountManager {
         try {
             account senderAccount = getAccount(senderAccountNo);
             account recieverAccount = getAccount(recieverAccountNo);
+            senderAccount.subtract(amount);
+            recieverAccount.add(amount);
         } catch (Exception e) {
             System.err.println("Could not transact: " + e.getMessage());
         }
