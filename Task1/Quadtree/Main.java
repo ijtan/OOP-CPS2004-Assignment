@@ -21,18 +21,16 @@ public class Main {
         tree.init(1, image.toCharArray());
 
        
-
-        System.out.println("\n");
-        System.out.println("Pre optimization leaf count = " + tree.leafCount());
+        System.out.println("\nPre optimization leaf count = " + tree.leafCount());
         System.out.println("Pre optimization parent node count = " + tree.nodeCount());
         
         System.out.println("\nOptimizing Tree...\n");
         tree.optimize();
 
-        System.out.println("Post optimization leaf count = " + tree.leafCount());
+        System.out.println("\nPost optimization leaf count = " + tree.leafCount());
         System.out.println("Post optimization parent node count = " + tree.nodeCount());
         
-        System.out.println("\n");
+        System.out.println("Assigned Tree Representation: ");
         System.out.println(tree.print());
 
     }
