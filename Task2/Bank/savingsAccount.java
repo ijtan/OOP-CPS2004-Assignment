@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 public class savingsAccount extends account {
     private double interestRate;

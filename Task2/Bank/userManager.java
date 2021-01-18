@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 // import java.util.List;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class userManager {
         return getUser(uid).hasAccountNo(accNo);
     }
 
-    public static boolean userExists(String uid) throws Exception {
+    public static boolean userExists(String uid){
         if(usersMap.containsKey(uid))
             return true;
         return false;

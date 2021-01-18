@@ -1,0 +1,1 @@
+java -ea -classpath build/ Bank.main

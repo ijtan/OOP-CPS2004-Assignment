@@ -1,0 +1,1 @@
+javac -d build/ Bank/main.java

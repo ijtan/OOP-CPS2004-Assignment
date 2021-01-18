@@ -1,5 +1,4 @@
-
-package Task2;
+package Bank;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -184,11 +183,8 @@ public class accountManager {
     public static void transact(String senderAccountNo, String recieverAccountNo, double amount) {
 
         try {
-            account senderAccount = accounts.get(senderAccountNo);
-            account recieverAccount = accounts.get(recieverAccountNo);
-            if (senderAccount == null || recieverAccount == null) {
-                throw new Exception("Could not retrieve one of the accounts specified!");
-            }
+            account senderAccount = getAccount(senderAccountNo);
+            account recieverAccount = getAccount(recieverAccountNo);
         } catch (Exception e) {
             System.err.println("Could not transact: " + e.getMessage());
         }

@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 public class card {
     private String parentAccNo;

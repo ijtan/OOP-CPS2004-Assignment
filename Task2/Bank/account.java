@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +15,7 @@ public class account {
     private char currency;
     private HashMap<String, card> cards = new HashMap<String, card>();
     private ArrayList<String> ownerIDs = new ArrayList<>();
-    private ArrayList<HashMap<String,String>> trasnactions;
+    private ArrayList<HashMap<String,String>> trasnactions = new ArrayList<>();
     private int cardCounter;
 
     public account(String AccountNumber, ArrayList<String> ownerIDs, char currency) {
