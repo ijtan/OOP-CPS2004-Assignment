@@ -18,7 +18,6 @@ private:
     vector<bool> values = vector<bool>(size);
 
 public:
-
     template <class T>
     myuint(T value)
     {
@@ -87,7 +86,7 @@ public:
     myuint<size> operator-=(myuint<otherSize> other)
     {
         string bin = other.toBinaryString();
-        return *this = subtract<otherSize>(other); 
+        return *this = subtract<otherSize>(other);
     };
 
     template <class T>
@@ -95,7 +94,7 @@ public:
     {
         static_assert(is_integral<T>::value, "Can only subtract by integral types!");
         string bin = toBinaryString(other);
-        setValueByBinaryString(subtractBinaryStrings(toBinaryString(),bin));
+        setValueByBinaryString(subtractBinaryStrings(toBinaryString(), bin));
         return *this;
     }
 
@@ -115,7 +114,7 @@ public:
         return isEqual(other);
     }
 
-     template <class T>
+    template <class T>
     bool operator==(T other)
     {
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
@@ -127,8 +126,8 @@ public:
     {
         return !isEqual(other);
     }
-    
-     template <class T>
+
+    template <class T>
     bool operator!=(T other)
     {
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
@@ -160,8 +159,6 @@ public:
         int val = whichIsLarger(values, other.getValueContainer());
         return val == 2 || val == 0;
     }
-
-   
 
     template <class T>
     bool operator>(T other)
@@ -201,21 +198,23 @@ public:
         return val == 2 || val == 0;
     }
 
-
-    myuint<size> operator<<(int amount){
+    myuint<size> operator<<(int amount)
+    {
         return shiftLeft(amount);
     }
-    myuint<size> operator>>(int amount){
+    myuint<size> operator>>(int amount)
+    {
         return shiftRight(amount);
     }
 
-    myuint<size> operator<<=(int amount){
+    myuint<size> operator<<=(int amount)
+    {
         return shiftLeftThis(amount);
     }
-    myuint<size> operator>>=(int amount){
+    myuint<size> operator>>=(int amount)
+    {
         return shiftRightThis(amount);
     }
-
 
     template <int otherSize>
     myuint<size> operator*(myuint<otherSize> other)
@@ -419,7 +418,7 @@ public:
     {
         myuint<size> tmp(*this);
         string newStr = toBinaryString();
-        
+
         // tmp.setValueByBinaryString(newStr);
 
         for (; m > 0; --m)
@@ -576,15 +575,41 @@ public:
         {
             if (i >= 0)
                 x += aStr[i] - '0';
-            else
-                x += 0;
 
             if (j >= 0)
                 x += bStr[i] - '0';
-            else
-                x += 0;
 
             added = char(x % 2 + '0') + added;
+
+            x /= 2;
+            i--;
+            j--;
+        }
+        return added;
+    }
+
+    vector<bool> addVecs(vector<bool> A, vector<bool> B)
+    {
+        vector<bool> added;
+        int x = 0;
+
+        if (A > B)
+            B.resize(A.size());
+        else
+            A.resize(B.size());
+            
+        int i,j;
+        i=j=A.size() - 1;
+
+        while (x == 1 or i >= 0 or j >= 0)
+        {
+            if (i >= 0 && A[i])
+                x += 1;
+
+            if (j >= 0 && B[i])
+                x += 1;
+
+            added.insert(added.begin(), bool(x % 2));
 
             x /= 2;
             i--;
@@ -639,7 +664,7 @@ public:
         vector<bool> tmp = stringToBoolVec(s, size);
         if (tmp.size() > size)
         {
-            cerr << "string too large to assign "<<tmp.size()<<">"<<size<<" Removing extra bits!\n";
+            cerr << "string too large to assign " << tmp.size() << ">" << size << " Removing extra bits!\n";
             int diff = (tmp.size() - size);
             tmp.erase(tmp.begin(), tmp.begin() + diff);
         }
@@ -736,14 +761,14 @@ public:
         if (other == 0)
             throw "Division by zero!";
 
-        myuint<size> nomin(0);
-        nomin.setValueByVec(getValueContainer());
+        myuint<size> nomin(*this);
+        // nomin.setValueByVec(getValueContainer());
 
-        myuint<size> denom(0);
-        denom.setValueByVec(getValueContainer());
+        myuint<size> denom(*this);
+        // denom.setValueByVec(getValueContainer());
 
-        myuint<size> remain(0);
-        remain.setValueByVec(getValueContainer());
+        myuint<size> remain(*this);
+        // remain.setValueByVec(getValueContainer());
 
         myuint<size> m0(1);
         myuint<size> n0(0);
@@ -826,9 +851,9 @@ public:
     template <int otherSize>
     myuint(myuint<otherSize> &other)
     {
-        if (other.getSize() > getSize())        
+        if (other.getSize() > getSize())
             cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n";
-        
+
         int diff = size - other.getSize();
         this->values = other.getValueContainer();
     }
@@ -836,7 +861,7 @@ public:
     template <int otherSize>
     myuint(myuint<otherSize> &&other)
     {
-        cout<<"move constructor\n";
+        cout << "move constructor\n";
 
         if (other.getSize() > getSize())
         {
@@ -887,4 +912,3 @@ ostream &operator<<(ostream &os, myuint<size> mi)
     os << mi.toDecimalString();
     return os;
 }
-

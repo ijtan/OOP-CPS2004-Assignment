@@ -9,6 +9,16 @@ using namespace std;
 int main()
 {
     runTest();
+    // vector
+    myuint<32>x(1);
+    myuint<32>A(100000);
+    myuint<32>B(590000);
+    vector<bool>test = x.addVecs(A.getValueContainer(),B.getValueContainer());
+    x.setValueByVec(test);
+    cout<<x<<endl;
+    // x<<=2047;
+    // cout<<x.toBinaryString()<<endl;
+    // cout<<x.toDecimalString()<<endl;
     // myuint<128> testString0(1234567890123);
     
     // cout << testString0.convert_to<int>() << endl;
