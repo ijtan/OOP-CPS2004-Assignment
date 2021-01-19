@@ -8,13 +8,6 @@ using namespace std;
 
 int main()
 {
-    myuint<8> B0(255);
-    cout<<B0<<endl;
-
     runTest();
-
-    myuint<32> A1(2000);
-    myuint<32> B1(6);
-    cout << A1*B1 << endl;
     return 0;
 }

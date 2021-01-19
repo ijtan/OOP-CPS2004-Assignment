@@ -82,4 +82,6 @@ static void runTest()
     myuint<32> D = move(C);
     assert(C != B && "move constructor failed");
     assert(D == B && "move constructor failed");
+
+    cout << "\n\nDone Testing\n";
 }
