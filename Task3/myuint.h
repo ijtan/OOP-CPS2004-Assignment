@@ -47,11 +47,8 @@ public:
     template <int otherSize>
     myuint<size> operator+(myuint<otherSize> &other)
     {
-        cout << "+ operator called!\n";
         return addMyuints<size>(other);
     };
-    // template <int otherSize>
-    // myuint<size> operator+(myuint<otherSize> &other);
 
     template <class T>
     myuint<size> operator+(T other)
@@ -85,7 +82,6 @@ public:
     template <int otherSize>
     myuint<size> operator-(myuint<otherSize> other)
     {
-        cout << "- operator called!\n";
         return subtract<size>(other);
     };
 
@@ -93,7 +89,6 @@ public:
     myuint<size> operator-(T other)
     {
         static_assert(is_integral<T>::value, "Can only subtract by integral types!");
-        cout << "- operator called!\n";
         return subtract<T>(other);
     }
 
@@ -140,7 +135,27 @@ public:
     template <int otherSize>
     bool operator==(myuint<otherSize> other)
     {
-        return whichIsLarger(values, other.getValueContainer()) == 0;
+        return isEqual(other);
+    }
+
+     template <class T>
+    bool operator==(T other)
+    {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
+        return isEqual(other);
+    }
+
+    template <int otherSize>
+    bool operator!=(myuint<otherSize> other)
+    {
+        return !isEqual(other);
+    }
+    
+     template <class T>
+    bool operator!=(T other)
+    {
+        static_assert(is_integral<T>::value, "Can only compare to integral types!");
+        return !isEqual(other);
     }
 
     template <int otherSize>
@@ -169,14 +184,7 @@ public:
         return val == 2 || val == 0;
     }
 
-    template <class T>
-    bool operator==(T other)
-    {
-        static_assert(is_integral<T>::value, "Can only compare to integral types!");
-        string otherStr = toBinaryString(other);
-        vector<bool> otherVec = stringToBoolVec(otherStr);
-        return whichIsLarger(values, otherVec) == 0;
-    }
+   
 
     template <class T>
     bool operator>(T other)
@@ -203,7 +211,7 @@ public:
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
         int val = whichIsLarger(values, otherVec);
-        return val == 1 || val == 1;
+        return val == 1 || val == 0;
     }
 
     template <class T>
@@ -212,9 +220,25 @@ public:
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
         string otherStr = toBinaryString(other);
         vector<bool> otherVec = stringToBoolVec(otherStr);
-        int val = whichIsLarger(values, otherVec) == 2;
-        return val == 1 || val == 1;
+        int val = whichIsLarger(values, otherVec);
+        return val == 2 || val == 0;
     }
+
+
+    myuint<size> operator<<(int amount){
+        return shiftLeft(amount);
+    }
+    myuint<size> operator>>(int amount){
+        return shiftRight(amount);
+    }
+
+    myuint<size> operator<<=(int amount){
+        return shiftLeftThis(amount);
+    }
+    myuint<size> operator>>=(int amount){
+        return shiftRightThis(amount);
+    }
+
 
     template <int otherSize>
     myuint<size> operator*(myuint<otherSize> other)
@@ -511,7 +535,7 @@ public:
     {
         string other = toBinaryString(num);
         string thisS = toBinaryString();
-        return (this == other);
+        return (thisS == other);
     }
 
     template <int otherSize>
@@ -606,7 +630,6 @@ public:
     template <int addResultSize, int otherSize>
     myuint<addResultSize> addMyuints(myuint<otherSize> &b)
     {
-        cout << "in add method\n";
         vector<bool> aValues = getValueContainer();
         vector<bool> bValues = b.getValueContainer();
 
