@@ -1,28 +1,37 @@
 #include <iostream>
 #include <vector>
-#include "myuint.h"
+// #include "myuint.h"
+#include "testing.h"
 #define ll unsigned long long
 // long long holds 8 bytes
 using namespace std;
 
 int main()
 {
+    runTest();
+    myuint<128> testString0(1234567890123);
+    
+    cout << testString0.convert_to<int>() << endl;
 
-    cout << "\nmult\n";
+    cout << testString0 << endl;
+    cout << testString0.shiftLeft(1) << endl;
+    cout << testString0.shiftLeft(2) << endl;
+
+    cout<< "\nmult\n";
     unsigned long t = pow(2, 32) - 1;
-    cout<<"int to mult: "<<t<<endl;
+    cout << "int to mult: " << t << endl;
     myuint<32> y(t);
     myuint<64> y0(t);
     // myuint<16> y(4);
     myuint<32> x(0);
     myuint<64> x0(0);
     x = y * y;
-    
+
     // cout<<xy.toBinaryString()<<endl;
-    cout <<"mult ints "<< x.convert_to<u_int64_t>() << endl;
+    cout << "mult ints " << x.convert_to<u_int64_t>() << endl;
 
     x0 = y0 * y0;
-    cout <<"mult longs "<< x0.convert_to<u_int64_t>() << endl;
+    cout << "mult longs " << x0.convert_to<u_int64_t>() << endl;
 
     // cout << x.toBinaryString() << endl;
     // cout << x.convert_to<u_int32_t>() << endl;

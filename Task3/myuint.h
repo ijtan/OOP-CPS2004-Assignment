@@ -50,6 +50,8 @@ public:
         cout << "+ operator called!\n";
         return addMyuints<size>(other);
     };
+    // template <int otherSize>
+    // myuint<size> operator+(myuint<otherSize> &other);
 
     template <class T>
     myuint<size> operator+(T other)
@@ -354,8 +356,9 @@ public:
         {
             values.push_back((bool)a[i]);
         }
-        if(values.size()!=size){
-            cerr<<"Error while trying to initialize myuint with other type\n";
+        if (values.size() != size)
+        {
+            cerr << "Error while trying to initialize myuint with other type\n";
         }
         return this[0];
     }
@@ -440,10 +443,10 @@ public:
     }
 
     template <int otherSize>
-    myuint<size + otherSize> multiplyMyuints(myuint<otherSize> other)
+    myuint<size> multiplyMyuints(myuint<otherSize> other)
     {
 
-        myuint<size + otherSize> ret(0);
+        myuint<size> ret(0);
         string aStr = toBinaryString();
         string bStr = other.toBinaryString();
 
@@ -552,8 +555,6 @@ public:
                     ans[i] = '0' + 1;
                 borrow = true;
             }
-            // if (borrow)
-            //     ans += "error";TODO
         }
         return ans;
     }
@@ -648,9 +649,10 @@ public:
     void setValueByBinaryString(string s)
     {
         values.clear();
-        vector<bool> tmp  = stringToBoolVec(s, size);
-        if(tmp.size()>size){
-            cerr<<"string too large to assign! Removing extra bits!\n";
+        vector<bool> tmp = stringToBoolVec(s, size);
+        if (tmp.size() > size)
+        {
+            cerr << "string too large to assign! Removing extra bits!\n";
             int diff = (tmp.size() - size);
             tmp.erase(tmp.begin(), tmp.begin() + diff);
         }
@@ -659,19 +661,19 @@ public:
 
     void setValueByVec(vector<bool> vals)
     {
-        if(vals.size()==size){
+        if (vals.size() == size)
+        {
             this->values = vals;
             return;
         }
         if (vals.size() < size)
         {
-            int diff = vals.size()-size;
-            vals.insert(vals.begin(),diff,false);
+            int diff = vals.size() - size;
+            vals.insert(vals.begin(), diff, false);
             this->values = vals;
             return;
         }
-        cerr<<"Vector is too large to assign. Aborting...\n";
-        
+        cerr << "Vector is too large to assign. Aborting...\n";
     }
 
     myuint<size> shiftRightThis(int shiftAmount)
@@ -696,13 +698,13 @@ public:
     myuint<size> shiftRight(int shiftAmount)
     {
 
-        myuint<size> tmp(this);
+        myuint<size> tmp(*this);
         return tmp.shiftRightThis(shiftAmount);
     }
 
     myuint<size> shiftLeft(int shiftAmount)
     {
-        myuint<size> tmp(this);
+        myuint<size> tmp(*this);
         return tmp.shiftLeftThis(shiftAmount);
     }
 
@@ -752,6 +754,9 @@ public:
     template <class T>
     vector<myuint<size>> longDivide(T other)
     {
+        if (other == 0)
+            throw "Division by zero!";
+
         myuint<size> nomin(0);
         nomin.setValueByVec(getValueContainer());
 
@@ -767,7 +772,7 @@ public:
 
         myuint<size> quotient(0);
 
-        if (other > *this)
+        if (*this < other)
         {
             return {quotient, remain};
         }
@@ -796,6 +801,12 @@ public:
         return {quotient, remain};
     }
 
+    // template <string>
+    // string convert_to()
+    // {
+    //     return toDecimalString();
+    //}
+
     template <class T>
     T convert_to()
     {
@@ -820,10 +831,6 @@ public:
             canConvert = true;
             cSize = realSize;
         }
-        // cout<<"real size is: "<<realSize<<"\n";
-        // cout<<"declared size is: "<<getSize()<<"\n";
-        // cout<<"real container size is: "<<getContainerSize()<<"\n";
-        // cout<<"dest size is: "<<sizeof(T)*8<<"\n";
         if (!canConvert)
         {
             cerr << "size of number cannot be converted to size of type specified\n";
@@ -861,4 +868,45 @@ public:
         else
             cerr << "Could not move by different size!\n";
     }
+
+    string toDecimalString()
+    {
+        string str = toBinaryString();
+        string ret = "";
+
+        string divStr = "";
+        int rem = 0;
+
+        if ((count(str.begin(), str.end(), '1')) == 0)
+            return "0";
+        do
+        {
+            rem = 0;
+            divStr = "";
+            for (char bit : str)
+            {
+                rem *= 2;
+                rem += bit - '0';
+                if (rem >= 10)
+                {
+                    rem -= 10;
+                    divStr += "1";
+                }
+                else
+                    divStr += "0";
+                // cout << "particular loop\n";
+            }
+            str = divStr;
+            ret.insert(0, 1, rem + '0');
+        } while (count(str.begin(), str.end(), '1'));
+        return ret;
+    }
 };
+
+template <int size>
+ostream &operator<<(ostream &os, myuint<size> mi)
+{
+    os << mi.toDecimalString();
+    return os;
+}
+

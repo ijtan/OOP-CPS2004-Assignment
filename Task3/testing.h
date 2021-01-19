@@ -16,7 +16,7 @@ static void runTest(){
     assert(A + B  == x+y && "Addition with other Big int failed");
     assert(A + 10 == x + 10 && "Addition with int failed");
 
-    assert(A - B == x-y&& "Subtraction with other Big int failed");    
+    assert(A - B == x-y && "Subtraction with other Big int failed");    
     assert(A - 10 == x-10 && "Subtraction With int failed");
 
     assert(A * B == x * y && "multiplication with other Big int failed");
