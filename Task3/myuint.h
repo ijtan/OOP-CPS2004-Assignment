@@ -18,18 +18,6 @@ private:
     vector<bool> values = vector<bool>(size);
 
 public:
-    // template <int otherSize>
-    // myuint(myuint<otherSize> other)
-    // {
-    //     cout << "init with other myuint\n";
-    //     if (other.getSize() > getSize())
-    //     {
-    //         cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
-    //     }
-    //     int diff = other.getSize() - size;
-    //     this->values = other.getValueContainer();
-    //     values.insert(values.begin(), diff, false);
-    // }
 
     template <class T>
     myuint(T value)
@@ -119,26 +107,8 @@ public:
 
     myuint<size> operator++()
     {
-        // string bin = toBinaryString();
-        // setValueByBinaryString(addBinaryStrings(this->toBinaryString(), "01"));
-        // return this[0];
         return *this += 1;
     }
-
-    // template <int otherSize>
-    // myuint<size> operator=(myuint<otherSize> other)
-    // {
-    //     // if (other.getSize() > getSize())
-    //     // {
-    //     //     cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
-    //     //     return this[0];
-    //     // }
-    //     // int diff = size - other.getSize();
-    //     // this->values = other.getValueContainer();
-    //     // values.insert(values.begin(), diff, false);
-    //     this(other);
-    //     return this[0];
-    // }
 
     template <int otherSize>
     bool operator==(myuint<otherSize> other)
@@ -264,8 +234,6 @@ public:
             if (tmpCont[i])
             {
                 cerr << "overflow detected!" << endl;
-                // cerr << "overflow detected! Aborting!" << endl;
-                // throw "overflow detected!";
                 break;
             }
         }
@@ -275,7 +243,6 @@ public:
         ret.setValueByVec(tmpCont);
         return ret;
     }
-    // explicit operator int *() const { return nullptr; }
 
     template <class T>
     myuint<size> operator*(T other)
@@ -288,7 +255,6 @@ public:
     template <int otherSize>
     myuint<size> operator*=(myuint<otherSize> other)
     {
-        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return *this = checkOverflows(multiplyMyuints(other));
     }
 
@@ -303,7 +269,6 @@ public:
     template <int otherSize>
     myuint<size> operator/(myuint<otherSize> other)
     {
-        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return longDivide(other)[0];
     }
 
@@ -324,7 +289,6 @@ public:
     template <int otherSize>
     myuint<size> operator%(myuint<otherSize> other)
     {
-        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return longDivide(other)[1];
     }
 
@@ -345,14 +309,12 @@ public:
     template <int otherSize>
     myuint<size> operator/=(myuint<otherSize> other)
     {
-        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return *this = longDivide(other)[0];
     }
 
     template <int otherSize>
     myuint<size> operator%=(myuint<otherSize> other)
     {
-        // static_assert(is_integral<T>::value, "Can only divide by integral types!");
         return *this = longDivide(other)[1];
     }
 
@@ -363,12 +325,10 @@ public:
 
     int getSize()
     {
-        // return sizeof(values)/sizeof(values[0]);
         return size;
     }
     int getContainerSize()
     {
-        // return sizeof(values)/sizeof(values[0]);
         return values.size();
     }
 
@@ -410,7 +370,6 @@ public:
 
         for (int i = size - 1; i >= 0; i--)
             ret += to_string(a[i]);
-        // cout << "num was converted to: " << ret << endl;
         return ret;
     }
 
@@ -662,8 +621,6 @@ public:
                 ret.push_back(true);
             else
             {
-                // cerr << "unkown character found! defaulting to 0\n";
-                // this->values.push_back(false);
                 cerr << "unkown character found! [" << c << "] aborting...\n";
                 ret.clear();
                 return ret;
@@ -739,21 +696,16 @@ public:
     string toBinaryString()
     {
         string bin;
-        // cout << "value size: " << values.size();
-        // cout << "starting conversion to binary String\n";
-
         int i = 0;
         for (bool b : values)
         {
             i++;
-            // cout<<i<<" ";
 
             if (b)
                 bin += '1';
             else
                 bin += '0';
         }
-        // cout << "done2\n";
         return bin;
     }
 
@@ -829,12 +781,6 @@ public:
         return {quotient, remain};
     }
 
-    // template <string>
-    // string convert_to()
-    // {
-    //     return toDecimalString();
-    //}
-
     template <class T>
     T convert_to()
     {
@@ -881,35 +827,21 @@ public:
     template <int otherSize>
     myuint(myuint<otherSize> &other)
     {
-        // cout << "copy constructor\n";
-        // if (otherSize == size)
-        //     values = other.getValueContainer();
-        // else
-        //     cerr << "Could not copy by different size!\n";
-        if (other.getSize() > getSize())
-        {
+        if (other.getSize() > getSize())        
             cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n";
-            // return this[0];
-        }
+        
         int diff = size - other.getSize();
         this->values = other.getValueContainer();
-        values.insert(values.begin(), diff, false);
-        // return this[0];
     }
 
     template <int otherSize>
     myuint(myuint<otherSize> &&other)
     {
         cout<<"move constructor\n";
-        // if (otherSize == size)
-        //     this->values = move(other.getValueContainer());
-        // else
-        //     cerr << "Could not move by different size!\n";
 
         if (other.getSize() > getSize())
         {
             cerr << "other size(" << other.getSize() << ") is too big to move to this(" << getSize() << ") one!\n";
-            // return this[0];
         }
         int diff = size - other.getSize();
         this->values = move(other.getValueContainer());
