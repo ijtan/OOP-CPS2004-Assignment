@@ -519,7 +519,7 @@ public:
             aStr.insert(0, "0");
 
         string ans(aStr.length(), '0');
-        bool borrow = false;
+        bool borrowed = false;
         int aInt, bInt;
         for (int i = aStr.length() - 1; i >= 0; --i)
         {
@@ -527,23 +527,68 @@ public:
             bInt = bStr[i];
             ans[i] += (aInt - bInt);
 
-            if (borrow)
+            if (borrowed)
             {
                 if (ans[i] != '0' - 1)
                 {
                     ans[i] -= 1;
-                    borrow = false;
+                    borrowed = false;
                 }
             }
 
             if (ans[i] == '0' - 1)
             {
-                if (borrow)
+                if (borrowed)
                     ans[i] = '0';
                 else
                     ans[i] = '0' + 1;
-                borrow = true;
+                borrowed = true;
             }
+        }
+        return ans;
+    }
+
+    vector<bool> subtractVecs(vector<bool> A, vector<bool> B)
+    {
+        if (A.size() > B.size())
+            B.resize(A.size(), false);
+        else
+            A.resize(B.size(), false);
+
+        // string ans(aStr.length(), '0');
+        vector<bool> ans;
+        bool borrowed = false;
+        bool currBit = false;
+        bool needBorrow = false;
+        for (int i = A.size() - 1; i >= 0; --i)
+        {
+            //emulate subtracting bitA - bitB
+            if(A[i] && B[i])
+                currBit = false;
+            if(A[i]&&!B[i])
+                currBit = true;
+            if (!A[i] && B[i])
+                needBorrow = true;
+            //check if previous bit needed a borrow
+            //if we also need a borrow skip
+            if (borrowed && !needBorrow)
+            {            
+                if (currBit) //if we are 1, we can turn into a 0, we can sacrifice current bit to resolve borrow
+                    currBit = false;
+                else //if we are 0, we need to borrow to satisfy the previous borrow
+                    needBorrow = true;
+                borrowed = false; //either way, the current borrow is satisfied (either by ourselves or future borrow)
+                
+            }
+
+            if (needBorrow) //if we need to borrow
+            {
+                currBit = !borrowed; //if we have already borrowed, current bit=0, else curr becomes 1, since we will have borrowed
+                borrowed = true; //flag for next numbers
+                needBorrow = false;//borrow need has been satisfied
+            }
+            ans.insert(ans.begin(), currBit); //insert  current bit to ans
+            currBit = false; //reset current bit
         }
         return ans;
     }
@@ -594,20 +639,20 @@ public:
         int x = 0;
 
         if (A > B)
-            B.resize(A.size());
+            B.resize(A.size(), false);
         else
-            A.resize(B.size());
-            
-        int i,j;
-        i=j=A.size() - 1;
+            A.resize(B.size(), false);
+
+        int i, j;
+        i = j = A.size() - 1;
 
         while (x == 1 or i >= 0 or j >= 0)
         {
             if (i >= 0 && A[i])
-                x += 1;
+                x++;
 
             if (j >= 0 && B[i])
-                x += 1;
+                x++;
 
             added.insert(added.begin(), bool(x % 2));
 
