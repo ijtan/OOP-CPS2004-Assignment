@@ -42,10 +42,11 @@ public:
     {
         static_assert(is_integral<T>::value, "Can only add by integral types!");
 
-        string bin = toBinaryString<T>(other);
+        // string bin = toBinaryString<T>(other);
         myuint<size> tmp(0);
 
-        tmp.setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        // tmp.setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        tmp.setValueByVec(addVecs(values, toBinVec(other)));
         return tmp;
     };
 
@@ -53,8 +54,9 @@ public:
     myuint<size> operator+=(myuint<otherSize> &other)
     {
 
-        string bin = other.toBinaryString();
-        setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        // string bin = other.toBinaryString();
+        // setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        setValueByVec(addVecs(values, other.getValueContainer()));
         return this[0];
         // return *this + other;
     };
@@ -63,8 +65,9 @@ public:
     myuint<size> operator+=(T other)
     {
         static_assert(is_integral<T>::value, "Can only add by integral types!");
-        string bin = toBinaryString<T>(other);
-        this->setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        // string bin = toBinaryString<T>(other);
+        // this->setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        setValueByVec(addVecs(values, toBinVec(other)));
         return this[0];
         // return *this + other;
     };
@@ -93,8 +96,10 @@ public:
     myuint<size> operator-=(const T other)
     {
         static_assert(is_integral<T>::value, "Can only subtract by integral types!");
-        string bin = toBinaryString(other);
-        setValueByBinaryString(subtractBinaryStrings(toBinaryString(), bin));
+        // string bin = toBinaryString(other);
+        // setValueByBinaryString(subtractBinaryStrings(toBinVec(), bin));
+        setValueByVec(subtractVecs(values, toBinVec(other)));
+
         return *this;
     }
 
@@ -358,7 +363,7 @@ public:
     {
         static_assert(is_integral<T>::value, "Can only convert integral types to strings!");
         int a[size] = {0};
-        int tmp = num;
+        T tmp = num;
         string ret = "";
         for (int i = 0; tmp > 0; i++)
         {
@@ -368,6 +373,26 @@ public:
 
         for (int i = size - 1; i >= 0; i--)
             ret += to_string(a[i]);
+        return ret;
+    }
+
+    template <class T>
+    vector<bool> toBinVec(T num)
+    {
+        static_assert(is_integral<T>::value, "Can only convert integral types to strings!");
+        // int a[size] = {0};
+        vector<bool> ret;
+        T tmp = num;
+        // string ret = "";
+        while (tmp > 0)
+        {
+            ret.push_back((bool)(tmp % 2));
+            tmp >>= 1; // = tmp / 2;
+        }
+
+        // for (int i = size - 1; i >= 0; i--)
+        //     ret += to_string(a[i]);
+        reverse(ret.begin(), ret.end());
         return ret;
     }
 
@@ -436,63 +461,113 @@ public:
     {
 
         myuint<size> ret(0);
-        string aStr = toBinaryString();
-        string bStr = other.toBinaryString();
+        // string aStr = toBinaryString();
+        // string bStr = other.toBinaryString();
 
-        string retStr = multiplyBinaryStrings(aStr, bStr);
+        // string retStr = multiplyBinaryStrings(aStr, bStr);
 
-        ret.setValueByBinaryString(retStr);
+        // ret.setValueByBinaryString(retStr);
+        ret.setValueByVec(multiplyVecs(values, other.getValueContainer()));
         return ret;
     }
 
-    string multiplyBinaryStrings(string aStr, string bStr)
+    // string multiplyBinaryStrings(string aStr, string bStr)
+    // {
+    //     vector<string> tmp;
+    //     int aSize = aStr.size();
+    //     int bSize = bStr.size();
+    //     if (aSize > bSize)
+    //     {
+    //         int diff = aSize - bSize;
+    //         bStr.insert(0, abs(diff), '0');
+
+    //         bSize = bStr.size();
+    //     }
+    //     else if (aSize < bSize)
+    //     {
+    //         int diff = bSize - aSize;
+    //         aStr.insert(0, abs(diff), '0');
+    //         aSize = aStr.size();
+    //     }
+    //     int i = aStr.size() - 1;
+    //     int j = 0;
+
+    //     string current;
+    //     int aC, bC;
+    //     aC = bC = 0;
+    //     char abC;
+    //     for (; i >= 0; i--)
+    //     {
+    //         current = "";
+    //         for (j = bStr.size() - 1; j >= 0; j--)
+    //         {
+    //             aC = aStr[j] - '0';
+    //             bC = bStr[i] - '0';
+    //             abC = (aC * bC) + '0';
+    //             current.insert(0, 1, abC);
+    //         }
+    //         tmp.push_back(current);
+    //     }
+    //     string retStr = "";
+    //     int increase = 0;
+    //     for (string s : tmp)
+    //     {
+    //         // cout<<increase<<") "<<s<<endl;
+    //         s.insert(s.size(), increase, '0');
+    //         s.insert(0, 1, '0');
+    //         retStr = addBinaryStrings(retStr, s);
+    //         increase++;
+    //     }
+    //     return retStr;
+    // }
+
+    vector<bool> multiplyVecs(vector<bool> A, vector<bool> B)
     {
-        vector<string> tmp;
-        int aSize = aStr.size();
-        int bSize = bStr.size();
-        if (aSize > bSize)
-        {
-            int diff = aSize - bSize;
-            bStr.insert(0, abs(diff), '0');
+        vector<vector<bool>> tmp;
+        // int aSize = A.size();
+        // int bSize = B.size();
 
-            bSize = bStr.size();
-        }
-        else if (aSize < bSize)
-        {
-            int diff = bSize - aSize;
-            aStr.insert(0, abs(diff), '0');
-            aSize = aStr.size();
-        }
-        int i = aStr.size() - 1;
-        int j = 0;
+        while (A.size() > B.size())
+            B.insert(B.begin(), false);
+        while (B.size() > A.size())
+            A.insert(A.begin(), false);
+        int i, j;
 
-        string current;
-        int aC, bC;
-        aC = bC = 0;
-        char abC;
-        for (; i >= 0; i--)
+        // int j = 0;
+
+        // string current = ;
+        vector<bool> currentVec;
+        // int aC, bC;
+        // aC = bC = 0;
+        // char abC;
+        for (int i = A.size() - 1; i >= 0; i--)
         {
-            current = "";
-            for (j = bStr.size() - 1; j >= 0; j--)
+            // current = "";
+            currentVec.clear();
+            for (int j = B.size() - 1; j >= 0; j--)
             {
-                aC = aStr[j] - '0';
-                bC = bStr[i] - '0';
-                abC = (aC * bC) + '0';
-                current.insert(0, 1, abC);
+                // aC = aStr[j] - '0';
+                // bC = bStr[i] - '0';
+                // abC = (aC * bC) + '0';
+                // current.insert(0, 1, abC);
+                currentVec.insert(currentVec.begin(), A[j] && B[i]);
             }
-            tmp.push_back(current);
+            tmp.push_back(currentVec);
         }
-        string retStr = "";
+        // string retStr = "";
+        vector<bool> retVec;
         int increase = 0;
-        for (string s : tmp)
+        for (vector<bool> num : tmp)
         {
             // cout<<increase<<") "<<s<<endl;
-            s.insert(s.size(), increase, '0');
-            s.insert(0, 1, '0');
-            retStr = addBinaryStrings(retStr, s);
+            // s.insert(s.size(), increase, '0');
+            num.insert(num.end(), increase, false);
+            num.insert(num.begin(), false);
+            // s.insert(0, 1, '0');
+            retVec = addVecs(retVec, num);
             increase++;
         }
-        return retStr;
+        return retVec;
     }
 
     template <class T>
@@ -511,49 +586,50 @@ public:
         return (thisS == otherS);
     }
 
-    string subtractBinaryStrings(string aStr, string bStr)
-    {
-        while (aStr.length() > bStr.length())
-            bStr.insert(0, "0");
-        while (bStr.length() > aStr.length())
-            aStr.insert(0, "0");
+    // string subtractBinaryStrings(string aStr, string bStr)
+    // {
+    //     while (aStr.length() > bStr.length())
+    //         bStr.insert(0, "0");
+    //     while (bStr.length() > aStr.length())
+    //         aStr.insert(0, "0");
 
-        string ans(aStr.length(), '0');
-        bool borrowed = false;
-        int aInt, bInt;
-        for (int i = aStr.length() - 1; i >= 0; --i)
-        {
-            aInt = aStr[i];
-            bInt = bStr[i];
-            ans[i] += (aInt - bInt);
+    //     string ans(aStr.length(), '0');
+    //     bool borrowed = false;
+    //     int aInt, bInt;
+    //     for (int i = aStr.length() - 1; i >= 0; --i)
+    //     {
+    //         aInt = aStr[i];
+    //         bInt = bStr[i];
+    //         ans[i] += (aInt - bInt);
 
-            if (borrowed)
-            {
-                if (ans[i] != '0' - 1)
-                {
-                    ans[i] -= 1;
-                    borrowed = false;
-                }
-            }
+    //         if (borrowed)
+    //         {
+    //             if (ans[i] != '0' - 1)
+    //             {
+    //                 ans[i] -= 1;
+    //                 borrowed = false;
+    //             }
+    //         }
 
-            if (ans[i] == '0' - 1)
-            {
-                if (borrowed)
-                    ans[i] = '0';
-                else
-                    ans[i] = '0' + 1;
-                borrowed = true;
-            }
-        }
-        return ans;
-    }
+    //         if (ans[i] == '0' - 1)
+    //         {
+    //             if (borrowed)
+    //                 ans[i] = '0';
+    //             else
+    //                 ans[i] = '0' + 1;
+    //             borrowed = true;
+    //         }
+    //     }
+    //     return ans;
+    // }
 
     vector<bool> subtractVecs(vector<bool> A, vector<bool> B)
     {
-        if (A.size() > B.size())
-            B.resize(A.size(), false);
-        else
-            A.resize(B.size(), false);
+        while (A.size() > B.size())
+            B.insert(B.begin(), false);
+        while (B.size() > A.size())
+            A.insert(A.begin(), false);
+        int i, j;
 
         // string ans(aStr.length(), '0');
         vector<bool> ans;
@@ -563,86 +639,83 @@ public:
         for (int i = A.size() - 1; i >= 0; --i)
         {
             //emulate subtracting bitA - bitB
-            if(A[i] && B[i])
+            if (A[i] && B[i])
                 currBit = false;
-            if(A[i]&&!B[i])
+            if (A[i] && !B[i])
                 currBit = true;
             if (!A[i] && B[i])
                 needBorrow = true;
             //check if previous bit needed a borrow
             //if we also need a borrow skip
             if (borrowed && !needBorrow)
-            {            
+            {
                 if (currBit) //if we are 1, we can turn into a 0, we can sacrifice current bit to resolve borrow
                     currBit = false;
                 else //if we are 0, we need to borrow to satisfy the previous borrow
                     needBorrow = true;
                 borrowed = false; //either way, the current borrow is satisfied (either by ourselves or future borrow)
-                
             }
 
             if (needBorrow) //if we need to borrow
             {
                 currBit = !borrowed; //if we have already borrowed, current bit=0, else curr becomes 1, since we will have borrowed
-                borrowed = true; //flag for next numbers
-                needBorrow = false;//borrow need has been satisfied
+                borrowed = true;     //flag for next numbers
+                needBorrow = false;  //borrow need has been satisfied
             }
             ans.insert(ans.begin(), currBit); //insert  current bit to ans
-            currBit = false; //reset current bit
+            currBit = false;                  //reset current bit
         }
         return ans;
     }
 
-    string addBinaryStrings(string aStr, string bStr)
-    {
-        string added = "";
-        int x = 0;
+    // string addBinaryStrings(string aStr, string bStr)
+    // {
+    //     string added = "";
+    //     int x = 0;
 
-        int aSize = aStr.size();
-        int bSize = bStr.size();
-        if (aSize > bSize)
-        {
-            int diff = aSize - bSize;
-            bStr.insert(0, abs(diff), '0');
+    //     int aSize = aStr.size();
+    //     int bSize = bStr.size();
+    //     if (aSize > bSize)
+    //     {
+    //         int diff = aSize - bSize;
+    //         bStr.insert(0, abs(diff), '0');
 
-            bSize = bStr.size();
-        }
-        else if (aSize < bSize)
-        {
-            int diff = bSize - aSize;
-            aStr.insert(0, abs(diff), '0');
-            aSize = aStr.size();
-        }
-        int i = aStr.size() - 1;
-        int j = bStr.size() - 1;
+    //         bSize = bStr.size();
+    //     }
+    //     else if (aSize < bSize)
+    //     {
+    //         int diff = bSize - aSize;
+    //         aStr.insert(0, abs(diff), '0');
+    //         aSize = aStr.size();
+    //     }
+    //     int i = aStr.size() - 1;
+    //     int j = bStr.size() - 1;
 
-        while (x == 1 or i >= 0 or j >= 0)
-        {
-            if (i >= 0)
-                x += aStr[i] - '0';
+    //     while (x == 1 or i >= 0 or j >= 0)
+    //     {
+    //         if (i >= 0)
+    //             x += aStr[i] - '0';
 
-            if (j >= 0)
-                x += bStr[i] - '0';
+    //         if (j >= 0)
+    //             x += bStr[i] - '0';
 
-            added = char(x % 2 + '0') + added;
+    //         added = char(x % 2 + '0') + added;
 
-            x /= 2;
-            i--;
-            j--;
-        }
-        return added;
-    }
+    //         x /= 2;
+    //         i--;
+    //         j--;
+    //     }
+    //     return added;
+    // }
 
     vector<bool> addVecs(vector<bool> A, vector<bool> B)
     {
         vector<bool> added;
         int x = 0;
-
-        if (A > B)
-            B.resize(A.size(), false);
-        else
-            A.resize(B.size(), false);
-
+        while (A.size() > B.size())
+            B.insert(B.begin(), false);
+        while (B.size() > A.size())
+            A.insert(A.begin(), false);
         int i, j;
         i = j = A.size() - 1;
 
@@ -654,7 +727,7 @@ public:
             if (j >= 0 && B[i])
                 x++;
 
-            added.insert(added.begin(), bool(x % 2));
+            added.insert(added.begin(), (bool)(x % 2));
 
             x /= 2;
             i--;
@@ -666,14 +739,15 @@ public:
     template <int addResultSize, int otherSize>
     myuint<addResultSize> addMyuints(myuint<otherSize> &b)
     {
-        vector<bool> aValues = getValueContainer();
-        vector<bool> bValues = b.getValueContainer();
+        // vector<bool> aValues = getValueContainer();
+        // vector<bool> bValues = b.getValueContainer();
 
-        string aStr = toBinaryString();
-        string bStr = b.toBinaryString();
+        // string aStr = toBinaryString();
+        // string bStr = b.toBinaryString();
 
         myuint<addResultSize> ret(0);
-        ret.setValueByBinaryString(addBinaryStrings(aStr, bStr));
+        ret.setValueByVec(addVecs(values, b.getValueContainer()));
+        // ret.setValueByBinaryString(addBinaryStrings(aStr, bStr));
         return ret;
     }
 
@@ -725,12 +799,18 @@ public:
         }
         if (vals.size() < size)
         {
-            int diff = vals.size() - size;
+            int diff = size - vals.size();
             vals.insert(vals.begin(), diff, false);
             this->values = vals;
             return;
         }
-        cerr << "Vector is too large to assign. Aborting...\n";
+        cerr << "Vector to assign is larger than size; data may be lost\n";
+        while (size < vals.size())
+        {
+            vals.erase(vals.begin());
+        }
+        this->values = vals;
+        return;
     }
 
     myuint<size> shiftRightThis(int shiftAmount)
@@ -781,22 +861,25 @@ public:
     template <int otherSize>
     myuint<size> subtract(myuint<otherSize> &b)
     {
-        string thisStr = toBinaryString();
-        string bStr = b.toBinaryString();
-        string result = subtractBinaryStrings(thisStr, bStr);
+        // string thisStr = toBinaryString();
+        // string bStr = b.toBinaryString();
+        // string result = subtractBinaryStrings(thisStr, bStr);
         myuint<size> tmp(0);
-        tmp.setValueByBinaryString(result);
+        tmp.setValueByVec(subtractVecs(values, b.getValueContainer()));
         return tmp;
     }
 
     template <class T>
     myuint<size> subtract(T b)
     {
-        string thisStr = toBinaryString();
-        string bStr = toBinaryString(b);
-        string result = subtractBinaryStrings(thisStr, bStr);
+        // string thisStr = toBinaryString();
+        // string bStr = toBinaryString(b);
+        // string result = subtractBinaryStrings(thisStr, bStr);
+        // myuint<size> tmp(0);
+        // tmp.setValueByBinaryString(result);
+        // return tmp;
         myuint<size> tmp(0);
-        tmp.setValueByBinaryString(result);
+        tmp.setValueByVec(subtractVecs(values, toBinVec(b)));
         return tmp;
     }
 
@@ -899,8 +982,9 @@ public:
         if (other.getSize() > getSize())
             cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n";
 
-        int diff = size - other.getSize();
-        this->values = other.getValueContainer();
+        // int diff = size - other.getSize();
+        // this->values = other.getValueContainer();
+        setValueByVec(other.getValueContainer());
     }
 
     template <int otherSize>
