@@ -15,7 +15,7 @@ static void runTest(){
     assert(A.toDecimalString() == "20" && "to decimnal string failed");
     assert((A*B).toDecimalString() == "200" && "to decimnal string failed");
     assert(B.toDecimalString() == "10" && "to decimnal string failed");
-    cout<<C<<endl;
+
     assert(A == x && "Equality check with integer failed");
     assert(A1==A && "Equality check with other Big Int failed");
     assert(B!=x && "Not equal check with integer failed");
