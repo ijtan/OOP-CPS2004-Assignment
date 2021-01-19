@@ -13,7 +13,6 @@ static void runTest()
     int y = B.convert_to<int>();
 
     assert(A.toDecimalString() == "20" && "to decimal string failed");
-    // assert((A * B).toDecimalString() == "200" && "to decimal string failed");
     assert(B.toDecimalString() == "10" && "to decimal string failed");
 
     assert(A == x && "Equality check with integer failed");        //tests both convert_to() and ==
@@ -32,6 +31,7 @@ static void runTest()
 
     assert(A / B == x / y && "division with other Big int failed");
     assert(A / 10 == x / 10 && "division With int failed");
+    // assert(A / 0 == x / 0 && "division BY ZERO");
 
     assert((A *= B) == (x *= y) && "multiplication= failed with other Big int");
     assert((A *= 10) == (x *= 10) && "multiplication= with int failed");

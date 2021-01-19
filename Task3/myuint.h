@@ -78,7 +78,6 @@ public:
     template <int otherSize>
     myuint<size> operator-=(myuint<otherSize> other)
     {
-        string bin = other.toBinaryString();
         return *this = subtract<otherSize>(other);
     };
 
@@ -157,27 +156,21 @@ public:
     bool operator>(T other)
     {
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
-        string otherStr = toBinaryString(other);
-        vector<bool> otherVec = stringToBoolVec(otherStr);
-        return whichIsLarger(values, otherVec) == 1;
+        return whichIsLarger(values, toBinVec(other)) == 1;
     }
 
     template <class T>
     bool operator<(T other)
     {
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
-        string otherStr = toBinaryString(other);
-        vector<bool> otherVec = stringToBoolVec(otherStr);
-        return whichIsLarger(values, otherVec) == 2;
+        return whichIsLarger(values, toBinVec(other)) == 2;
     }
 
     template <class T>
     bool operator>=(T other)
     {
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
-        string otherStr = toBinaryString(other);
-        vector<bool> otherVec = stringToBoolVec(otherStr);
-        int val = whichIsLarger(values, otherVec);
+        int val = whichIsLarger(values, toBinVec(other));
         return val == 1 || val == 0;
     }
 
@@ -185,9 +178,7 @@ public:
     bool operator<=(T other)
     {
         static_assert(is_integral<T>::value, "Can only compare to integral types!");
-        string otherStr = toBinaryString(other);
-        vector<bool> otherVec = stringToBoolVec(otherStr);
-        int val = whichIsLarger(values, otherVec);
+        int val = whichIsLarger(values, toBinVec(other));
         return val == 2 || val == 0;
     }
 
@@ -367,9 +358,16 @@ public:
     template <class T>
     vector<bool> toBinVec(T num)
     {
+
         static_assert(is_integral<T>::value, "Can only convert integral types to strings!");
         vector<bool> ret;
         T tmp = num;
+        if (num == 0)
+        {
+            ret.push_back(false);
+            return ret;
+        }
+
         while (tmp > 0)
         {
             ret.push_back((bool)(tmp % 2));
@@ -380,64 +378,24 @@ public:
         return ret;
     }
 
-    int whichIsLarger(vector<bool> boolVec, unsigned long long other)
+    int whichIsLarger(vector<bool> A, vector<bool> B)
     {
-        string otherString = toBinaryString(other);
-        vector<bool> otherVec = stringToBoolVec(otherString);
-        return whichIsLarger(boolVec, otherVec);
-    }
+        while (A.size() > B.size())
+            B.insert(B.begin(), false);
+        while (B.size() > A.size())
+            A.insert(A.begin(), false);
 
-    int whichIsLarger(vector<bool> aV, vector<bool> bV)
-    {
-        size_t aSize = aV.size();
-        size_t bSize = bV.size();
-
-        if (aSize > bSize)
-        {
-            int diff = aSize - bSize;
-            bV.insert(bV.begin(), abs(diff), false);
-
-            bSize = bV.size();
-        }
-        else if (aSize < bSize)
-        {
-            int diff = bSize - aSize;
-            aV.insert(aV.begin(), abs(diff), false);
-            aSize = aV.size();
-        }
-
-        if (aSize != bSize)
+        if (A.size() != B.size())
             cerr << "comparison sizes could not be matched!\n";
 
-        for (int i = 0; i < aSize; i++)
+        for (int i = 0; i < A.size(); i++)
         {
-            bool aC = aV[i];
-            bool bC = bV[i];
-
-            if (aC == 0 && bC == 1)
+            if (!A[i] && B[i])
                 return 2;
-            if (aC == 1 && bC == 0)
+            if (A[i] && !B[i])
                 return 1;
         }
         return 0;
-    }
-
-    template <int otherSize>
-    myuint<size> divideByMyuint(myuint<otherSize> m)
-    {
-        myuint<size> tmp(*this);
-        string newStr = toBinaryString();
-
-        // tmp.setValueByBinaryString(newStr);
-
-        for (; m > 0; --m)
-        {
-            tmp.shiftRightThis(1);
-            newStr = subtractBinaryStrings(newStr, tmp.toBinaryString());
-        }
-        tmp.setValueByBinaryString(newStr);
-
-        return tmp;
     }
 
     template <int otherSize>
@@ -462,9 +420,9 @@ public:
         for (int i = A.size() - 1; i >= 0; i--)
         {
             currentVec.clear();
-            for (int j = B.size() - 1; j >= 0; j--)            
+            for (int j = B.size() - 1; j >= 0; j--)
                 currentVec.insert(currentVec.begin(), A[j] && B[i]);
-            
+
             tmp.push_back(currentVec);
         }
         vector<bool> retVec;
@@ -482,17 +440,36 @@ public:
     template <class T>
     bool isEqual(T num)
     {
-        string other = toBinaryString(num);
-        string thisS = toBinaryString();
-        return (thisS == other);
+        vector<bool> other = toBinVec(num);
+        vector<bool> current = values;
+
+        if (current.empty() || other.empty())
+            return false;
+
+        while (!other[0] && other.size() > 1)
+            other.erase(other.begin());
+        while (!current[0] && current.size() > 1)
+            current.erase(current.begin());
+
+        return (current == other);
     }
 
     template <int otherSize>
     bool isEqual(myuint<otherSize> other)
     {
-        string otherS = other.toBinaryString();
-        string thisS = toBinaryString();
-        return (thisS == otherS);
+
+        vector<bool> otherVec = other.getValueContainer();
+        vector<bool> currentVec = values;
+
+        if (currentVec.empty() || otherVec.empty())
+            return false;
+
+        while (!currentVec[0] && currentVec.size() > 1)
+            currentVec.erase(currentVec.begin());
+        while (!otherVec[0] && otherVec.size() > 1)
+            otherVec.erase(otherVec.begin());
+
+        return (currentVec == otherVec);
     }
 
     vector<bool> subtractVecs(vector<bool> A, vector<bool> B)
@@ -571,15 +548,9 @@ public:
     template <int addResultSize, int otherSize>
     myuint<addResultSize> addMyuints(myuint<otherSize> &b)
     {
-        // vector<bool> aValues = getValueContainer();
-        // vector<bool> bValues = b.getValueContainer();
-
-        // string aStr = toBinaryString();
-        // string bStr = b.toBinaryString();
 
         myuint<addResultSize> ret(0);
         ret.setValueByVec(addVecs(values, b.getValueContainer()));
-        // ret.setValueByBinaryString(addBinaryStrings(aStr, bStr));
         return ret;
     }
 
@@ -693,9 +664,6 @@ public:
     template <int otherSize>
     myuint<size> subtract(myuint<otherSize> &b)
     {
-        // string thisStr = toBinaryString();
-        // string bStr = b.toBinaryString();
-        // string result = subtractBinaryStrings(thisStr, bStr);
         myuint<size> tmp(0);
         tmp.setValueByVec(subtractVecs(values, b.getValueContainer()));
         return tmp;
@@ -704,12 +672,6 @@ public:
     template <class T>
     myuint<size> subtract(T b)
     {
-        // string thisStr = toBinaryString();
-        // string bStr = toBinaryString(b);
-        // string result = subtractBinaryStrings(thisStr, bStr);
-        // myuint<size> tmp(0);
-        // tmp.setValueByBinaryString(result);
-        // return tmp;
         myuint<size> tmp(0);
         tmp.setValueByVec(subtractVecs(values, toBinVec(b)));
         return tmp;
@@ -738,13 +700,10 @@ public:
             return {quotient, remain};
         }
 
-        myuint<size> tmp(0);
-        tmp = n0;
-        while (((tmp.shiftLeftThis(1)) <= *this))
+        while (n0 <= shiftRight(1))
         {
             n0.shiftLeftThis(1);
             m0.shiftLeftThis(1);
-            tmp = n0;
         }
         remain -= n0;
         quotient += m0;
@@ -809,10 +768,8 @@ public:
     myuint(myuint<otherSize> &other)
     {
         if (other.getSize() > getSize())
-            cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n";
+            cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n"; //TODO stop execution or ??
 
-        // int diff = size - other.getSize();
-        // this->values = other.getValueContainer();
         setValueByVec(other.getValueContainer());
     }
 
@@ -832,34 +789,22 @@ public:
 
     string toDecimalString()
     {
-        string str = toBinaryString();
         string ret = "";
-
-        string divStr = "";
+        myuint<size> current(*this);
+        myuint<size>remTmp(0);
+        
         int rem = 0;
 
-        if ((count(str.begin(), str.end(), '1')) == 0)
+        if (current == 0)
             return "0";
         do
         {
-            rem = 0;
-            divStr = "";
-            for (char bit : str)
-            {
-                rem *= 2;
-                rem += bit - '0';
-                if (rem >= 10)
-                {
-                    rem -= 10;
-                    divStr += "1";
-                }
-                else
-                    divStr += "0";
-                // cout << "particular loop\n";
-            }
-            str = divStr;
+            remTmp = current % 10;
+            rem = remTmp.convert_to<int>();
+            current /= 10;
             ret.insert(0, 1, rem + '0');
-        } while (count(str.begin(), str.end(), '1'));
+        } while (current > 0);
+
         return ret;
     }
 };
