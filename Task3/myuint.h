@@ -46,7 +46,7 @@ public:
         string bin = toBinaryString<T>(other);
         myuint<size> tmp(0);
 
-        tmp.setValueByBinaryString(addBinaryStrings(this->toBinaryString(), bin));
+        tmp.setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
         return tmp;
     };
 
@@ -55,7 +55,7 @@ public:
     {
 
         string bin = other.toBinaryString();
-        setValueByBinaryString(addBinaryStrings(this->toBinaryString(), bin));
+        setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
         return this[0];
         // return *this + other;
     };
@@ -87,7 +87,6 @@ public:
     myuint<size> operator-=(myuint<otherSize> other)
     {
         string bin = other.toBinaryString();
-        // setValueByBinaryString();
         return *this = subtract<otherSize>(other); 
     };
 
@@ -418,10 +417,10 @@ public:
     template <int otherSize>
     myuint<size> divideByMyuint(myuint<otherSize> m)
     {
-        myuint<size> tmp(0);
-        string newStr = this->toBinaryString();
-
-        tmp.setValueByBinaryString(newStr);
+        myuint<size> tmp(*this);
+        string newStr = toBinaryString();
+        
+        // tmp.setValueByBinaryString(newStr);
 
         for (; m > 0; --m)
         {
@@ -640,7 +639,7 @@ public:
         vector<bool> tmp = stringToBoolVec(s, size);
         if (tmp.size() > size)
         {
-            cerr << "string too large to assign! Removing extra bits!\n";
+            cerr << "string too large to assign "<<tmp.size()<<">"<<size<<" Removing extra bits!\n";
             int diff = (tmp.size() - size);
             tmp.erase(tmp.begin(), tmp.begin() + diff);
         }
