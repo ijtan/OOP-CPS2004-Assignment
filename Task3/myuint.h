@@ -767,9 +767,6 @@ public:
     template <int otherSize>
     myuint(myuint<otherSize> &other)
     {
-        if (other.getSize() > getSize())
-            cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n"; //TODO stop execution or ??
-
         setValueByVec(other.getValueContainer());
     }
 

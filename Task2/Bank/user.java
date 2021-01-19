@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class user extends person {
-    // private ArrayList<account> accounts = new ArrayList<account>(); TODO we will
-    // change this so user does not have access to his account ! he will only bave a
-    // list of accountNumbers
+
     private ArrayList<String> accountNumbers = new ArrayList<String>();
     // private ArrayList<String> transactions = new ArrayList<String>();
 
