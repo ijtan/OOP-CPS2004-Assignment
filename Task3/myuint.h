@@ -18,18 +18,18 @@ private:
     vector<bool> values = vector<bool>(size);
 
 public:
-    template <int otherSize>
-    myuint(myuint<otherSize> other)
-    {
-        cout << "init with other myuint\n";
-        if (other.getSize() > getSize())
-        {
-            cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
-        }
-        int diff = other.getSize() - size;
-        this->values = other.getValueContainer();
-        values.insert(values.begin(), diff, false);
-    }
+    // template <int otherSize>
+    // myuint(myuint<otherSize> other)
+    // {
+    //     cout << "init with other myuint\n";
+    //     if (other.getSize() > getSize())
+    //     {
+    //         cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
+    //     }
+    //     int diff = other.getSize() - size;
+    //     this->values = other.getValueContainer();
+    //     values.insert(values.begin(), diff, false);
+    // }
 
     template <class T>
     myuint(T value)
@@ -69,14 +69,17 @@ public:
         string bin = other.toBinaryString();
         setValueByBinaryString(addBinaryStrings(this->toBinaryString(), bin));
         return this[0];
+        // return *this + other;
     };
 
     template <class T>
-    void operator+=(T other)
+    myuint<size> operator+=(T other)
     {
         static_assert(is_integral<T>::value, "Can only add by integral types!");
         string bin = toBinaryString<T>(other);
         this->setValueByBinaryString(addBinaryStrings(toBinaryString(), bin));
+        return this[0];
+        // return *this + other;
     };
 
     template <int otherSize>
@@ -95,42 +98,47 @@ public:
     template <int otherSize>
     myuint<size> operator-=(myuint<otherSize> other)
     {
-        return *this = subtract<otherSize>(other);
+        string bin = other.toBinaryString();
+        // setValueByBinaryString();
+        return *this = subtract<otherSize>(other); 
     };
 
     template <class T>
     myuint<size> operator-=(const T other)
     {
         static_assert(is_integral<T>::value, "Can only subtract by integral types!");
-        return this - other;
+        string bin = toBinaryString(other);
+        setValueByBinaryString(subtractBinaryStrings(toBinaryString(),bin));
+        return *this;
     }
 
     myuint<size> operator--()
     {
-        setValueByBinaryString(subtract(1).toBinaryString());
-        return this[0];
+        return *this -= 1;
     }
 
     myuint<size> operator++()
     {
         // string bin = toBinaryString();
-        setValueByBinaryString(addBinaryStrings(this->toBinaryString(), "01"));
-        return this[0];
+        // setValueByBinaryString(addBinaryStrings(this->toBinaryString(), "01"));
+        // return this[0];
+        return *this += 1;
     }
 
-    template <int otherSize>
-    myuint<size> operator=(myuint<otherSize> other)
-    {
-        if (other.getSize() > getSize())
-        {
-            cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
-            return this[0];
-        }
-        int diff = size - other.getSize();
-        this->values = other.getValueContainer();
-        values.insert(values.begin(), diff, false);
-        return this[0];
-    }
+    // template <int otherSize>
+    // myuint<size> operator=(myuint<otherSize> other)
+    // {
+    //     // if (other.getSize() > getSize())
+    //     // {
+    //     //     cerr << "other size(" << other.getSize() << ") is too big to assign to this(" << getSize() << ") one!\n";
+    //     //     return this[0];
+    //     // }
+    //     // int diff = size - other.getSize();
+    //     // this->values = other.getValueContainer();
+    //     // values.insert(values.begin(), diff, false);
+    //     this(other);
+    //     return this[0];
+    // }
 
     template <int otherSize>
     bool operator==(myuint<otherSize> other)
@@ -701,9 +709,6 @@ public:
 
     myuint<size> shiftRightThis(int shiftAmount)
     {
-
-        // this->setSize((getSize()/8)+shiftAmount);
-
         values.erase(values.end() - shiftAmount, values.end());
         values.insert(values.begin(), shiftAmount, false);
 
@@ -874,22 +879,41 @@ public:
 
     //copy const
     template <int otherSize>
-    myuint(const myuint<otherSize> &other)
+    myuint(myuint<otherSize> &other)
     {
-        if (otherSize == size)
-            this->values = other.values;
-        else
-            cerr << "Could not copy by different size!\n";
+        // cout << "copy constructor\n";
+        // if (otherSize == size)
+        //     values = other.getValueContainer();
+        // else
+        //     cerr << "Could not copy by different size!\n";
+        if (other.getSize() > getSize())
+        {
+            cerr << "other size(" << other.getSize() << ") is too big to copy to this(" << getSize() << ") one!\n";
+            // return this[0];
+        }
+        int diff = size - other.getSize();
+        this->values = other.getValueContainer();
+        values.insert(values.begin(), diff, false);
+        // return this[0];
     }
 
     template <int otherSize>
     myuint(myuint<otherSize> &&other)
     {
+        cout<<"move constructor\n";
+        // if (otherSize == size)
+        //     this->values = move(other.getValueContainer());
+        // else
+        //     cerr << "Could not move by different size!\n";
 
-        if (otherSize == size)
-            this->values = move(other.values);
-        else
-            cerr << "Could not move by different size!\n";
+        if (other.getSize() > getSize())
+        {
+            cerr << "other size(" << other.getSize() << ") is too big to move to this(" << getSize() << ") one!\n";
+            // return this[0];
+        }
+        int diff = size - other.getSize();
+        this->values = move(other.getValueContainer());
+        values.insert(values.begin(), diff, false);
     }
 
     string toDecimalString()

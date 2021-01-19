@@ -6,12 +6,17 @@ static void runTest(){
     myuint<32>A (20);
     myuint<32> A1(20);
 
-    myuint<32>B (10);    
+    myuint<32>B (10);
+    
 
     int x = A.convert_to<int>();
     int y = B.convert_to<int>();
 
-    assert(A==x && "Equality check with integer failed");
+    assert(A.toDecimalString() == "20" && "to decimnal string failed");
+    assert((A*B).toDecimalString() == "200" && "to decimnal string failed");
+    assert(B.toDecimalString() == "10" && "to decimnal string failed");
+    cout<<C<<endl;
+    assert(A == x && "Equality check with integer failed");
     assert(A1==A && "Equality check with other Big Int failed");
     assert(B!=x && "Not equal check with integer failed");
     assert(A!=B && "Not equal check with other Big Int failed");
@@ -37,6 +42,12 @@ static void runTest(){
     assert(A<<20 == x<<20 && "big left Shift failed");
     assert(A>>20 == x>>20 && "big right Shift failed");
 
+    assert((A<<=1) == (x<<=1) && "left Shift failed");
+    assert((A>>=1) == (x>>=1) && "right Shift failed");
+
+    assert((A<<=20) == (x<<=20) && "big left Shift failed");
+    assert((A>>=20) == (x>>=20) && "big right Shift failed");
+
     assert(A>x==false && "Comparison check with integer failed");
     assert(A>=x==true && "Comparison check with integer failed");
     assert(A<x==false && "Comparison check with integer failed");
@@ -47,5 +58,19 @@ static void runTest(){
     assert(A<A1==false && "Comparison check with other big int failed");
     assert(A<=A1==true && "Comparison check with other big int failed");
 
-    cout<<"\nTesting Passed!\n\n";
+    assert(++A==++x && "increment check failed");
+    assert(--A==--x && "decrement check failed");
+    assert((A+=10)==(x+=10) && "increment (+=) check failed");
+    assert((A-=10)==(x-=10) && "decrement (-=) check failed");
+
+
+    assert((A+=B)==(x+=y) && "increment (+=) check failed");
+    assert((A-=B)==(x-=y) && "decrement (-=) check failed");
+
+    myuint<32> C(B);
+    assert(C == B && "copy constructor failed");
+
+    myuint<32> D = move(C);
+    assert(C != B && "move constructor failed");
+    assert(D == B && "move constructor failed");
 }
