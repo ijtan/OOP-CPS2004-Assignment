@@ -10,6 +10,9 @@ public class accountManager {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();
+    static private final String possibleChars = "123456789ABC";// using this to allow for
+    static private final int max_len = 16;
+
 
     public static request requestNewAccount(String userID) {
         try {
@@ -158,8 +161,7 @@ public class accountManager {
         }
     }
 
-    static private final String possibleChars = "123456789ABC";// using this to allow for
-    static private final int max_len = 16;
+
 
     private static String generateNewAccountKey() {
         StringBuilder sb = new StringBuilder(max_len);

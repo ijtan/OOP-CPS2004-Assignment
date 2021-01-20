@@ -11,4 +11,8 @@ public class savingsAccount extends account {
         return interestRate;
     }
 
+    public void setInterestRate(double ir) {
+        interestRate = ir;
+    }
+
 }

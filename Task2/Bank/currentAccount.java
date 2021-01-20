@@ -10,6 +10,11 @@ public class currentAccount extends account {
         super(ownerID, accountNumber);
     }
 
+    public currentAccount(String ownerID, String accountNumber,double interestRate) {
+        super(ownerID, accountNumber);
+        interest = interestRate;
+    }
+
     public void createChequeBook(String id) {
         // implement approval process here but for now just add
         chequeBooks.add(id);
@@ -28,6 +33,10 @@ public class currentAccount extends account {
 
     public double getInterestRate() {
         return interest;
+    }
+
+    public void setInterestRate(double ir) {
+        interest = ir;
     }
 
 }
