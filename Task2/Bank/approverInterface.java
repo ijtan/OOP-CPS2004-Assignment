@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 interface approverInterface {
     void approve(request r);

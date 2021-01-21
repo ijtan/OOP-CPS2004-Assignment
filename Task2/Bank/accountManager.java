@@ -1,5 +1,4 @@
-
-package Task2;
+package Bank;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -11,6 +10,9 @@ public class accountManager {
 
     private static List<request> requests = new ArrayList<request>();
     private static HashMap<String, account> accounts = new HashMap<String, account>();
+    static private final String possibleChars = "123456789ABC";// using this to allow for
+    static private final int max_len = 16;
+
 
     public static request requestNewAccount(String userID) {
         try {
@@ -43,7 +45,7 @@ public class accountManager {
     public static void approveNewAccount(request r) {
         requests.remove(r);
         String accNo = generateNewAccountKey();
-        System.out.println("approve new acc has been run");
+        // System.out.println("approve new acc has been run");
         account newAcc = new account(accNo, r.getRequester(), '$');
         accounts.put(accNo, newAcc);
         userManager.addAccountToUser(r.getRequester(), accNo);
@@ -103,7 +105,7 @@ public class accountManager {
 
     public static String approveNewCard(request r, String accountNumber) {
         requests.remove(r);
-        System.out.println("approve new card has been run");
+        // System.out.println("approve new card has been run");
         return accounts.get(accountNumber).addCard();
     }
 
@@ -159,8 +161,7 @@ public class accountManager {
         }
     }
 
-    static private final String possibleChars = "123456789ABC";// using this to allow for
-    static private final int max_len = 16;
+
 
     private static String generateNewAccountKey() {
         StringBuilder sb = new StringBuilder(max_len);
@@ -184,11 +185,10 @@ public class accountManager {
     public static void transact(String senderAccountNo, String recieverAccountNo, double amount) {
 
         try {
-            account senderAccount = accounts.get(senderAccountNo);
-            account recieverAccount = accounts.get(recieverAccountNo);
-            if (senderAccount == null || recieverAccount == null) {
-                throw new Exception("Could not retrieve one of the accounts specified!");
-            }
+            account senderAccount = getAccount(senderAccountNo);
+            account recieverAccount = getAccount(recieverAccountNo);
+            senderAccount.subtract(amount);
+            recieverAccount.add(amount);
         } catch (Exception e) {
             System.err.println("Could not transact: " + e.getMessage());
         }
@@ -250,5 +250,20 @@ public class accountManager {
             return;
         }
 
+    }
+
+    public static boolean accountExists(String accNo){
+        if(accounts.containsKey(accNo))
+            return true;
+        return false;
+    }
+
+    public static boolean isOwner(String userID, String accNo){
+        try{
+        return getAccount(accNo).getOwnerIDs().contains(userID);
+        }catch(Exception e){
+            System.err.println("User account not found!");
+            return false;
+        }
     }
 }

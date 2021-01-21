@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 // import java.util.List;
 import java.util.HashMap;
@@ -8,23 +8,22 @@ public class userManager {
     private static HashMap<String, user> usersMap = new HashMap<String, user>(); 
 
 
-    public static boolean hasAccount(String uid, String accNo) throws Exception {
-        // user u = usersMap.get(uid);
-        // if(u==null)
-        //     throw new Exception("User nto found!");
-        return getUser(uid).hasAccountNo(accNo);
+    public static boolean hasAccount(String uid, String accNo){
+        user u =  getUser(uid);
+        if(u==null){
+            System.err.println("User not found!");
+            return false;
+        }
+        return u.hasAccountNo(accNo);
     }
 
-    public static boolean userExists(String uid) throws Exception {
+    public static boolean userExists(String uid){
         if(usersMap.containsKey(uid))
             return true;
         return false;
     }
 
-    public static user getUser(String id) {
-        System.err.println("This function is public for testing only!");
-        // if(!usersMap.containsKey(id))
-        //     throw new Exception("User not found!");
+    private static user getUser(String id) {
         return usersMap.get(id);
     }
 

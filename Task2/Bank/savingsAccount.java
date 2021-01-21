@@ -1,4 +1,4 @@
-package Task2;
+package Bank;
 
 public class savingsAccount extends account {
     private double interestRate;
@@ -9,6 +9,10 @@ public class savingsAccount extends account {
 
     public double getInterestRate() {
         return interestRate;
+    }
+
+    public void setInterestRate(double ir) {
+        interestRate = ir;
     }
 
 }

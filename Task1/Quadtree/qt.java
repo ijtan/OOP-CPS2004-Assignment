@@ -6,12 +6,17 @@ public class qt {
     private boolean state, isLeaf;
     private int size, max, index;
     private qt parent, subTrees[];
-    // ArrayList<Integer> indeces;
     ArrayList<Integer> contained = new ArrayList<Integer>();
 
     public qt(int index) {
         
         this.index = index;
+        this.isLeaf = false;
+    }
+
+    public qt() {
+        
+        this.index = 1;
         this.isLeaf = false;
     }
 
@@ -33,6 +38,7 @@ public class qt {
             this.state = charToBool(image[index - 1]);
             return this;
         }
+
         subTrees = new qt[4];
         final int startIndex = 4* (this.index-1);
         for (int i = 0; i < subTrees.length; i++) {
@@ -40,8 +46,10 @@ public class qt {
             subTrees[i].parent = this;
             subTrees[i].init(size * 4, image);
         }
+
         if (parent != null)
             parent.contained.addAll(this.contained);
+
         return this;
     }
 
@@ -51,7 +59,7 @@ public class qt {
         return false;
     }
 
-    public int getPixel(int index) {
+    public int getPixel(int index) { //relativized version of getNode
         ArrayList<Integer> indices = imageProcessor.indices;
         return getNode(indices.get(index - 1)+1);
     }
