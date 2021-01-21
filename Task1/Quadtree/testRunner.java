@@ -15,5 +15,24 @@ public class testRunner {
         nodeMax += i;
     }
     assert nodeMax==tester.nodeCount() : "node count does not match calculated one!";
+
+    tester.optimize();
+    asertChildNodes(tester);
+
+}
+
+private static void asertChildNodes(qt quad){
+
+        if (quad.isLeaf())
+            return;
+        boolean state = quad.getState();
+        qt[] subTrees = quad.getSubtrees();
+        for (int i = 0; i < subTrees.length; i++){
+            asertChildNodes(subTrees[i]);            
+        }
+        boolean allFalse = !subTrees[0].getState()&&!subTrees[1].getState()&&!subTrees[2].getState()&&!subTrees[3].getState();
+        boolean allTrue = subTrees[0].getState()&&subTrees[1].getState()&&subTrees[2].getState()&&subTrees[3].getState();
+        boolean allSame = allFalse||allTrue;
+        assert !allSame : "Found unoptimized nodes!";
 }
 }

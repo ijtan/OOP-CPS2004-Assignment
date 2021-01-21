@@ -140,4 +140,14 @@ public class qt {
             return true;
         return false;
     }
+
+    public qt[] getSubtrees(){
+        return subTrees;
+    }
+    public boolean isLeaf(){
+        return isLeaf;
+    }
+    public boolean getState(){
+        return state;
+    }
 }
