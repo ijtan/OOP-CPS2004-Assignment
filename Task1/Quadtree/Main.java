@@ -3,16 +3,18 @@ import java.io.File;
 
 public class Main {
     public static void main(String args[]) {
-        testRunner.runTests();
-        // String exampleImg = "TTTTTTTT\n" + "TTTTTTTT\n" + "TTTTFFFT\n" + "TTTTTTFF\n" + "FFFFTTFF\n" + "FFFFTTFF\n"
-        //         + "FFFFTTTT\n" + "FFFFTTTF\n";
+        tests.runTests();
 
-        
-        // String exampleImg = imageProcessor.readfile("Task1/testCSV.csv");
-        String path = new File("testTXT.txt").getAbsolutePath();
+        if(args.length < 1) {
+        System.err.println("Error: no input file passed as argument");
+	    System.exit(1);
+    }
+   
+    // Scanner reader = new Scanner(new FileInputStream(args[0]));
+        String path = new File(args[0]).getAbsolutePath();
         String exampleImg = imageProcessor.readfile(path);
 
-        assert exampleImg!=null : "Aborting due to error: example image cannot be loaded";
+        assert exampleImg!=null : "Aborting due to error: example image cannot be loaded; Is filename correct?";
 
         String image = imageProcessor.preprocess(exampleImg.replaceAll("\n", ""));
         assert image!=null : "Aborting due to error: image could not be processed";

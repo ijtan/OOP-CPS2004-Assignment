@@ -1,6 +1,6 @@
 package Quadtree;
 
-public class testRunner {
+public class tests {
     public static void runTests(){
     System.out.println("Starting Unit Tests");
     qt tester = new qt(1); // MyClass is tested

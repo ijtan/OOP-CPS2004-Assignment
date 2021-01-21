@@ -84,7 +84,7 @@ public class imageProcessor {
             System.err.println("error while reading the txt file: " + e.getMessage());
             return null;
         }
-        if (!image.contains("F") || !image.contains("T") || image.contains(",")) {
+        if ((!image.contains("F") && !image.contains("T")) || image.contains(",")) {
             System.err.println("Wrong format detected, aborting!");
             return null;
         }
