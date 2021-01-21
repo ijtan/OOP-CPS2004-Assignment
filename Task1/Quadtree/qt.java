@@ -158,4 +158,7 @@ public class qt {
     public boolean getState(){
         return state;
     }
+    public int getIndex(){
+        return index;
+    }
 }
