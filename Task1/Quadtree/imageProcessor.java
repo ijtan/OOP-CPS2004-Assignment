@@ -10,14 +10,10 @@ import java.util.List;
 public class imageProcessor {
     public static ArrayList<Integer> indices;
 
-    public static String print(qt QuadTree) {
-        String print = "";
-        return print;
-    }
-
     private static String readCSV(String filename) {
 
         List<Integer> reads = new ArrayList<Integer>();
+        //storing all coords
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
             String line;
@@ -40,25 +36,22 @@ public class imageProcessor {
             System.err.println("Error while reading file: " + e.getMessage());
             return null;
         }
-
-        
+        //finding appropriate size
         ArrayList<Integer> whites = new ArrayList<>();
-        
-
         int minSideSize = Collections.max(reads);      
 
-        int size = (int) Math.pow(4, 1);
-        
-        for (int i = 1; Math.sqrt(size) < minSideSize; i++)
+        int size = 4;        
+        for (int i = 1; Math.sqrt(size) < minSideSize; i++) //find the minimum size which is able to hold all given coords
             size = (int) Math.pow(4, i);
-
-
-
         System.out.println("Defaulting to minimum size which holds all values as: " + size);
-
+        
+        //converting to linear
         int sideLength = (int) Math.sqrt(size);
         for (int i = 0; i < reads.size(); i += 2)
             whites.add(coordinateToLinear(sideLength, reads.get(i), reads.get(i + 1)));
+
+
+        //image generation
         String image = "";
 
         for (int i = 0; i < size; i++) {
