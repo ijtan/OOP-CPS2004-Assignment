@@ -3,6 +3,8 @@ package Bank;
 import java.util.ArrayList;
 
 public interface requestorInterface {
+    //this class enables communication between subordinaes of accountManager and accountManager
+    //used to restrict communication nd speareate the two objects
     public static void requestNewAccount(String uid){
         accountManager.requestNewAccount(uid);
     }

@@ -3,10 +3,11 @@ package Quadtree;
 public class tests {
     public static void runTests(){
     System.out.println("Starting Unit Tests");
-    qt tester = new qt(1); // MyClass is tested
+    qt tester = new qt(1); 
     String exampleImg = "TTTTTTTTTTTTTTTTTTTTFFFTFFFFTTFFFFFFTTTTTTTTTTTTTTTTTTFFFFFFTTFF";
     // String exampleImg = "TTTTTTTTTTTTTTTTTTTTFFFTTTTTTTFFFFFFTTFFFFFFTTFFFFFFTTTTFFFFTTTF";
     // String exampleImg = "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
+    
     String image = imageProcessor.preprocess(exampleImg.replaceAll("\n", ""));
     int len = image.length();
     tester.init(1, image.toCharArray());

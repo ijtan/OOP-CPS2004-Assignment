@@ -61,14 +61,14 @@ public class account {
         }
         
         balance -= value;
-
+        //adds a map of details to the transaction log
         HashMap<String, String> log = new HashMap<>();
         log.put("type", "debit");
         log.put("amount", String.valueOf(value));
         log.put("date", getCurrentDate());
         trasnactions.add(log);
     }
-
+    //used to get a nicely fromated date and time (for transactions)
     private String getCurrentDate(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         LocalDateTime currDateTime = LocalDateTime.now();
@@ -77,7 +77,7 @@ public class account {
 
     public void add(double value) {
         balance += value;
-
+        //adds a map of details to the transaction log
         HashMap<String, String> log = new HashMap<>();
         log.put("type", "credit");
         log.put("amount", String.valueOf(value));
@@ -91,13 +91,13 @@ public class account {
 
     public String addCard() {
         cardCounter++;
-        String cardNo = accountNo + "CARD" + cardCounter;
+        String cardNo = accountNo + "CARD" + cardCounter; //generated the CardNo
         card newCard = new card(cardNo, accountNo);
         this.cards.put(cardNo, newCard);
         return cardNo;
     }
 
-    public boolean hasCard(String accNo){
+    public boolean hasCard(String accNo){ //checks ownership of cards
         if(this.cards.containsKey(accNo))
             return true;
         return false;

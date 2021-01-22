@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class userManager {
     private static HashMap<String, user> usersMap = new HashMap<String, user>(); 
 
-
+    //used to verify ownership of an account
     public static boolean hasAccount(String uid, String accNo){
         user u =  getUser(uid);
         if(u==null){
@@ -16,7 +16,7 @@ public class userManager {
         }
         return u.hasAccountNo(accNo);
     }
-
+    //used to veridy existance of user
     public static boolean userExists(String uid){
         if(usersMap.containsKey(uid))
             return true;
@@ -27,6 +27,7 @@ public class userManager {
         return usersMap.get(id);
     }
 
+    //used to get a list of acount numbers owned by a user
     public static ArrayList<String> getUserAccounts(String ID) {
         user u = usersMap.get(ID);
         if (u == null) {
@@ -44,20 +45,19 @@ public class userManager {
         }
         return u.listAccounts();
     }
-
+    //adds user to the syste,
     public static void addUser(String name, String surname, String id) {
         user u = new user(name, surname, id);
         usersMap.put(id, u);
-        // users.add(u);
     }
 
+    //used to add an account to user's account list
     public static void addAccountToUser(String id, String accountNo) {
         user u = usersMap.get(id);
         if (u == null) {
             System.err.println("Could not find user to add account to!");
             return;
         }
-        // accountMediator.removeAccount(accountNo);
         u.addAccountToList(accountNo);
     }
 

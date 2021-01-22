@@ -12,8 +12,9 @@ public class user extends person {
         super(name, surname, id);
     }
 
+    //used to transact
     public void moveMoney(double value, String myAccount, String recipientAccountNumber) {
-        if (accountNumbers.contains(myAccount))
+        if (accountNumbers.contains(myAccount)) //ensured that sending from an owned account
             requestorInterface.transact(myAccount, recipientAccountNumber, value);            
         else
             System.err.println("Account specified not found under user");
@@ -30,6 +31,7 @@ public class user extends person {
             System.err.println("Account specified not found under user");
     }
 
+    //used to verify ownership of accounts
     public boolean hasAccountNo(String accountNo){
         if(this.accountNumbers.contains(accountNo))
             return true;
@@ -70,6 +72,7 @@ public class user extends person {
         return name + " " + surname;
     }
 
+    //used to add an accountNumber to list of owned accounts
     public void addAccountToList(String accNo) {
         // System.out.println("adding account!: " + accNo);
         accountNumbers.add(accNo);
